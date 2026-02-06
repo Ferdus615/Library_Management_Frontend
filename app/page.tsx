@@ -1,64 +1,195 @@
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
+    <div className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-[var(--clr-surface-a0)]">
+      {/* Subtle Grid Background */}
+      <div
+        className="pointer-events-none absolute inset-0 z-0"
+        style={{
+          backgroundImage: `
+            linear-gradient(to right, rgba(255,255,255,0.02) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(255,255,255,0.02) 1px, transparent 1px)
+          `,
+          backgroundSize: "50px 50px",
+        }}
+      />
+
+      {/* Radial glow effect */}
+      <div className="pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(ellipse_at_center,_var(--clr-primary-a0)_0%,_transparent_70%)] opacity-20" />
+
+      {/* Header with Logo */}
+      <header className="absolute left-0 top-0 z-20 w-full px-6 py-6 sm:px-10 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <Image
+            src="/brand/logo-icon-w.svg"
+            alt="Library Management System"
+            width={35}
+            height={35}
+            priority
+          />
+
+          <Image
+            src="/brand/name-w.svg"
+            alt="Library Management System"
+            width={60}
+            height={60}
+            priority
+          />
+        </div>
+
+        <div className="flex items-center gap-3">
+          <Link
+            href="/login"
+            className="text-[var(--clr-primary-a10)] text-sm px-2 py-1 rounded border border-[var(--clr-primary-a10)] 
+            hover:bg-[var(--clr-primary-a10)] hover:text-[var(--clr-primary-a50)]"
+          >
+            Login
+          </Link>
+          <Link
+            href="/register"
+            className="text-[var(--clr-primary-a10)] text-sm px-2 py-1 rounded border border-[var(--clr-primary-a10)] 
+            hover:bg-[var(--clr-primary-a10)] hover:text-[var(--clr-primary-a50)]"
+          >
+            Register
+          </Link>
+        </div>
+      </header>
+
+      <main className="relative z-10 flex w-full max-w-6xl flex-col items-center gap-16 px-6 py-24 text-center">
+        {/* Hero Section */}
+        <section className="flex flex-col items-center gap-6">
+          <h1 className="max-w-3xl text-4xl font-bold leading-tight tracking-tight text-[var(--clr-light-a0)] sm:text-5xl md:text-6xl">
+            Your Library.{" "}
+            <span className="text-[var(--clr-primary-a10)]">Smarter.</span>{" "}
+            <span className="text-[var(--clr-primary-a20)]">Faster.</span>{" "}
+            <span className="text-[var(--clr-primary-a30)]">Digital.</span>
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+          <p className="max-w-xl text-lg leading-relaxed text-[var(--clr-surface-a50)]">
+            Manage books, reservations, members, and notifications — all in one
+            intelligent system.
           </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+          {/* CTA Buttons */}
+          <div className="mt-4 flex flex-col gap-4 sm:flex-row">
+            <Link
+              href="/dashboard"
+              className="inline-flex items-center justify-center rounded-xl bg-[var(--clr-primary-a0)] px-8 py-3 font-semibold text-white shadow-lg shadow-[var(--clr-primary-a0)]/30 transition-all hover:scale-105 hover:bg-[var(--clr-primary-a10)] hover:shadow-xl"
+            >
+              Get Started
+            </Link>
+            <Link
+              href="#demo"
+              className="inline-flex items-center justify-center rounded-xl border border-[var(--clr-surface-a30)] bg-transparent px-8 py-3 font-semibold text-[var(--clr-light-a0)] transition-all hover:scale-105 hover:border-[var(--clr-primary-a10)] hover:text-[var(--clr-primary-a10)]"
+            >
+              View Demo
+            </Link>
+          </div>
+        </section>
+
+        {/* Dashboard Preview Card */}
+        <section className="w-full max-w-4xl">
+          <div className="rounded-2xl border border-[var(--clr-surface-a20)] bg-[var(--clr-surface-tonal-a0)] p-6 shadow-2xl shadow-black/50">
+            {/* Card Header */}
+            <div className="mb-6 flex items-center justify-between border-b border-[var(--clr-surface-a20)] pb-4">
+              <h2 className="text-lg font-semibold text-[var(--clr-light-a0)]">
+                Dashboard Overview
+              </h2>
+              <div className="flex gap-2">
+                <span className="h-3 w-3 rounded-full bg-[var(--clr-danger-a0)]" />
+                <span className="h-3 w-3 rounded-full bg-[var(--clr-warning-a0)]" />
+                <span className="h-3 w-3 rounded-full bg-[var(--clr-success-a0)]" />
+              </div>
+            </div>
+
+            {/* Stats Grid */}
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+              {/* Books Card */}
+              <div className="rounded-xl bg-[var(--clr-surface-a10)] p-5 transition-transform hover:scale-[1.02]">
+                <div className="mb-2 flex items-center gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[var(--clr-info-a0)]/20 text-[var(--clr-info-a10)]">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-5 w-5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+                      />
+                    </svg>
+                  </div>
+                  <span className="text-sm font-medium text-[var(--clr-surface-a50)]">
+                    Total Books
+                  </span>
+                </div>
+                <p className="text-3xl font-bold text-[var(--clr-light-a0)]">
+                  12,847
+                </p>
+              </div>
+
+              {/* Reservations Card */}
+              <div className="rounded-xl bg-[var(--clr-surface-a10)] p-5 transition-transform hover:scale-[1.02]">
+                <div className="mb-2 flex items-center gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[var(--clr-warning-a0)]/20 text-[var(--clr-warning-a10)]">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-5 w-5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                      />
+                    </svg>
+                  </div>
+                  <span className="text-sm font-medium text-[var(--clr-surface-a50)]">
+                    Reservations
+                  </span>
+                </div>
+                <p className="text-3xl font-bold text-[var(--clr-light-a0)]">
+                  284
+                </p>
+              </div>
+
+              {/* Notifications Card */}
+              <div className="rounded-xl bg-[var(--clr-surface-a10)] p-5 transition-transform hover:scale-[1.02]">
+                <div className="mb-2 flex items-center gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[var(--clr-success-a0)]/20 text-[var(--clr-success-a10)]">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-5 w-5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+                      />
+                    </svg>
+                  </div>
+                  <span className="text-sm font-medium text-[var(--clr-surface-a50)]">
+                    Notifications
+                  </span>
+                </div>
+                <p className="text-3xl font-bold text-[var(--clr-light-a0)]">
+                  18
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
       </main>
     </div>
   );
