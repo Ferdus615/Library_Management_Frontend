@@ -18,17 +18,17 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     ref,
   ) => {
     const baseStyles =
-      "inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-white dark:ring-offset-gray-950 transition-all duration-300 active:scale-95";
+      "inline-flex items-center justify-center rounded-md text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-white dark:ring-offset-gray-950 duration-300 active:scale-95 hover:scale-[1.02]";
 
     const variants = {
       primary:
-        "bg-blue-600 text-white hover:bg-blue-700 shadow-lg hover:shadow-blue-500/25 dark:bg-blue-600 dark:hover:bg-blue-700",
+        "bg-(--clr-primary-a0) text-white hover:bg-(--clr-primary-a10) shadow-lg shadow-(--clr-primary-a0)/25",
       secondary:
-        "bg-gray-100 text-gray-900 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-50 dark:hover:bg-gray-800",
+        "bg-(--clr-surface-a10) text-(--clr-light-a0) hover:bg-(--clr-surface-a20)",
       outline:
-        "border border-gray-200 hover:bg-gray-100 dark:border-gray-800 dark:hover:bg-gray-800 dark:text-gray-50",
+        "border border-(--clr-surface-a20) bg-transparent hover:border-(--clr-primary-a10) hover:text-(--clr-primary-a10) text-(--clr-light-a0)",
       ghost:
-        "hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-gray-800 dark:hover:text-gray-50",
+        "text-(--clr-surface-a50) hover:bg-(--clr-surface-a10) hover:text-(--clr-light-a0)",
     };
 
     return (
