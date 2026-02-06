@@ -27,7 +27,7 @@ export const metadata: Metadata = {
   icons: {
     icon: "/brand/logo-icon-w.svg",
   },
-  title: "Book Keeper",
+  title: "book keeper",
   description: "A modern library management system",
 };
 

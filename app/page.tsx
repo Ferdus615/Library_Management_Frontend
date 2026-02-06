@@ -9,8 +9,8 @@ export default function Home() {
         className="pointer-events-none absolute inset-0 z-0"
         style={{
           backgroundImage: `
-            linear-gradient(to right, rgba(255,255,255,0.02) 1px, transparent 1px),
-            linear-gradient(to bottom, rgba(255,255,255,0.02) 1px, transparent 1px)
+            linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px)
           `,
           backgroundSize: "50px 50px",
         }}
@@ -30,27 +30,25 @@ export default function Home() {
             priority
           />
 
-          <Image
-            src="/brand/name-w.svg"
-            alt="Library Management System"
-            width={60}
-            height={60}
-            priority
-          />
+          <span className="text-xl/4 font-extralight text-(--clr-light-a0)">
+            book
+            <br />
+            keeper
+          </span>
         </div>
 
         <div className="flex items-center gap-3">
           <Link
             href="/login"
-            className="text-(--clr-primary-a50) bg-(--clr-primary-a0) text-sm px-2 py-1 rounded border border-(--clr-primary-a10) 
-            hover:bg-transparent"
+            className="inline-flex items-center justify-center rounded-lg bg-(--clr-primary-a0) px-5 py-2 font-semibold text-(--clr-light-a0) 
+            text-sm shadow-lg shadow-(--clr-primary-a0)/30 transition-all hover:scale-105 hover:bg-(--clr-primary-a10) hover:shadow-xl"
           >
             Login
           </Link>
           <Link
             href="/register"
-            className="text-(--clr-primary-a50) bg-(--clr-primary-a0) text-sm px-2 py-1 rounded border border-(--clr-primary-a10) 
-            hover:bg-transparent"
+            className="inline-flex items-center justify-center rounded-lg border border-(--clr-surface-a30) bg-transparent px-5 py-2 font-semibold 
+              text-sm text-(--clr-light-a0) transition-all hover:scale-105 hover:border-(--clr-primary-a10) hover:text-(--clr-primary-a10)"
           >
             Register
           </Link>
