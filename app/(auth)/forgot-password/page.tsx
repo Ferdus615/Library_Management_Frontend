@@ -2,56 +2,11 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { Input } from "../../../components/ui/Input";
 import { Button } from "../../../components/ui/Button";
 import Image from "next/image";
 
-export default function LoginPage() {
-  const router = useRouter();
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
-  const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError(null);
-    setIsLoading(true);
-
-    try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000"}/user/login`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
-        },
-      );
-
-      if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.message || "Login failed");
-      }
-
-      // Successful login
-      router.push("/dashboard");
-    } catch (err: any) {
-      setError(err.message || "Something went wrong. Please try again.");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
+const ForgotPasswordPage = () => {
   return (
     <div className="min-h-screen relative overflow-hidden">
       {/* Layer 0: Background Colors */}
@@ -103,8 +58,8 @@ export default function LoginPage() {
                 <span className="text-(--clr-primary-a10)">Digitalized.</span>
               </h1>
               <p className="text-lg text-(--clr-surface-a50)">
-                Log in to manage your collection and stay updated with your
-                library&apos;s activity.
+                Enter your email address, and we&apos;ll send you a link to
+                reset your password.
               </p>
             </div>
           </div>
@@ -138,63 +93,34 @@ export default function LoginPage() {
           <div className="max-w-md w-full space-y-5 relative z-10">
             <div className="text-center">
               <h2 className="text-xl font-extrabold text-(--clr-dark-a0) dark:text-(--clr-light-a0) tracking-tight">
-                Welcome Back
+                Forgot Password
               </h2>
               <p className="mt-2 text-sm text-(--clr-surface-a50)">
-                Log in to your account to continue
+                Enter your email to reset password
               </p>
             </div>
 
             <div className="bg-white/80 dark:bg-(--clr-surface-tonal-a10)/80 backdrop-blur-lg py-8 px-4 shadow-2xl rounded-2xl sm:px-10 border border-(--clr-surface-a20)/20">
-              <form className="space-y-6" onSubmit={handleSubmit}>
-                {error && (
-                  <div className="bg-(--clr-danger-a0)/10 border border-(--clr-danger-a0)/20 text-(--clr-danger-a10) text-sm rounded-md p-3 animate-pulse">
-                    {error}
-                  </div>
-                )}
-
+              <form className="space-y-6">
                 <Input
                   label="Email address"
+                  type="email"
                   id="email"
                   name="email"
-                  type="email"
                   autoComplete="email"
                   required
-                  value={formData.email}
-                  onChange={handleChange}
+                  // value={email}
+                  // onChange={handleChange}
                   placeholder="john.doe@example.com"
                 />
-
-                <Input
-                  label="Password"
-                  id="password"
-                  name="password"
-                  type="password"
-                  autoComplete="current-password"
-                  required
-                  value={formData.password}
-                  onChange={handleChange}
-                  placeholder="••••••••"
-                />
-
-                <div className="flex items-center justify-end">
-                  <div className="text-sm">
-                    <Link
-                      href="/forgot-password"
-                      className="font-medium text-(--clr-primary-a0) hover:text-(--clr-primary-a10)"
-                    >
-                      Forgot your password?
-                    </Link>
-                  </div>
-                </div>
 
                 <div>
                   <Button
                     type="submit"
                     className="w-full text-lg font-semibold py-6 bg-(--clr-primary-a0) hover:bg-(--clr-primary-a10) text-white shadow-lg shadow-(--clr-primary-a0)/20"
-                    isLoading={isLoading}
+                    // isLoading={isLoading}
                   >
-                    Sign in
+                    Reset My Password
                   </Button>
                 </div>
               </form>
@@ -206,17 +132,17 @@ export default function LoginPage() {
                   </div>
                   <div className="relative flex justify-center text-sm">
                     <span className="px-2 bg-white dark:bg-(--clr-surface-tonal-a10) text-(--clr-surface-a50)">
-                      Don&apos;t have an account?
+                      Remember your password?
                     </span>
                   </div>
                 </div>
 
                 <div className="mt-6 flex justify-center">
                   <Link
-                    href="/register"
+                    href="/login"
                     className="font-medium text-(--clr-primary-a0) hover:text-(--clr-primary-a10) transition-colors duration-200"
                   >
-                    Sign up instead
+                    Back to login
                   </Link>
                 </div>
               </div>
@@ -226,4 +152,6 @@ export default function LoginPage() {
       </div>
     </div>
   );
-}
+};
+
+export default ForgotPasswordPage;
