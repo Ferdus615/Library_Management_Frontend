@@ -31,6 +31,8 @@ export default function RegisterPage() {
     setError(null);
     setIsLoading(true);
 
+    const { confirm_password, ...dataToSend } = formData;
+
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000"}/user`,
@@ -39,7 +41,7 @@ export default function RegisterPage() {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(formData),
+          body: JSON.stringify(dataToSend),
         },
       );
 
@@ -279,7 +281,7 @@ export default function RegisterPage() {
                 <div className="mt-6 flex justify-center">
                   <Link
                     href="/login"
-                    className="font-medium text-(--clr-primary-a0) hover:text-(--clr-primary-a10) transition-colors duration-200"
+                    className="font-medium text-(--clr-primary-a30) hover:text-(--clr-primary-a40) transition-colors duration-200"
                   >
                     Sign in instead
                   </Link>

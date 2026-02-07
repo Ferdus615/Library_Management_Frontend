@@ -28,7 +28,7 @@ export default function LoginPage() {
 
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000"}/user/login`,
+        `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000"}/auth/login`,
         {
           method: "POST",
           headers: {
@@ -214,7 +214,7 @@ export default function LoginPage() {
                 <div className="mt-6 flex justify-center">
                   <Link
                     href="/register"
-                    className="font-medium text-(--clr-primary-a0) hover:text-(--clr-primary-a10) transition-colors duration-200"
+                    className="font-medium text-(--clr-primary-a30) hover:text-(--clr-primary-a40) transition-colors duration-200"
                   >
                     Sign up instead
                   </Link>
