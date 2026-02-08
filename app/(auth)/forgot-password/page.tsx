@@ -1,12 +1,25 @@
 "use client";
 
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Input } from "../../../components/ui/Input";
 import { Button } from "../../../components/ui/Button";
 import Image from "next/image";
 
 const ForgotPasswordPage = () => {
+  const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [error, serError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    setEmail(e.target.value);
+  };
+
+  const handleSubmit = () => {};
+
   return (
     <div className="min-h-screen relative overflow-hidden">
       {/* Layer 0: Background Colors */}
@@ -109,8 +122,8 @@ const ForgotPasswordPage = () => {
                   name="email"
                   autoComplete="email"
                   required
-                  // value={email}
-                  // onChange={handleChange}
+                  value={email}
+                  onChange={handleChange}
                   placeholder="john.doe@example.com"
                 />
 
@@ -118,7 +131,7 @@ const ForgotPasswordPage = () => {
                   <Button
                     type="submit"
                     className="w-full text-lg font-semibold py-6 bg-(--clr-primary-a0) hover:bg-(--clr-primary-a10) text-white shadow-lg shadow-(--clr-primary-a0)/20"
-                    // isLoading={isLoading}
+                    isLoading={isLoading}
                   >
                     Reset My Password
                   </Button>
