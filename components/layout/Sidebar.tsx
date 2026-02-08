@@ -127,36 +127,42 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
       {/* Mobile overlay */}
       {isOpen && (
         <div
-          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+          className="fixed inset-0 bg-black/60 z-40 lg:hidden backdrop-blur-sm transition-all duration-300"
           onClick={onClose}
         />
       )}
 
-      {/* Sidebar */}
+      {/* Sidebar with Glassmorphism */}
       <aside
-        className={`fixed top-0 left-0 z-50 h-full w-64 bg-(--clr-surface-a0) border-r border-(--clr-surface-a20) 
-          transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:z-auto
-          ${isOpen ? "translate-x-0" : "-translate-x-full"}`}
+        className={`fixed top-0 left-0 z-50 h-full w-64 glass border-r border-white/5 
+          transform transition-all duration-500 cubic-bezier(0.4, 0, 0.2, 1) lg:translate-x-0 lg:static lg:z-auto
+          ${isOpen ? "translate-x-0 shadow-2xl shadow-black/50" : "-translate-x-full"}`}
       >
-        {/* Logo */}
-        <div className="flex items-center gap-3 px-6 py-6 border-b border-(--clr-surface-a20)">
-          <Image
-            src="/brand/logo-icon-w.svg"
-            alt="BookKeeper"
-            width={35}
-            height={35}
-            priority
-          />
-          <span className="text-xl/4 font-extralight text-(--clr-light-a0)">
-            book
-            <br />
-            keeper
-          </span>
+        {/* Logo Section */}
+        <div className="flex items-center gap-3 px-6 py-8 border-b border-white/5 relative group">
+          <div className="absolute inset-0 bg-gradient-to-r from-(--clr-primary-a0)/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+          <div className="relative flex items-center gap-3">
+            <div className="p-2 bg-(--clr-primary-a0)/20 rounded-xl">
+              <Image
+                src="/brand/logo-icon-w.svg"
+                alt="BookKeeper"
+                width={32}
+                height={32}
+                priority
+                className="animate-in fade-in duration-1000"
+              />
+            </div>
+            <span className="text-xl/4 font-extralight text-white tracking-tight">
+              book
+              <br />
+              keeper
+            </span>
+          </div>
         </div>
 
         {/* Navigation */}
-        <nav className="flex flex-col gap-1 p-4">
-          {navItems.map((item) => {
+        <nav className="flex flex-col gap-2 p-4 mt-4">
+          {navItems.map((item, index) => {
             const isActive =
               pathname === item.href ||
               (item.href !== "/dashboard" && pathname.startsWith(item.href));
@@ -166,19 +172,44 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                 key={item.href}
                 href={item.href}
                 onClick={onClose}
-                className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200
+                className={`flex items-center gap-3 px-4 py-3.5 rounded-xl text-sm font-medium transition-all duration-300 group
                   ${
                     isActive
-                      ? "bg-(--clr-primary-a0)/20 text-(--clr-primary-a10) border-l-3 border-(--clr-primary-a0)"
-                      : "text-(--clr-surface-a50) hover:bg-(--clr-surface-a10) hover:text-(--clr-light-a0)"
+                      ? "bg-(--clr-primary-a0) text-white shadow-lg shadow-(--clr-primary-a0)/25"
+                      : "text-(--clr-surface-a50) hover:bg-white/5 hover:text-white"
                   }`}
+                style={{ animationDelay: `${index * 50}ms` }}
               >
-                {item.icon}
-                {item.label}
+                <div
+                  className={`transition-transform duration-300 group-hover:scale-110 ${isActive ? "text-white" : "text-(--clr-primary-a10)"}`}
+                >
+                  {item.icon}
+                </div>
+                <span className="flex-1">{item.label}</span>
+                {isActive && (
+                  <div className="w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.8)]" />
+                )}
               </Link>
             );
           })}
         </nav>
+
+        {/* User Status / Quick Actions */}
+        <div className="mt-auto p-4 mb-4">
+          <div className="glass-light rounded-2xl p-4 border-white/10 group cursor-pointer hover:border-white/20 transition-all duration-300">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-(--clr-primary-a0) to-(--clr-primary-a20) border border-white/20" />
+              <div className="flex-1 overflow-hidden">
+                <p className="text-sm font-semibold text-white truncate">
+                  Membership Status
+                </p>
+                <p className="text-xs text-(--clr-success-a10) font-medium">
+                  Active Member
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
       </aside>
     </>
   );

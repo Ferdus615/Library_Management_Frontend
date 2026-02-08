@@ -1,17 +1,17 @@
 import React from "react";
 import StatCard from "../common/StatCard";
-import { AdminDashboardData } from "../../types/admin";
+import { MemberDashboardData } from "../../types/admin";
 
-interface DashboardStatsProps {
-  stats: AdminDashboardData | null;
+interface MemberStatsProps {
+  stats: MemberDashboardData | null;
 }
 
-export default function DashboardStats({ stats }: DashboardStatsProps) {
+export default function MemberStats({ stats }: MemberStatsProps) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
       <StatCard
-        title="Total Books"
-        value={stats?.totalBook.toLocaleString() || "0"}
+        title="Active Loans"
+        value={stats?.activeLoans || 0}
         colorClass="bg-(--clr-info-a0)/20 text-(--clr-info-a10)"
         icon={
           <svg
@@ -31,9 +31,9 @@ export default function DashboardStats({ stats }: DashboardStatsProps) {
         }
       />
       <StatCard
-        title="Total Users"
-        value={stats?.totalActiveUser.toLocaleString() || "0"}
-        colorClass="bg-(--clr-success-a0)/20 text-(--clr-success-a10)"
+        title="Overdue Loans"
+        value={stats?.overdueLoans || 0}
+        colorClass="bg-(--clr-danger-a0)/20 text-(--clr-danger-a10)"
         icon={
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -46,14 +46,14 @@ export default function DashboardStats({ stats }: DashboardStatsProps) {
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
-              d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
+              d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
             />
           </svg>
         }
       />
       <StatCard
-        title="Active Loans"
-        value={stats?.totalLoanedCopies || 0}
+        title="Total Reservations"
+        value={stats?.totalReservation || 0}
         colorClass="bg-(--clr-warning-a0)/20 text-(--clr-warning-a10)"
         icon={
           <svg
@@ -73,9 +73,9 @@ export default function DashboardStats({ stats }: DashboardStatsProps) {
         }
       />
       <StatCard
-        title="Overdue Books"
-        value={stats?.totalOverdueCopies || 0}
-        colorClass="bg-(--clr-danger-a0)/20 text-(--clr-danger-a10)"
+        title="Total Fine Amount"
+        value={`$${stats?.totalFineAmount.toLocaleString() || "0"}`}
+        colorClass="bg-(--clr-success-a0)/20 text-(--clr-success-a10)"
         icon={
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -88,7 +88,7 @@ export default function DashboardStats({ stats }: DashboardStatsProps) {
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
-              d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+              d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
             />
           </svg>
         }
