@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Input } from "../../../components/ui/Input";
 import { Button } from "../../../components/ui/Button";
+import { authService } from "../../../services/auth.service";
 import Image from "next/image";
 
 export default function RegisterPage() {
@@ -31,24 +32,11 @@ export default function RegisterPage() {
     setError(null);
     setIsLoading(true);
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { confirm_password, ...dataToSend } = formData;
 
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000"}/user`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(dataToSend),
-        },
-      );
-
-      if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.message || "Registration failed");
-      }
+      await authService.register(dataToSend);
 
       // Successful registration
       router.push("/login?registered=true");

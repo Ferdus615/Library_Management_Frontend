@@ -3,7 +3,8 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
+import { authService } from "../../services/auth.service";
 
 interface NavItem {
   label: string;
@@ -112,26 +113,6 @@ const navItems: NavItem[] = [
       </svg>
     ),
   },
-  {
-    label: "System Activity",
-    href: "/admin/activity",
-    icon: (
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        className="h-5 w-5"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-        strokeWidth={2}
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-        />
-      </svg>
-    ),
-  },
 ];
 
 interface SidebarProps {
@@ -141,11 +122,9 @@ interface SidebarProps {
 
 export default function AdminSidebar({ isOpen, onClose }: SidebarProps) {
   const pathname = usePathname();
-  const router = useRouter();
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    router.push("/login");
+    authService.logout();
   };
 
   return (
@@ -160,12 +139,12 @@ export default function AdminSidebar({ isOpen, onClose }: SidebarProps) {
 
       {/* Sidebar with Glassmorphism - Unified with Member Sidebar */}
       <aside
-        className={`fixed top-0 left-0 z-50 h-full w-64 glass border-r border-white/5 
+        className={`fixed top-0 left-0 z-50 h-full w-64 glass border-r border-white/5 flex flex-col
           transform transition-all duration-500 cubic-bezier(0.4, 0, 0.2, 1) lg:translate-x-0 lg:static lg:z-auto
           ${isOpen ? "translate-x-0 shadow-2xl shadow-black/50" : "-translate-x-full"}`}
       >
         {/* Logo Section */}
-        <div className="flex items-center gap-3 px-6 py-8 border-b border-white/5 relative group">
+        <div className="items-center gap-3 px-6 py-8 border-b border-white/5 relative group">
           <div className="absolute inset-0 bg-gradient-to-r from-(--clr-primary-a0)/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
           <div className="flex flex-col gap-5">
             <div className="relative flex items-center gap-3">
@@ -198,41 +177,44 @@ export default function AdminSidebar({ isOpen, onClose }: SidebarProps) {
           </div>
         </div>
 
-        {/* Navigation */}
-        <nav className="flex flex-col gap-2 p-4 mt-6">
-          {navItems.map((item, index) => {
-            const isActive =
-              pathname === item.href ||
-              (item.href !== "/admin" && pathname.startsWith(item.href));
+        <div className="">
+          {/* Navigation */}
+          <nav className="flex flex-col gap-2 p-4 mt-6">
+            {navItems.map((item, index) => {
+              const isActive =
+                pathname === item.href ||
+                (item.href !== "/admin" && pathname.startsWith(item.href));
 
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={onClose}
-                className={`flex items-center gap-3 px-4 py-3.5 rounded-xl text-sm font-medium transition-all duration-300 group
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={onClose}
+                  className={`flex items-center gap-3 px-4 py-3.5 rounded-xl text-sm font-medium transition-all duration-300 group
                   ${
                     isActive
                       ? "bg-(--clr-primary-a0) text-white shadow-lg shadow-(--clr-primary-a0)/25"
                       : "text-(--clr-surface-a50) hover:bg-white/5 hover:text-white"
                   }`}
-                style={{ animationDelay: `${index * 50}ms` }}
-              >
-                <div
-                  className={`transition-all duration-300 group-hover:scale-110 group-hover:rotate-3 ${isActive ? "text-white" : "text-(--clr-primary-a10)"}`}
+                  style={{ animationDelay: `${index * 50}ms` }}
                 >
-                  {item.icon}
-                </div>
-                <span className="flex-1">{item.label}</span>
-                {isActive && (
-                  <div className="w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.8)]" />
-                )}
-              </Link>
-            );
-          })}
-        </nav>
+                  <div
+                    className={`transition-all duration-300 group-hover:scale-110 group-hover:rotate-3 ${isActive ? "text-white" : "text-(--clr-primary-a10)"}`}
+                  >
+                    {item.icon}
+                  </div>
+                  <span className="flex-1">{item.label}</span>
+                  {isActive && (
+                    <div className="w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.8)]" />
+                  )}
+                </Link>
+              );
+            })}
+          </nav>
 
-        {/* Footer/Logout */}
+          {/* Footer/Logout */}
+        </div>
+
         <div className="mt-auto p-4 mb-4">
           <button
             onClick={handleLogout}

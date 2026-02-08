@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Input } from "../../../components/ui/Input";
 import { Button } from "../../../components/ui/Button";
+import { authService } from "../../../services/auth.service";
 import Image from "next/image";
 
 export default function LoginPage() {
@@ -27,21 +28,7 @@ export default function LoginPage() {
     setIsLoading(true);
 
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000"}/auth/login`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
-        },
-      );
-
-      if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.message || "Login failed");
-      }
+      await authService.login(formData);
 
       // Successful login
       router.push("/dashboard");
