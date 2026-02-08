@@ -58,36 +58,18 @@ export default function AdminTopbar({ onMenuClick }: AdminTopbarProps) {
         </div>
       </div>
 
-      <div className="flex items-center gap-6">
-        {/* Admin Stats Quick Look - Unified colors */}
-        <div className="hidden md:flex items-center gap-6 pr-6 border-r border-white/5">
-          <div className="text-right">
-            <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">
-              Active Loans
-            </p>
-            <p className="text-sm font-semibold text-white">1,284</p>
-          </div>
-          <div className="text-right text-(--clr-primary-a10)">
-            <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">
-              Late Returns
-            </p>
-            <p className="text-sm font-semibold text-white">42</p>
-          </div>
+      <div className="flex items-center gap-3 border-l-2 border-white/5 pl-5">
+        <div className="flex flex-col items-end">
+          <span className="text-sm font-bold text-white tracking-tight">
+            System Admin
+          </span>
+          <span className="text-[10px] text-(--clr-primary-a10) font-mono uppercase">
+            Role: Superuser
+          </span>
         </div>
-
-        <div className="flex items-center gap-3">
-          <div className="flex flex-col items-end">
-            <span className="text-sm font-bold text-white tracking-tight">
-              System Admin
-            </span>
-            <span className="text-[10px] text-(--clr-primary-a10) font-mono uppercase">
-              Role: Superuser
-            </span>
-          </div>
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-(--clr-primary-a0) to-(--clr-primary-a10) p-[1px] shadow-lg shadow-(--clr-primary-a0)/20">
-            <div className="w-full h-full rounded-[11px] bg-(--clr-dark-a0) flex items-center justify-center text-xs font-black text-white">
-              AD
-            </div>
+        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-(--clr-primary-a0) to-(--clr-primary-a10) p-[1px] shadow-lg shadow-(--clr-primary-a0)/20">
+          <div className="w-full h-full rounded-[11px] bg-(--clr-dark-a0) flex items-center justify-center text-xs font-black text-white">
+            AD
           </div>
         </div>
       </div>
