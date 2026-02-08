@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
 
 interface AdminTopbarProps {
   onMenuClick: () => void;
@@ -9,13 +8,11 @@ interface AdminTopbarProps {
 
 export default function AdminTopbar({ onMenuClick }: AdminTopbarProps) {
   return (
-    <header className="sticky top-0 z-30 flex items-center justify-between h-16 px-4 sm:px-6 bg-(--clr-surface-tonal-a0)/80 backdrop-blur-lg border-b border-(--clr-surface-a20)">
-      {/* Left section */}
+    <header className="sticky top-0 z-30 h-18 glass border-b border-white/5 mx-6 mt-4 rounded-2xl flex items-center justify-between px-6 transition-all duration-300">
       <div className="flex items-center gap-4">
-        {/* Mobile menu button */}
         <button
           onClick={onMenuClick}
-          className="lg:hidden p-2 rounded-lg text-(--clr-surface-a50) hover:bg-(--clr-surface-a10) hover:text-(--clr-light-a0) transition-colors"
+          className="lg:hidden p-2.5 rounded-xl text-(--clr-surface-a50) hover:bg-white/5 hover:text-white transition-all duration-200"
           aria-label="Toggle menu"
         >
           <svg
@@ -34,11 +31,11 @@ export default function AdminTopbar({ onMenuClick }: AdminTopbarProps) {
           </svg>
         </button>
 
-        {/* Search */}
-        <div className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-lg bg-(--clr-surface-a10) border border-(--clr-surface-a20)">
+        {/* Premium Search Bar */}
+        <div className="hidden sm:flex items-center flex-1 max-w-md gap-3 px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 group focus-within:border-(--clr-primary-a0)/50 focus-within:bg-white/10 transition-all duration-300">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            className="h-4 w-4 text-(--clr-surface-a50)"
+            className="h-5 w-5 text-zinc-500 group-focus-within:text-(--clr-primary-a0) transition-colors"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -52,47 +49,27 @@ export default function AdminTopbar({ onMenuClick }: AdminTopbarProps) {
           </svg>
           <input
             type="text"
-            placeholder="Search..."
-            className="w-48 bg-transparent text-sm text-(--clr-light-a0) placeholder:text-(--clr-surface-a50)/50 focus:outline-none"
+            placeholder="Search books, authors, or ISBN..."
+            className="w-full bg-transparent text-sm text-white placeholder:text-zinc-500 focus:outline-none"
           />
-          <kbd className="hidden md:inline-flex px-2 py-0.5 text-xs text-(--clr-surface-a50) bg-(--clr-surface-a20) rounded">
-            ⌘K
+          <kbd className="hidden md:inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-mono font-medium text-zinc-500 bg-white/5 border border-white/10 rounded">
+            <span>⌘</span>K
           </kbd>
         </div>
       </div>
 
-      {/* Right section */}
-      <div className="flex items-center gap-3">
-        {/* Notifications */}
-        <button className="relative p-2 rounded-lg text-(--clr-surface-a50) hover:bg-(--clr-surface-a10) hover:text-(--clr-light-a0) transition-colors">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-5 w-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={2}
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
-            />
-          </svg>
-          {/* Notification badge */}
-          <span className="absolute top-1 right-1 w-2 h-2 bg-(--clr-danger-a10) rounded-full"></span>
-        </button>
-
-        {/* User menu */}
-        <div className="flex items-center gap-3 pl-3 border-l border-(--clr-surface-a20)">
-          <div className="hidden sm:block text-right">
-            <p className="text-sm font-medium text-(--clr-light-a0)">
-              Admin User
-            </p>
-            <p className="text-xs text-(--clr-surface-a50)">Administrator</p>
-          </div>
-          <div className="w-9 h-9 rounded-full bg-gradient-to-br from-(--clr-primary-a0) to-(--clr-primary-a20) flex items-center justify-center text-sm font-semibold text-white">
-            A
+      <div className="flex items-center gap-3 border-l-2 border-white/5 pl-5">
+        <div className="flex flex-col items-end">
+          <span className="text-sm font-bold text-white tracking-tight">
+            System Admin
+          </span>
+          <span className="text-[10px] text-(--clr-primary-a10) font-mono uppercase">
+            Role: Superuser
+          </span>
+        </div>
+        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-(--clr-primary-a0) to-(--clr-primary-a10) p-[1px] shadow-lg shadow-(--clr-primary-a0)/20">
+          <div className="w-full h-full rounded-[11px] bg-(--clr-dark-a0) flex items-center justify-center text-xs font-black text-white">
+            AD
           </div>
         </div>
       </div>
