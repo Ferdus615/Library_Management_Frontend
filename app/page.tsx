@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 export default function Home() {
@@ -17,6 +18,42 @@ export default function Home() {
 
       {/* Radial glow effect */}
       <div className="pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(ellipse_at_center, (--clr-primary-a0)_0%,_transparent_70%)] opacity-20" />
+
+      {/* Header with Logo */}
+      <header className="absolute left-0 top-0 z-20 w-full px-6 py-6 sm:px-10 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <Image
+            src="/brand/logo-icon-w.svg"
+            alt="Library Management System"
+            width={35}
+            height={35}
+            priority
+          />
+
+          <span className="text-xl/4 font-extralight text-(--clr-light-a0)">
+            book
+            <br />
+            keeper
+          </span>
+        </div>
+
+        <div className="flex items-center gap-3">
+          <Link
+            href="/login"
+            className="inline-flex items-center justify-center rounded-lg bg-(--clr-primary-a0) px-5 py-2 font-semibold text-(--clr-light-a0) 
+            text-sm shadow-lg shadow-(--clr-primary-a0)/30 transition-all hover:scale-105 hover:bg-(--clr-primary-a10) hover:shadow-xl"
+          >
+            Login
+          </Link>
+          <Link
+            href="/register"
+            className="inline-flex items-center justify-center rounded-lg border border-(--clr-surface-a30) bg-transparent px-5 py-2 font-semibold 
+              text-sm text-(--clr-light-a0) transition-all hover:scale-105 hover:border-(--clr-primary-a10) hover:text-(--clr-primary-a10)"
+          >
+            Register
+          </Link>
+        </div>
+      </header>
 
       <main className="relative z-10 flex w-full max-w-6xl flex-col items-center gap-16 px-6 py-24 text-center">
         {/* Hero Section */}

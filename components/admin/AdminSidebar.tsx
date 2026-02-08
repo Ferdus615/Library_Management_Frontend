@@ -13,7 +13,7 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   {
-    label: "Overview",
+    label: "Dashboard",
     href: "/admin",
     icon: (
       <svg

@@ -23,8 +23,6 @@ const ibmPlexMono = IBM_Plex_Mono({
   display: "swap",
 });
 
-import NavigationShell from "../components/layout/NavigationShell";
-
 export const metadata: Metadata = {
   icons: {
     icon: "/brand/logo-icon-w.svg",
@@ -43,7 +41,7 @@ export default function RootLayout({
       <body
         className={`${ibmPlexSans.variable} ${ibmPlexSerif.variable} ${ibmPlexMono.variable} antialiased`}
       >
-        <NavigationShell>{children}</NavigationShell>
+        {children}
       </body>
     </html>
   );
