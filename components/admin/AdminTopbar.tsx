@@ -1,5 +1,6 @@
 "use client";
 
+import { authService } from "@/services/auth.service";
 import React from "react";
 
 interface AdminTopbarProps {
@@ -7,6 +8,16 @@ interface AdminTopbarProps {
 }
 
 export default function AdminTopbar({ onMenuClick }: AdminTopbarProps) {
+  const user = authService.getUser();
+
+  const userName = user?.first_name + " " + user?.last_name;
+  const userRole = user?.role;
+  const getInitials = () => {
+    const firstName = user?.first_name[0] || "?";
+    const lastName = user?.last_name[0] || "?";
+    return firstName + lastName;
+  };
+
   return (
     <header className="sticky top-0 z-30 h-18 glass border-b border-white/5 mx-6 mt-4 rounded-2xl flex items-center justify-between px-6 transition-all duration-300">
       <div className="flex items-center gap-4">
@@ -61,15 +72,15 @@ export default function AdminTopbar({ onMenuClick }: AdminTopbarProps) {
       <div className="flex items-center gap-3 border-l-2 border-white/5 pl-5">
         <div className="flex flex-col items-end">
           <span className="text-sm font-bold text-white tracking-tight">
-            System Admin
+            {userName}
           </span>
           <span className="text-[10px] text-(--clr-primary-a10) font-mono uppercase">
-            Role: Superuser
+            Role: {userRole}
           </span>
         </div>
         <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-(--clr-primary-a0) to-(--clr-primary-a10) p-[1px] shadow-lg shadow-(--clr-primary-a0)/20">
           <div className="w-full h-full rounded-[11px] bg-(--clr-dark-a0) flex items-center justify-center text-xs font-black text-white">
-            AD
+            {getInitials()}
           </div>
         </div>
       </div>

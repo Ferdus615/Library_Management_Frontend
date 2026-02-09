@@ -4,8 +4,6 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { User } from "@/types/auth";
-import { authService } from "@/services/auth.service";
 
 interface NavItem {
   label: string;
@@ -197,13 +195,13 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
         </nav>
 
         {/* User Status / Quick Actions */}
-        <div className="mt-auto p-4 mb-4">
+        {/* <div className="mt-auto p-4 mb-4">
           <div className="glass-light rounded-2xl p-4 border-white/10 group cursor-pointer hover:border-white/20 transition-all duration-300">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-full bg-gradient-to-br from-(--clr-primary-a0) to-(--clr-primary-a20) border border-white/20" />
               <div className="flex-1 overflow-hidden">
                 <p className="text-sm font-semibold text-white truncate">
-                  Membership Status
+                  Membership State
                 </p>
                 <p className="text-xs text-(--clr-success-a10) font-medium">
                   Active Member
@@ -211,7 +209,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
       </aside>
     </>
   );

@@ -12,6 +12,7 @@ export default function Topbar({ onMenuClick }: TopbarProps) {
 
   useEffect(() => {
     const userData = authService.getUser();
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setUser(userData);
   }, []);
 
@@ -133,7 +134,7 @@ export default function Topbar({ onMenuClick }: TopbarProps) {
           </div>
           <div className="relative">
             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-(--clr-primary-a0) to-(--clr-primary-a20) p-[1px]">
-              <div className="w-full h-full rounded-[11px] bg-(--clr-surface-a0) flex items-center justify-center text-sm font-bold text-white group-hover:bg-transparent transition-colors">
+              <div className="w-full h-full rounded-[11px] bg-(--clr-surface-a10) flex items-center justify-center text-sm font-bold text-white group-hover:bg-transparent transition-colors">
                 {getInitials()}
               </div>
             </div>
