@@ -79,9 +79,10 @@ export default function AdminTopbar({ onMenuClick }: AdminTopbarProps) {
           </span>
         </div>
         <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-(--clr-primary-a0) to-(--clr-primary-a10) p-[1px] shadow-lg shadow-(--clr-primary-a0)/20">
-          <div className="w-full h-full rounded-[11px] bg-(--clr-dark-a0) flex items-center justify-center text-xs font-black text-white">
+          <div className="w-full h-full rounded-[11px] bg-(--clr-surface-a10) flex items-center justify-center text-xs font-black text-white">
             {getInitials()}
           </div>
+          <div className="absolute bottom-3 right-5 w-3.5 h-3.5 bg-(--clr-success-a0) border-2 border-(--clr-surface-a0) rounded-full" />
         </div>
       </div>
     </header>
