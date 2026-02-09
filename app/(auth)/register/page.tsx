@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Input } from "../../../components/ui/Input";
 import { Button } from "../../../components/ui/Button";
+import { authService } from "../../../services/auth.service";
 import Image from "next/image";
 
 export default function RegisterPage() {
@@ -31,22 +32,11 @@ export default function RegisterPage() {
     setError(null);
     setIsLoading(true);
 
-    try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000"}/user`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
-        },
-      );
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { confirm_password, ...dataToSend } = formData;
 
-      if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.message || "Registration failed");
-      }
+    try {
+      await authService.register(dataToSend);
 
       // Successful registration
       router.push("/login?registered=true");
@@ -280,7 +270,7 @@ export default function RegisterPage() {
                 <div className="mt-6 flex justify-center">
                   <Link
                     href="/login"
-                    className="font-medium text-(--clr-primary-a0) hover:text-(--clr-primary-a10) transition-colors duration-200"
+                    className="font-medium text-(--clr-primary-a30) hover:text-(--clr-primary-a40) transition-colors duration-200"
                   >
                     Sign in instead
                   </Link>
