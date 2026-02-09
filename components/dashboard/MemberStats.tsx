@@ -11,7 +11,7 @@ export default function MemberStats({ stats }: MemberStatsProps) {
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
       <StatCard
         title="Active Loans"
-        value={stats?.activeLoans || 0}
+        value={stats?.activeLoans?.toLocaleString() ?? "0"}
         colorClass="bg-(--clr-info-a0)/20 text-(--clr-info-a10)"
         icon={
           <svg
@@ -32,7 +32,7 @@ export default function MemberStats({ stats }: MemberStatsProps) {
       />
       <StatCard
         title="Overdue Loans"
-        value={stats?.overdueLoans || 0}
+        value={stats?.overdueLoans?.toLocaleString() ?? "0"}
         colorClass="bg-(--clr-danger-a0)/20 text-(--clr-danger-a10)"
         icon={
           <svg
@@ -53,7 +53,7 @@ export default function MemberStats({ stats }: MemberStatsProps) {
       />
       <StatCard
         title="Total Reservations"
-        value={stats?.totalReservation || 0}
+        value={stats?.totalReservation?.toLocaleString() ?? "0"}
         colorClass="bg-(--clr-warning-a0)/20 text-(--clr-warning-a10)"
         icon={
           <svg
@@ -74,7 +74,11 @@ export default function MemberStats({ stats }: MemberStatsProps) {
       />
       <StatCard
         title="Total Fine Amount"
-        value={`$${stats?.totalFineAmount.toLocaleString() || "0"}`}
+        value={
+          stats?.totalFineAmount !== undefined
+            ? `$${stats.totalFineAmount.toLocaleString()}`
+            : "$0"
+        }
         colorClass="bg-(--clr-success-a0)/20 text-(--clr-success-a10)"
         icon={
           <svg
