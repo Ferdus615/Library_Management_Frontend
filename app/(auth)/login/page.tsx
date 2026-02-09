@@ -28,10 +28,15 @@ export default function LoginPage() {
     setIsLoading(true);
 
     try {
-      await authService.login(formData);
+      const userData = await authService.login(formData);
 
-      // Successful login
-      router.push("/dashboard");
+      // Successful login - Redirect based on role
+      const userRole = userData?.user?.role;
+      if (userRole === "admin" || userRole === "librarian") {
+        router.push("/admin");
+      } else {
+        router.push("/dashboard");
+      }
     } catch (err: any) {
       setError(err.message || "Something went wrong. Please try again.");
     } finally {

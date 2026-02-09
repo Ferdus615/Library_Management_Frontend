@@ -110,6 +110,7 @@ export default function AdminDashboard() {
             </div>
           )}
         </div>
+        
         <div className="flex items-center gap-3">
           <button className="px-6 py-3 text-sm font-bold rounded-2xl bg-white/5 border border-white/10 text-white hover:bg-white/10 transition-all active:scale-95">
             Logs
