@@ -4,6 +4,7 @@ import {
   ActivityLog,
   PendingRequest,
   OverdueBookDetail,
+  PendingFine,
 } from "../types/admin";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
@@ -44,9 +45,9 @@ export const adminService = {
   },
 
   getOverdue: async (): Promise<OverdueBookDetail[]> => {
-    const loans = await fetchFromApi("/loan");
-    return loans.filter(
-      (l: OverdueBookDetail) => (l as any).status === "OVERDUE",
-    );
+    const overdues = await fetchFromApi("/dashboard/admin/overdue");
+    return overdues;
   },
+
+  getFines: (): Promise<PendingFine[]> => fetchFromApi("/fine"),
 };

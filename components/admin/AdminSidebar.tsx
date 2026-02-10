@@ -54,6 +54,26 @@ const navItems: NavItem[] = [
     ),
   },
   {
+    label: "Fines",
+    href: "/admin/fines",
+    icon: (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        className="h-5 w-5"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        strokeWidth={2}
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+        />
+      </svg>
+    ),
+  },
+  {
     label: "Borrow Requests",
     href: "/admin/borrow-request",
     icon: (
@@ -69,6 +89,26 @@ const navItems: NavItem[] = [
           strokeLinecap="round"
           strokeLinejoin="round"
           d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
+        />
+      </svg>
+    ),
+  },
+  {
+    label: "Reservations",
+    href: "/admin/reservations",
+    icon: (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        className="h-5 w-5"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        strokeWidth={2}
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
         />
       </svg>
     ),
@@ -145,7 +185,7 @@ export default function AdminSidebar({ isOpen, onClose }: SidebarProps) {
       >
         {/* Logo Section */}
         <div className="items-center gap-3 px-6 py-8 border-b border-white/5 relative group">
-          <div className="absolute inset-0 bg-gradient-to-r from-(--clr-primary-a0)/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+          <div className="absolute inset-0 bg-linear-to-r from-(--clr-primary-a0)/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
           <div className="flex flex-col gap-5">
             <div className="relative flex items-center gap-3">
               <div className="p-2 bg-(--clr-primary-a0)/20 rounded-xl">
@@ -215,10 +255,10 @@ export default function AdminSidebar({ isOpen, onClose }: SidebarProps) {
           {/* Footer/Logout */}
         </div>
 
-        <div className="mt-auto p-4 mb-4">
+        <div className="mt-auto p-4 mb-">
           <button
             onClick={handleLogout}
-            className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl border border-white/5 text-(--clr-surface-a50) hover:bg-(--clr-danger-a0)/20 hover:text-(--clr-danger-a10) hover:border-(--clr-danger-a0)/30 transition-all duration-300 group"
+            className="w-full flex items-center justify-center gap-2 py-2 px-3 rounded-xl border border-white/5 text-(--clr-surface-a50) hover:bg-(--clr-danger-a0)/20 hover:text-(--clr-danger-a10) hover:border-(--clr-danger-a0)/30 transition-all duration-300 group"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -234,7 +274,7 @@ export default function AdminSidebar({ isOpen, onClose }: SidebarProps) {
                 d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
               />
             </svg>
-            <span className="font-medium">Sign Out</span>
+            <span className="text-sm font-medium">Sign Out</span>
           </button>
         </div>
       </aside>
