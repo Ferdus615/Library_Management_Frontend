@@ -1,13 +1,28 @@
-"use client";
-
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import { authService } from "../../services/auth.service";
+import { User } from "../../types/auth";
 
 interface TopbarProps {
   onMenuClick: () => void;
 }
 
 export default function Topbar({ onMenuClick }: TopbarProps) {
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    const userData = authService.getUser();
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setUser(userData);
+  }, []);
+
+  const getInitials = () => {
+    if (!user) return "??";
+    const first = user.first_name?.[0] || "";
+    const last = user.last_name?.[0] || "";
+    return (first + last).toUpperCase() || "U";
+  };
+
   return (
     <header className="sticky top-0 z-30 h-18 glass border-b border-white/5 mx-6 mt-4 rounded-2xl flex items-center justify-between px-6 transition-all duration-300">
       {/* Search and Branding (Mobile) */}
@@ -85,7 +100,7 @@ export default function Topbar({ onMenuClick }: TopbarProps) {
           <button
             className="p-2.5 rounded-xl text-zinc-400 hover:bg-white/5 hover:text-white transition-all duration-200"
             title="Logout"
-            onClick={() => (window.location.href = "/login")}
+            onClick={() => authService.logout()}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -110,15 +125,17 @@ export default function Topbar({ onMenuClick }: TopbarProps) {
           className="flex items-center gap-3 p-1 rounded-xl hover:bg-white/5 transition-all duration-200 group"
         >
           <div className="hidden text-right lg:block">
-            <p className="text-sm font-semibold text-white tracking-tight">
-              John Doe
+            <p className="text-sm font-semibold text-white tracking-tight capitalize">
+              {user ? `${user.first_name} ${user.last_name}` : "Loading..."}
             </p>
-            <p className="text-xs text-zinc-500 font-medium">Librarian</p>
+            <p className="text-xs text-zinc-500 font-medium capitalize">
+              {user?.role || "Synchronizing..."}
+            </p>
           </div>
           <div className="relative">
             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-(--clr-primary-a0) to-(--clr-primary-a20) p-[1px]">
-              <div className="w-full h-full rounded-[11px] bg-(--clr-surface-a0) flex items-center justify-center text-sm font-bold text-white group-hover:bg-transparent transition-colors">
-                JD
+              <div className="w-full h-full rounded-[11px] bg-(--clr-surface-a10) flex items-center justify-center text-sm font-bold text-white group-hover:bg-transparent transition-colors">
+                {getInitials()}
               </div>
             </div>
             <div className="absolute -bottom-1 -right-1 w-3.5 h-3.5 bg-(--clr-success-a0) border-2 border-(--clr-surface-a0) rounded-full" />

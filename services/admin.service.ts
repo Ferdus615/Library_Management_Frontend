@@ -10,6 +10,7 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
 
 async function fetchFromApi(endpoint: string) {
   const token = localStorage.getItem("token");
+  console.log(`Fetching from: ${API_URL}${endpoint}`);
   const response = await fetch(`${API_URL}${endpoint}`, {
     headers: {
       Authorization: `Bearer ${token}`,
