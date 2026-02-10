@@ -50,26 +50,6 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-12">
-      {/* Welcome Header */}
-      {/* <div className="animate-in fade-in slide-in-from-left-8 duration-1000">
-        <div className="flex items-center gap-3 mb-4">
-          <div className="h-1.5 w-8 bg-(--clr-primary-a0) rounded-full" />
-          <span className="text-[10px] font-black text-(--clr-primary-a10) uppercase tracking-widest">
-            Reader Dashboard
-          </span>
-        </div>
-        <h1 className="text-4xl md:text-6xl font-black text-white tracking-tight leading-tight">
-          Welcome back, <br />
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-white/40">
-            Explorer.
-          </span>
-        </h1>
-        <p className="text-sm md:text-base text-zinc-500 font-medium mt-4 max-w-xl leading-relaxed">
-          Your personal portal to the world&apos;s most expansive digital
-          collection. Discover, borrow, and manage your library journey.
-        </p>
-      </div> */}
-
       {/* Stats Grid */}
       <div className="animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-200">
         <MemberStats stats={stats} />
