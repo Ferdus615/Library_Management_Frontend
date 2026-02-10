@@ -1,20 +1,33 @@
 "use client";
 
 import React from "react";
+import { Button } from "@/components/ui/Button";
+import Link from "next/link";
 
 export default function AdminBooksPage() {
   return (
     <div className="space-y-6">
-      <div className="flex flex-col gap-2">
-        <h1 className="text-3xl font-black text-white tracking-tight">
-          Book Management
-        </h1>
-        <p className="text-sm text-zinc-500 font-medium">
-          Add, edit, and organize the library catalog.
-        </p>
+      <div className="flex items-center justify-between">
+        <div className="flex flex-col gap-2">
+          <h1 className="text-3xl font-black text-white tracking-tight">
+            Book Management
+          </h1>
+          <p className="text-sm text-zinc-500 font-medium">
+            Add, edit, and organize the library catalog.
+          </p>
+        </div>
+
+        <div className="flex justify-end">
+          <Link href="/admin/books/add">
+            <Button className="rounded-2xl px-6 flex items-center gap-2">
+              <span className="text-lg">+</span>
+              Add Book
+            </Button>
+          </Link>
+        </div>
       </div>
 
-      <div className="glass-light rounded-[2rem] border-white/5 p-12 text-center">
+      <div className="glass-light rounded-4xl border-white/5 p-12 text-center">
         <div className="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center mx-auto mb-6 text-(--clr-primary-a10)">
           <svg
             xmlns="http://www.w3.org/2000/svg"
