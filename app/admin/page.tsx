@@ -2,40 +2,30 @@
 
 import React, { useState, useEffect } from "react";
 import { adminService } from "../../services/admin.service";
-import {
-  AdminDashboardData,
-  ActivityLog,
-  PendingRequest,
-  OverdueBookDetail,
-} from "../../types/admin";
+import { AdminDashboardData, OverdueBookDetail } from "../../types/admin";
 import DashboardStats from "../../components/admin/DashboardStats";
-import RecentActivity from "../../components/admin/RecentActivity";
-import PendingRequests from "../../components/admin/PendingRequests";
 import OverdueBooks from "../../components/admin/OverdueBooks";
+import { authService } from "@/services/auth.service";
 
 export default function AdminDashboard() {
   const [stats, setStats] = useState<AdminDashboardData | null>(null);
-  const [activities, setActivities] = useState<ActivityLog[]>([]);
-  const [requests, setRequests] = useState<PendingRequest[]>([]);
   const [overdueBooks, setOverdueBooks] = useState<OverdueBookDetail[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const user = authService.getUser();
+  const userName = user?.first_name + " " + user?.last_name;
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         setIsLoading(true);
-        const [statsData, activityData, requestsData, overdueData] =
-          await Promise.all([
-            adminService.getStats(),
-            adminService.getActivity(),
-            adminService.getRequests(),
-            adminService.getOverdue(),
-          ]);
+        const [statsData, overdueData] = await Promise.all([
+          adminService.getStats(),
+          adminService.getOverdue(),
+        ]);
 
         setStats(statsData);
-        setActivities(activityData);
-        setRequests(requestsData);
         setOverdueBooks(overdueData);
       } catch (err: any) {
         console.error("Dashboard fetch error:", err);
@@ -109,8 +99,18 @@ export default function AdminDashboard() {
               </div>
             </div>
           )}
+
+          {!error && (
+            <div className="animate-in fade-in slide-in-from-top-4 duration-500">
+              <div className="relative z-10 flex gap-1">
+                <p className="text-sm font-light">Hello, </p>
+                <h4 className="text-sm font-bold text-white">{userName}.</h4>
+              </div>
+              <p className="text-sm font-extralight">Welcome to book keeper!</p>
+            </div>
+          )}
         </div>
-        
+
         <div className="flex items-center gap-3">
           <button className="px-6 py-3 text-sm font-bold rounded-2xl bg-white/5 border border-white/10 text-white hover:bg-white/10 transition-all active:scale-95">
             Logs
@@ -124,14 +124,6 @@ export default function AdminDashboard() {
       {/* Stats Grid */}
       <div className="animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-100">
         <DashboardStats stats={stats} />
-      </div>
-
-      {/* Secondary Features Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-6 gap-8 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-300">
-        {/* Pending Borrow Requests */}
-        <div className="lg:col-span-4 lg:row-span-2">
-          <PendingRequests requests={requests} />
-        </div>
       </div>
 
       {/* Overdue Books Table */}

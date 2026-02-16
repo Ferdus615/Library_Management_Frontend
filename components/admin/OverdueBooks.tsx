@@ -22,15 +22,18 @@ export default function OverdueBooks({ overdueBooks }: OverdueBooksProps) {
           Send Reminders
         </button>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
+      {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2"> */}
+      <div className="flex flex-col gap-2">
         {overdueBooks.length > 0 ? (
           overdueBooks.map((item, index) => (
             <OverdueBookRow
               key={index}
               book={item.book.title}
               user={`${item.user.first_name} ${item.user.last_name}`}
+              issueDate={new Date(item.issue_date).toLocaleDateString()}
               dueDate={new Date(item.due_date).toLocaleDateString()}
               daysOverdue={Math.floor(
+                // eslint-disable-next-line react-hooks/purity
                 (Date.now() - new Date(item.due_date).getTime()) /
                   (1000 * 60 * 60 * 24),
               )}
