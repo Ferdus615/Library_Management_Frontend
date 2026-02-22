@@ -19,6 +19,7 @@ export default function FinesPage() {
         setIsLoading(false);
       }
     };
+    console.log(fines);
     fetchFines();
   }, []);
 
@@ -90,7 +91,7 @@ export default function FinesPage() {
                     </td>
                     <td className="px-6 py-4">
                       <p className="text-sm font-medium text-white">
-                        {fine.loan.book.title}
+                        {fine.book_title}
                       </p>
                       <p className="text-[10px] text-zinc-500 font-mono italic">
                         Due: {new Date(fine.loan.due_date).toLocaleDateString()}
