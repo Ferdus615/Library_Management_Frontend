@@ -219,7 +219,7 @@ export default function AdminSidebar({ isOpen, onClose }: SidebarProps) {
 
         <div className="">
           {/* Navigation */}
-          <nav className="flex flex-col gap-2 p-4 mt-6">
+          <nav className="flex flex-col gap-2 p-4 mt-4">
             {navItems.map((item, index) => {
               const isActive =
                 pathname === item.href ||
@@ -230,7 +230,7 @@ export default function AdminSidebar({ isOpen, onClose }: SidebarProps) {
                   key={item.href}
                   href={item.href}
                   onClick={onClose}
-                  className={`flex items-center gap-3 px-4 py-3.5 rounded-xl text-sm font-medium transition-all duration-300 group
+                  className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-300 group
                   ${
                     isActive
                       ? "bg-(--clr-primary-a0) text-white shadow-lg shadow-(--clr-primary-a0)/25"
@@ -255,7 +255,7 @@ export default function AdminSidebar({ isOpen, onClose }: SidebarProps) {
           {/* Footer/Logout */}
         </div>
 
-        <div className="mt-auto p-4 mb-">
+        <div className="mt-auto p-4 mb-5">
           <button
             onClick={handleLogout}
             className="w-full flex items-center justify-center gap-2 py-2 px-3 rounded-xl border border-white/5 text-(--clr-surface-a50) hover:bg-(--clr-danger-a0)/20 hover:text-(--clr-danger-a10) hover:border-(--clr-danger-a0)/30 transition-all duration-300 group"
