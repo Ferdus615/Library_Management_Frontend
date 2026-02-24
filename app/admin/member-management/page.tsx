@@ -83,13 +83,40 @@ export default function AdminMemberManagementPage() {
                 </tr>
               ) : (
                 members.map((member) => (
-                  <tr key={member.id}>
-                    <td>{name(member)}</td>
-                    <td>{member.email}</td>
-                    <td>{member.phone}</td>
-                    <td>{member.address}</td>
-                    <td>{member.role}</td>
-                    <td>{member.is_active}</td>
+                  <tr
+                    key={member.id}
+                    className="border-b border-white/5 hover:bg-white/5 transition-colors group"
+                  >
+                    <td className="px-6 py-4">
+                      <p className="text-sm font-bold text-white group-hover:text-(--clr-primary-a10) transition-colors">
+                        {name(member)}
+                      </p>
+                    </td>
+                    <td className="px-6 py-4">
+                      <p className="text-sm font-light text-white">
+                        {member.email}
+                      </p>
+                    </td>
+                    <td className="px-6 py-4">
+                      <p className="text-sm font-light text-white">
+                        {member.phone ? member.phone : "---"}
+                      </p>
+                    </td>
+                    <td className="px-6 py-4">
+                      <p className="text-sm font-light text-white">
+                        {member.address ? member.address : "---"}
+                      </p>
+                    </td>
+                    <td className="px-6 py-4">
+                      <p className="text-sm font-light text-white">
+                        {member.role}
+                      </p>
+                    </td>
+                    <td className="px-6 py-4">
+                      <p className="text-sm font-light text-white">
+                        {member.is_active ? "Active" : "Blocked"}
+                      </p>
+                    </td>
                   </tr>
                 ))
               )}
