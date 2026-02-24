@@ -84,3 +84,24 @@ export interface MemberDetails {
   role: string;
   is_active: boolean;
 }
+
+export interface BorrowedBooks {
+  id: string;
+  user: {
+    id: string;
+    first_name: string;
+    last_name: string;
+    email: string;
+    phone: string;
+  };
+  book: {
+    id: string;
+    title: string;
+    author: string;
+    isbn: string;
+  };
+  issue_date: string;
+  due_date: string;
+  return_date: string | null;
+  status: string;
+}

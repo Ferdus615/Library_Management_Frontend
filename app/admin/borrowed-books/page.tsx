@@ -1,8 +1,10 @@
 "use client";
 
 import React from "react";
+import AdminActionButton from "@/components/admin/AdminActionButton";
 
 export default function AdminBorrowedBooksPage() {
+  const [borrowedBooks, setBorrowedBooks] = useState([]);
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-2">
