@@ -17,7 +17,15 @@ export default function AdminBooksPage() {
           </p>
         </div>
 
-        <div className="flex justify-end">
+        <div className="flex justify-end gap-3">
+          <Link href="/admin/category-management">
+            <Button
+              variant="outline"
+              className="rounded-2xl px-6 border-white/5 hover:bg-white/5 text-zinc-400"
+            >
+              Manage Categories
+            </Button>
+          </Link>
           <Link href="/admin/books/add">
             <Button className="rounded-2xl px-6 flex items-center gap-2">
               <span className="text-lg">+</span>
