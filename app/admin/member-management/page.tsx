@@ -3,6 +3,7 @@
 import { adminService } from "@/services/admin.service";
 import { MemberDetails } from "@/types/admin";
 import React, { useEffect, useState } from "react";
+import AdminActionButton from "@/components/admin/AdminActionButton";
 
 export default function AdminMemberManagementPage() {
   const [members, setMembers] = useState<MemberDetails[]>([]);
@@ -57,8 +58,11 @@ export default function AdminMemberManagementPage() {
                 <th className="px-6 py-4 text-xs font-bold text-zinc-400 uppercase tracking-widest">
                   Role
                 </th>
-                <th className="px-6 py-4 text-xs font-bold text-zinc-400 uppercase tracking-widest text-center">
+                <th className="px-6 py-4 text-xs font-bold text-zinc-400 uppercase tracking-widest">
                   Active Status
+                </th>
+                <th className="px-6 py-4 text-xs font-bold text-zinc-400 uppercase tracking-widest text-center">
+                  Action
                 </th>
               </tr>
             </thead>
@@ -116,6 +120,13 @@ export default function AdminMemberManagementPage() {
                       <p className="text-sm font-light text-white">
                         {member.is_active ? "Active" : "Blocked"}
                       </p>
+                    </td>
+                    <td className="px-6 py-4">
+                      <AdminActionButton
+                        onClick={() => console.log("Edit", member.id)}
+                      >
+                        Edit
+                      </AdminActionButton>
                     </td>
                   </tr>
                 ))

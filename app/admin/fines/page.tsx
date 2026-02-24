@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { adminService } from "@/services/admin.service";
 import { PendingFine } from "@/types/admin";
+import AdminActionButton from "@/components/admin/AdminActionButton";
 
 export default function FinesPage() {
   const [fines, setFines] = useState<PendingFine[]>([]);
@@ -114,9 +115,11 @@ export default function FinesPage() {
                     </td>
                     <td className="px-6 py-4 text-right">
                       {!fine.paid && (
-                        <button className="px-4 py-2 bg-(--clr-primary-a0)/10 hover:bg-(--clr-primary-a0) text-(--clr-primary-a10) hover:text-white rounded-xl text-xs font-bold transition-all active:scale-95 border border-(--clr-primary-a0)/20 hover:cursor-pointer">
+                        <AdminActionButton
+                          onClick={() => console.log("Mark Paid", fine.id)}
+                        >
                           Mark Paid
-                        </button>
+                        </AdminActionButton>
                       )}
                     </td>
                   </tr>
