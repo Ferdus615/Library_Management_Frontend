@@ -19,7 +19,6 @@ export default function FinesPage() {
         setIsLoading(false);
       }
     };
-    console.log(fines);
     fetchFines();
   }, []);
 

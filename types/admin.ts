@@ -68,7 +68,19 @@ export interface PendingFine {
       title: string;
     };
   };
+  book_title: string;
   total_amount: number;
   paid: boolean;
   paid_at: string | null;
+}
+
+export interface MemberDetails {
+  id: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone: string;
+  address: string;
+  role: string;
+  is_active: boolean;
 }
