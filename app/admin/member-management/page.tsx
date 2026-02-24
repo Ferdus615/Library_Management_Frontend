@@ -8,6 +8,10 @@ export default function AdminMemberManagementPage() {
   const [members, setMembers] = useState<MemberDetails[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
+  const name = (member: MemberDetails) => {
+    return `${member.first_name} ${member.last_name}`;
+  };
+
   useEffect(() => {
     const fetchMembers = async () => {
       try {
@@ -33,8 +37,65 @@ export default function AdminMemberManagementPage() {
         </p>
       </div>
 
-      <div className="glass-light rounded-3xl border-white/5 p-12 text-center">
-        <div className="overflow-x-auto"></div>
+      <div className="glass-light rounded-3xl border-white/5 overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border-collapse">
+            <thead>
+              <tr className="border-b border-white/5 bg-white/5">
+                <th className="px-6 py-4 text-xs font-bold text-zinc-400 uppercase tracking-widest">
+                  Name
+                </th>
+                <th className="px-6 py-4 text-xs font-bold text-zinc-400 uppercase tracking-widest">
+                  Email
+                </th>
+                <th className="px-6 py-4 text-xs font-bold text-zinc-400 uppercase tracking-widest">
+                  Phone
+                </th>
+                <th className="px-6 py-4 text-xs font-bold text-zinc-400 uppercase tracking-widest">
+                  Address
+                </th>
+                <th className="px-6 py-4 text-xs font-bold text-zinc-400 uppercase tracking-widest">
+                  Role
+                </th>
+                <th className="px-6 py-4 text-xs font-bold text-zinc-400 uppercase tracking-widest text-center">
+                  Active Status
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {isLoading ? (
+                <tr>
+                  <td
+                    colSpan={5}
+                    className="px-6 py-12 text-center text-zinc-500"
+                  >
+                    Loading user data...
+                  </td>
+                </tr>
+              ) : members.length === 0 ? (
+                <tr>
+                  <td
+                    colSpan={5}
+                    className="px-6 py-12 text-center text-zinc-500"
+                  >
+                    No member data found.
+                  </td>
+                </tr>
+              ) : (
+                members.map((member) => (
+                  <tr key={member.id}>
+                    <td>{name(member)}</td>
+                    <td>{member.email}</td>
+                    <td>{member.phone}</td>
+                    <td>{member.address}</td>
+                    <td>{member.role}</td>
+                    <td>{member.is_active}</td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

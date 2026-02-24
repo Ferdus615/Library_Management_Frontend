@@ -50,7 +50,7 @@ export default function FinesPage() {
                 <th className="px-6 py-4 text-xs font-bold text-zinc-400 uppercase tracking-widest">
                   Status
                 </th>
-                <th className="px-6 py-4 text-xs font-bold text-zinc-400 uppercase tracking-widest text-right">
+                <th className="px-6 py-4 text-xs font-bold text-zinc-400 uppercase tracking-widest text-center">
                   Action
                 </th>
               </tr>
