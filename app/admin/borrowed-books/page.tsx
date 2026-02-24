@@ -1,10 +1,28 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import AdminActionButton from "@/components/admin/AdminActionButton";
+import { BorrowedBooks } from "@/types/admin";
+import { adminService } from "@/services/admin.service";
 
 export default function AdminBorrowedBooksPage() {
-  const [borrowedBooks, setBorrowedBooks] = useState([]);
+  const [borrowedBooks, setBorrowedBooks] = useState<BorrowedBooks[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchBorrows = async () => {
+      try {
+        const data = await adminService.getBorrowedBooks();
+        setBorrowedBooks(data);
+      } catch (error) {
+        console.error("Faild to fetch borrows", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchBorrows();
+  }, []);
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-2">
