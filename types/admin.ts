@@ -24,14 +24,6 @@ export interface MemberDashboardData {
 }
 
 // Keeping these as they might be used in other specific components or if the API expands
-export interface ActivityLog {
-  type: "borrow" | "return" | "register" | "overdue";
-  user: string;
-  target: string;
-  time: string;
-  action: string;
-}
-
 export interface PendingRequest {
   id: string;
   user: {
@@ -48,7 +40,6 @@ export interface PendingRequest {
 }
 
 export interface OverdueBookDetail {
-  issue_date: string | number | Date;
   id: string;
   user: {
     first_name: string;
@@ -57,6 +48,7 @@ export interface OverdueBookDetail {
   book: {
     title: string;
   };
+  issue_date: string;
   due_date: string;
 }
 
