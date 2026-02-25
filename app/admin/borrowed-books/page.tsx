@@ -13,10 +13,11 @@ import {
   ArrowRightLeft,
   RotateCcw,
 } from "lucide-react";
-import AdminActionButton from "@/components/admin/AdminActionButton";
+import AdminActionButton from "@/components/ui/ActionButton";
 import { BorrowedBooks } from "@/types/admin";
 import { adminService } from "@/services/admin.service";
 import { toast } from "sonner"; // Assuming sonner is available for notifications
+import Image from "next/image";
 
 export default function AdminBorrowedBooksPage() {
   const [borrowedBooks, setBorrowedBooks] = useState<BorrowedBooks[]>([]);
@@ -219,9 +220,11 @@ export default function AdminBorrowedBooksPage() {
                       <div className="flex items-center gap-4">
                         <div className="w-12 h-16 rounded-lg bg-zinc-800 overflow-hidden shrink-0 border border-white/10 group-hover:border-(--clr-primary-a0)/50 transition-all duration-300">
                           {item.book.cover_image ? (
-                            <img
+                            <Image
                               src={item.book.cover_image}
                               alt={item.book.title}
+                              width={100}
+                              height={100}
                               className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                             />
                           ) : (
@@ -231,7 +234,10 @@ export default function AdminBorrowedBooksPage() {
                           )}
                         </div>
                         <div className="min-w-0 max-w-[200px]">
-                          <p className="text-sm font-black text-white truncate group-hover:text-(--clr-primary-a10) transition-colors">
+                          <p
+                            title={item.book.title}
+                            className="text-sm font-black text-white truncate group-hover:text-(--clr-primary-a10) transition-colors"
+                          >
                             {item.book.title}
                           </p>
                           <p className="text-[10px] text-zinc-500 font-medium truncate mt-0.5">

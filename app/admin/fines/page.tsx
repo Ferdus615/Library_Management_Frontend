@@ -3,8 +3,9 @@
 import React, { useState, useEffect } from "react";
 import { adminService } from "@/services/admin.service";
 import { PendingFine } from "@/types/admin";
-import AdminActionButton from "@/components/admin/AdminActionButton";
+import AdminActionButton from "@/components/ui/ActionButton";
 import { toast } from "sonner";
+import { AlertCircle, ArrowRightLeft } from "lucide-react";
 
 export default function FinesPage() {
   const [fines, setFines] = useState<PendingFine[]>([]);
@@ -25,6 +26,11 @@ export default function FinesPage() {
     fetchFines();
   }, []);
 
+  const stats = {
+    active: fines.filter((fine) => fine.paid === false).length,
+    paid: fines.filter((fine) => fine.paid === true).length,
+  };
+
   const handlePayFine = async (fineID: string) => {
     try {
       await adminService.payFine(fineID);
@@ -39,12 +45,59 @@ export default function FinesPage() {
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-2">
-        <h1 className="text-3xl font-black text-white tracking-tight">
-          Fine Management
+        <h1 className="text-4xl font-black text-white tracking-tight">
+          Fine <span className="text-(--clr-primary-a10)">Management</span>
         </h1>
         <p className="text-sm text-zinc-500 font-medium">
           Track and process member late return penalties.
         </p>
+      </div>
+
+      {/* stat card */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {[
+          {
+            label: "Active fine",
+            value: stats.active,
+            icon: ArrowRightLeft,
+            color: "text-(--clr-primary-a10)",
+            bg: "bg-(--clr-primary-a10)/10",
+          },
+          {
+            label: "Paid fine",
+            value: stats.paid,
+            icon: AlertCircle,
+            color: "text-(--clr-danger-a10)",
+            bg: "bg-(--clr-danger-a10)/10",
+          },
+        ].map(
+          (stat, i) =>
+            stat && (
+              <div
+                key={i}
+                className="glass group relative overflow-hidden p-6 rounded-3xl border border-white/5 transition-all hover:border-white/10"
+              >
+                <div
+                  className={`absolute -right-4 -bottom-4 opacity-5 group-hover:opacity-10 transition-opacity`}
+                >
+                  <stat.icon size={120} />
+                </div>
+                <div className="flex items-center gap-4">
+                  <div className={`p-3 rounded-2xl ${stat.bg}`}>
+                    <stat.icon className={`w-6 h-6 ${stat.color}`} />
+                  </div>
+                  <div>
+                    <p className="text-xs font-bold text-zinc-500 uppercase tracking-widest">
+                      {stat.label}
+                    </p>
+                    <p className="text-3xl font-black text-white mt-0.5">
+                      {stat.value}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ),
+        )}
       </div>
 
       <div className="glass rounded-3xl border-white/5 overflow-hidden">

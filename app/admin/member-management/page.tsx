@@ -3,7 +3,7 @@
 import { adminService } from "@/services/admin.service";
 import { MemberDetails } from "@/types/admin";
 import React, { useEffect, useState } from "react";
-import AdminActionButton from "@/components/admin/AdminActionButton";
+import AdminActionButton from "@/components/ui/ActionButton";
 
 export default function AdminMemberManagementPage() {
   const [members, setMembers] = useState<MemberDetails[]>([]);
@@ -30,8 +30,8 @@ export default function AdminMemberManagementPage() {
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-2">
-        <h1 className="text-3xl font-black text-white tracking-tight">
-          Member Management
+        <h1 className="text-4xl font-black text-white tracking-tight">
+          Member <span className="text-(--clr-primary-a10)">Management</span>
         </h1>
         <p className="text-sm text-zinc-500 font-medium">
           Oversee user accounts, memberships, and status.
