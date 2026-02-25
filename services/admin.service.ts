@@ -32,12 +32,6 @@ export const adminService = {
 
   getMembers: (): Promise<MemberDetails[]> => fetchFromApi("/user"),
 
-  // These mapping since backend doesn't have specific dashboard sub-endpoints yet
-  getActivity: async (): Promise<ActivityLog[]> => {
-    // For now, returning empty or fetching from loans as a placeholder
-    return [];
-  },
-
   getRequests: async (): Promise<PendingRequest[]> => {
     const reservations = await fetchFromApi("/reservation");
     return reservations.filter((r: PendingRequest) => r.status === "PENDING");
@@ -85,6 +79,23 @@ export const adminService = {
     if (!response.ok) {
       const error = await response.json();
       throw new Error(error.message || "Failed to update loan status");
+    }
+  },
+
+  payFine: async (fineId: string): Promise<void> => {
+    const token = localStorage.getItem("token");
+    const response = await fetch(`${API_URL}/fine/pay/${fineId}`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ paid: true, paid_at: new Date() }),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || "Failed to pay fine");
     }
   },
 };

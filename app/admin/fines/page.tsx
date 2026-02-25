@@ -4,24 +4,37 @@ import React, { useState, useEffect } from "react";
 import { adminService } from "@/services/admin.service";
 import { PendingFine } from "@/types/admin";
 import AdminActionButton from "@/components/admin/AdminActionButton";
+import { toast } from "sonner";
 
 export default function FinesPage() {
   const [fines, setFines] = useState<PendingFine[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
+  const fetchFines = async () => {
+    try {
+      const data = await adminService.getFines();
+      setFines(data);
+    } catch (error) {
+      console.error("Failed to fetch fines:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchFines = async () => {
-      try {
-        const data = await adminService.getFines();
-        setFines(data);
-      } catch (error) {
-        console.error("Failed to fetch fines:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
     fetchFines();
   }, []);
+
+  const handlePayFine = async (fineID: string) => {
+    try {
+      await adminService.payFine(fineID);
+      toast.success("Fine paid successfully!");
+      fetchFines(); // Refresh the list
+    } catch (error) {
+      toast.error("Failed to pay fine");
+      console.error(error);
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -98,7 +111,7 @@ export default function FinesPage() {
                       </p>
                     </td>
                     <td className="px-6 py-4">
-                      <p className="text-sm font-black text-(--clr-danger-a10)">
+                      <p className="text-sm font-black text-(--clr-info-a20)">
                         ${fine.total_amount.toFixed(2)}
                       </p>
                     </td>
@@ -106,7 +119,7 @@ export default function FinesPage() {
                       <span
                         className={`px-2 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider ${
                           fine.paid
-                            ? "bg-(--clr-primary-a0)/20 text-(--clr-primary-a10)"
+                            ? "bg-(--clr-success-a0)/20 text-(--clr-success-a10)"
                             : "bg-(--clr-danger-a0)/20 text-(--clr-danger-a10)"
                         }`}
                       >
@@ -116,7 +129,7 @@ export default function FinesPage() {
                     <td className="px-6 py-4 text-right">
                       {!fine.paid && (
                         <AdminActionButton
-                          onClick={() => console.log("Mark Paid", fine.id)}
+                          onClick={() => handlePayFine(fine.id)}
                         >
                           Mark Paid
                         </AdminActionButton>
