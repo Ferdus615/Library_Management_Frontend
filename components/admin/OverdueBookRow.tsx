@@ -17,7 +17,7 @@ export default function OverdueBookRow({
 }: OverdueBookProps) {
   return (
     <div className="flex items-center gap-4 py-3 px-4 rounded-lg hover:bg-(--clr-surface-a10) transition-colors">
-      <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-(--clr-danger-a0)/20 text-(--clr-danger-a10) shrink-0">
+      <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-(--clr-danger-a0)/20 text-(--clr-danger-a10) shrink-0 ">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           className="h-5 w-5"

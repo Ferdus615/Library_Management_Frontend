@@ -74,15 +74,18 @@ export default function LoginPage() {
         {/* Branding Section (Left Side Content) */}
         <div className="hidden lg:flex lg:w-1/2 flex-col items-center justify-center p-12">
           <div className="flex flex-col items-center gap-8 text-center">
-            <div className="flex items-center gap-4">
-              <Image
-                src="/brand/logo-icon-w.svg"
-                alt="Library Management System"
-                width={80}
-                height={80}
-                priority
-              />
-              <span className="text-4xl leading-none font-extralight text-(--clr-light-a0) text-left">
+            <div className="relative flex items-center gap-3">
+              <div className="p-2 bg-(--clr-primary-a0)/20 rounded-xl">
+                <Image
+                  src="/brand/logo-icon-w.svg"
+                  alt="BookKeeper"
+                  width={60}
+                  height={60}
+                  priority
+                  className="animate-in fade-in duration-1000"
+                />
+              </div>
+              <span className="text-4xl/9 font-light text-white tracking-tight text-left">
                 book
                 <br />
                 keeper
@@ -106,25 +109,31 @@ export default function LoginPage() {
         <div className="w-full lg:w-1/2 flex items-center justify-center p-4 sm:p-8  md:p-12">
           {/* Mobile Header (Visible only on small screens) */}
           <header className="lg:hidden absolute left-0 top-0 z-20 w-full px-6 py-6 flex items-center gap-3">
-            <Image
-              src="/brand/logo-icon.svg"
-              alt="Library Management System"
-              width={30}
-              height={30}
-              className="dark:hidden block"
-            />
-            <Image
-              src="/brand/logo-icon-w.svg"
-              alt="Library Management System"
-              width={30}
-              height={30}
-              className="hidden dark:block"
-            />
-            <span className="text-lg leading-4 font-extralight text-(--clr-dark-a0) dark:text-(--clr-light-a0)">
-              book
-              <br />
-              keeper
-            </span>
+            <div className="relative flex items-center gap-3">
+              <div className="p-2 bg-(--clr-primary-a0)/20 rounded-xl">
+                <Image
+                  src="/brand/logo-icon.svg"
+                  alt="BookKeeper"
+                  width={25}
+                  height={25}
+                  priority
+                  className="animate-in fade-in duration-1000 dark:hidden block"
+                />
+                <Image
+                  src="/brand/logo-icon-w.svg"
+                  alt="BookKeeper"
+                  width={25}
+                  height={25}
+                  priority
+                  className="animate-in fade-in duration-1000 hidden dark:block"
+                />
+              </div>
+              <span className="text-lg/4 font-light text-white tracking-tight text-left">
+                book
+                <br />
+                keeper
+              </span>
+            </div>
           </header>
 
           <div className="max-w-md w-full space-y-5 relative z-10">

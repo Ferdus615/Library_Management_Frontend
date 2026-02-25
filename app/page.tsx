@@ -21,16 +21,18 @@ export default function Home() {
 
       {/* Header with Logo */}
       <header className="absolute left-0 top-0 z-20 w-full px-6 py-6 sm:px-10 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <Image
-            src="/brand/logo-icon-w.svg"
-            alt="Library Management System"
-            width={35}
-            height={35}
-            priority
-          />
-
-          <span className="text-xl/4 font-extralight text-(--clr-light-a0)">
+        <div className="relative flex items-center gap-3">
+          <div className="p-2 bg-(--clr-primary-a0)/20 rounded-xl">
+            <Image
+              src="/brand/logo-icon-w.svg"
+              alt="BookKeeper"
+              width={32}
+              height={32}
+              priority
+              className="animate-in fade-in duration-1000"
+            />
+          </div>
+          <span className="text-xl/4 font-extralight text-white tracking-tight">
             book
             <br />
             keeper
@@ -71,14 +73,14 @@ export default function Home() {
           {/* CTA Buttons */}
           <div className="mt-4 flex flex-col gap-4 sm:flex-row">
             <Link
-              href="/dashboard"
+              href="/login"
               className="inline-flex items-center justify-center rounded-xl bg-(--clr-primary-a0) px-8 py-3 font-semibold text-white shadow-lg 
               shadow-(--clr-primary-a0)/30 transition-all hover:scale-105 hover:bg-(--clr-primary-a10) hover:shadow-xl"
             >
               Get Started
             </Link>
             <Link
-              href="#demo"
+              href="/dashboard"
               className="inline-flex items-center justify-center rounded-xl border border-(--clr-surface-a30) bg-transparent px-8 py-3 font-semibold 
               text-(--clr-light-a0) transition-all hover:scale-105 hover:border-(--clr-primary-a10) hover:text-(--clr-primary-a10)"
             >
