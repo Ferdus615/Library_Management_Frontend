@@ -1,6 +1,5 @@
 import {
   AdminDashboardData,
-  ActivityLog,
   PendingRequest,
   OverdueBookDetail,
   PendingFine,
@@ -54,4 +53,38 @@ export const adminService = {
   },
 
   getFines: (): Promise<PendingFine[]> => fetchFromApi("/fine"),
+
+  returnBook: async (loanId: string): Promise<void> => {
+    const token = localStorage.getItem("token");
+    const response = await fetch(`${API_URL}/loan/${loanId}`, {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ return_date: new Date() }),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || "Failed to return book");
+    }
+  },
+
+  updateLoanStatus: async (loanId: string, status: string): Promise<void> => {
+    const token = localStorage.getItem("token");
+    const response = await fetch(`${API_URL}/loan/${loanId}`, {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ status }),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || "Failed to update loan status");
+    }
+  },
 };

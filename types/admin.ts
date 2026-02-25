@@ -99,6 +99,7 @@ export interface BorrowedBooks {
     title: string;
     author: string;
     isbn: string;
+    cover_image: string | null;
   };
   issue_date: string;
   due_date: string;
