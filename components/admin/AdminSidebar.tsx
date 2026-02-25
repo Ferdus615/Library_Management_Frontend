@@ -191,7 +191,7 @@ export default function AdminSidebar({ isOpen, onClose }: SidebarProps) {
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-(--clr-primary-a10) opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-(--clr-primary-a0)"></span>
               </span>
-              <span className="text-[10px] font-bold text-(--clr-primary-a10) uppercase tracking-wider text-white">
+              <span className="text-[10px] font-bold text-(--clr-primary-a10) uppercase tracking-wider">
                 Live System
               </span>
             </div>
