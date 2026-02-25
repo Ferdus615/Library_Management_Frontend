@@ -85,6 +85,31 @@ export interface MemberDetails {
   is_active: boolean;
 }
 
+export interface Book {
+  id: string;
+  title: string;
+  author: string;
+  isbn: string;
+  publication_year: string;
+  total_copies: number;
+  available_copies: number;
+  damaged_copies: number;
+  cover_image: string | null;
+  category: {
+    id: string | null;
+    name: string | null;
+  } | null;
+}
+
+export interface Category {
+  id: string;
+  name: string;
+  description: string;
+  _count?: {
+    books: number;
+  };
+}
+
 export interface BorrowedBooks {
   id: string;
   user: {

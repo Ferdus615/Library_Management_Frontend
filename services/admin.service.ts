@@ -5,6 +5,8 @@ import {
   PendingFine,
   MemberDetails,
   BorrowedBooks,
+  Book,
+  Category,
 } from "../types/admin";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
@@ -34,7 +36,7 @@ export const adminService = {
 
   getRequests: async (): Promise<PendingRequest[]> => {
     const reservations = await fetchFromApi("/reservation");
-    return reservations.filter((r: PendingRequest) => r.status === "PENDING");
+    return reservations;
   },
 
   getOverdue: async (): Promise<OverdueBookDetail[]> => {
@@ -96,6 +98,58 @@ export const adminService = {
     if (!response.ok) {
       const error = await response.json();
       throw new Error(error.message || "Failed to pay fine");
+    }
+  },
+
+  cancelReservation: async (reservationId: string): Promise<void> => {
+    const token = localStorage.getItem("token");
+    const response = await fetch(`${API_URL}/reservation/${reservationId}`, {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || "Failed to cancel reservation");
+    }
+  },
+
+  getBooks: async (): Promise<Book[]> => fetchFromApi("/book"),
+
+  getCategories: async (): Promise<Category[]> => fetchFromApi("/category"),
+
+  deleteBook: async (id: string): Promise<void> => {
+    const token = localStorage.getItem("token");
+    const response = await fetch(`${API_URL}/book/${id}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || "Failed to delete book");
+    }
+  },
+
+  deleteCategory: async (id: string): Promise<void> => {
+    const token = localStorage.getItem("token");
+    const response = await fetch(`${API_URL}/category/${id}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || "Failed to delete category");
     }
   },
 };

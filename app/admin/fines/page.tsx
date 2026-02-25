@@ -5,7 +5,14 @@ import { adminService } from "@/services/admin.service";
 import { PendingFine } from "@/types/admin";
 import AdminActionButton from "@/components/ui/ActionButton";
 import { toast } from "sonner";
-import { AlertCircle, ArrowRightLeft } from "lucide-react";
+import {
+  BanknoteX,
+  BanknoteArrowUp,
+  User as UserIcon,
+  BookOpen,
+  DollarSign,
+  Activity,
+} from "lucide-react";
 
 export default function FinesPage() {
   const [fines, setFines] = useState<PendingFine[]>([]);
@@ -59,16 +66,16 @@ export default function FinesPage() {
           {
             label: "Active fine",
             value: stats.active,
-            icon: ArrowRightLeft,
-            color: "text-(--clr-primary-a10)",
-            bg: "bg-(--clr-primary-a10)/10",
+            icon: BanknoteX,
+            color: "text-(--clr-warning-a10)",
+            bg: "bg-(--clr-warning-a10)/10",
           },
           {
             label: "Paid fine",
             value: stats.paid,
-            icon: AlertCircle,
-            color: "text-(--clr-danger-a10)",
-            bg: "bg-(--clr-danger-a10)/10",
+            icon: BanknoteArrowUp,
+            color: "text-(--clr-success-a10)",
+            bg: "bg-(--clr-success-a10)/10",
           },
         ].map(
           (stat, i) =>
@@ -106,16 +113,28 @@ export default function FinesPage() {
             <thead>
               <tr className="border-b border-white/5 bg-white/5">
                 <th className="px-6 py-4 text-xs font-bold text-zinc-400 uppercase tracking-widest">
-                  Member
+                  <div className="flex items-center gap-2">
+                    <UserIcon size={14} />
+                    Member
+                  </div>
                 </th>
                 <th className="px-6 py-4 text-xs font-bold text-zinc-400 uppercase tracking-widest">
-                  Book
+                  <div className="flex items-center gap-2">
+                    <BookOpen size={14} />
+                    Book
+                  </div>
                 </th>
                 <th className="px-6 py-4 text-xs font-bold text-zinc-400 uppercase tracking-widest">
-                  Amount
+                  <div className="flex items-center gap-2">
+                    <DollarSign size={14} />
+                    Amount
+                  </div>
                 </th>
                 <th className="px-6 py-4 text-xs font-bold text-zinc-400 uppercase tracking-widest">
-                  Status
+                  <div className="flex items-center gap-2">
+                    <Activity size={14} />
+                    Status
+                  </div>
                 </th>
                 <th className="px-6 py-4 text-xs font-bold text-zinc-400 uppercase tracking-widest text-center">
                   Action
@@ -179,12 +198,12 @@ export default function FinesPage() {
                         {fine.paid ? "Paid" : "Unpaid"}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-right">
+                    <td className="px-6 py-4 text-right border border-(--clr-primary-a0)/20">
                       {!fine.paid && (
                         <AdminActionButton
                           onClick={() => handlePayFine(fine.id)}
                         >
-                          Mark Paid
+                          Paid
                         </AdminActionButton>
                       )}
                     </td>

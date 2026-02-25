@@ -9,7 +9,6 @@ import {
   Search,
   User,
   AlertCircle,
-  MoreVertical,
   ArrowRightLeft,
   RotateCcw,
 } from "lucide-react";
@@ -162,16 +161,28 @@ export default function AdminBorrowedBooksPage() {
             <thead>
               <tr className="border-b border-white/5 bg-white/5">
                 <th className="px-8 py-5 text-[10px] font-black text-zinc-400 uppercase tracking-[0.2em]">
-                  Item Details
+                  <div className="flex items-center gap-2">
+                    <BookOpen size={14} />
+                    Item Details
+                  </div>
                 </th>
                 <th className="px-8 py-5 text-[10px] font-black text-zinc-400 uppercase tracking-[0.2em]">
-                  Member Info
+                  <div className="flex items-center gap-2">
+                    <User size={14} />
+                    Member Info
+                  </div>
                 </th>
                 <th className="px-8 py-5 text-[10px] font-black text-zinc-400 uppercase tracking-[0.2em]">
-                  Dates
+                  <div className="flex items-center gap-2">
+                    <Calendar size={14} />
+                    Dates
+                  </div>
                 </th>
                 <th className="px-8 py-5 text-[10px] font-black text-zinc-400 uppercase tracking-[0.2em]">
-                  Status
+                  <div className="flex items-center gap-2">
+                    <Clock size={14} />
+                    Status
+                  </div>
                 </th>
                 <th className="px-8 py-5 text-[10px] font-black text-zinc-400 uppercase tracking-[0.2em] text-right">
                   Actions
@@ -304,7 +315,7 @@ export default function AdminBorrowedBooksPage() {
                         {item.status}
                       </span>
                     </td>
-                    <td className="px-8 py-5 text-right">
+                    <td className="px-6 py-4 text-right border border-(--clr-primary-a0)/20">
                       {item.status !== "returned" ? (
                         <div className="flex items-center justify-end gap-2">
                           <AdminActionButton
@@ -319,7 +330,7 @@ export default function AdminBorrowedBooksPage() {
                         </div>
                       ) : (
                         <div className="text-[10px] text-zinc-600 font-bold uppercase tracking-widest italic pr-4">
-                          Finalized
+                          Received
                         </div>
                       )}
                     </td>
