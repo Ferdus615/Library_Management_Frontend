@@ -1,8 +1,32 @@
 "use client";
 
-import React from "react";
+import { adminService } from "@/services/admin.service";
+import { MemberDetails } from "@/types/admin";
+import React, { useEffect, useState } from "react";
+import AdminActionButton from "@/components/admin/AdminActionButton";
 
 export default function AdminMemberManagementPage() {
+  const [members, setMembers] = useState<MemberDetails[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const name = (member: MemberDetails) => {
+    return `${member.first_name} ${member.last_name}`;
+  };
+
+  useEffect(() => {
+    const fetchMembers = async () => {
+      try {
+        const data = await adminService.getMembers();
+        setMembers(data);
+      } catch (error) {
+        console.error("Faild to fetch fines:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchMembers();
+  }, []);
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-2">
@@ -10,33 +34,106 @@ export default function AdminMemberManagementPage() {
           Member Management
         </h1>
         <p className="text-sm text-zinc-500 font-medium">
-          Oversee user accounts, memberships, and fine balances.
+          Oversee user accounts, memberships, and status.
         </p>
       </div>
 
-      <div className="glass-light rounded-[2rem] border-white/5 p-12 text-center">
-        <div className="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center mx-auto mb-6 text-(--clr-primary-a10)">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-8 w-8"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
-            />
-          </svg>
+      <div className="glass-light rounded-3xl border-white/5 overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border-collapse">
+            <thead>
+              <tr className="border-b border-white/5 bg-white/5">
+                <th className="px-6 py-4 text-xs font-bold text-zinc-400 uppercase tracking-widest">
+                  Name
+                </th>
+                <th className="px-6 py-4 text-xs font-bold text-zinc-400 uppercase tracking-widest">
+                  Email
+                </th>
+                <th className="px-6 py-4 text-xs font-bold text-zinc-400 uppercase tracking-widest">
+                  Phone
+                </th>
+                <th className="px-6 py-4 text-xs font-bold text-zinc-400 uppercase tracking-widest">
+                  Address
+                </th>
+                <th className="px-6 py-4 text-xs font-bold text-zinc-400 uppercase tracking-widest">
+                  Role
+                </th>
+                <th className="px-6 py-4 text-xs font-bold text-zinc-400 uppercase tracking-widest">
+                  Active Status
+                </th>
+                <th className="px-6 py-4 text-xs font-bold text-zinc-400 uppercase tracking-widest text-center">
+                  Action
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {isLoading ? (
+                <tr>
+                  <td
+                    colSpan={5}
+                    className="px-6 py-12 text-center text-zinc-500"
+                  >
+                    Loading user data...
+                  </td>
+                </tr>
+              ) : members.length === 0 ? (
+                <tr>
+                  <td
+                    colSpan={5}
+                    className="px-6 py-12 text-center text-zinc-500"
+                  >
+                    No member data found.
+                  </td>
+                </tr>
+              ) : (
+                members.map((member) => (
+                  <tr
+                    key={member.id}
+                    className="border-b border-white/5 hover:bg-white/5 transition-colors group"
+                  >
+                    <td className="px-6 py-4">
+                      <p className="text-sm font-bold text-white group-hover:text-(--clr-primary-a10) transition-colors">
+                        {name(member)}
+                      </p>
+                    </td>
+                    <td className="px-6 py-4">
+                      <p className="text-sm font-light text-white">
+                        {member.email}
+                      </p>
+                    </td>
+                    <td className="px-6 py-4">
+                      <p className="text-sm font-light text-white">
+                        {member.phone ? member.phone : "---"}
+                      </p>
+                    </td>
+                    <td className="px-6 py-4">
+                      <p className="text-sm font-light text-white">
+                        {member.address ? member.address : "---"}
+                      </p>
+                    </td>
+                    <td className="px-6 py-4">
+                      <p className="text-sm font-light text-white">
+                        {member.role}
+                      </p>
+                    </td>
+                    <td className="px-6 py-4">
+                      <p className="text-sm font-light text-white">
+                        {member.is_active ? "Active" : "Blocked"}
+                      </p>
+                    </td>
+                    <td className="px-6 py-4">
+                      <AdminActionButton
+                        onClick={() => console.log("Edit", member.id)}
+                      >
+                        Edit
+                      </AdminActionButton>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
         </div>
-        <h3 className="text-xl font-bold text-zinc-400">
-          Member Directory Initializing
-        </h3>
-        <p className="text-sm text-zinc-600 max-w-xs mx-auto mt-2">
-          Loading member dossiers and historical activity records.
-        </p>
       </div>
     </div>
   );

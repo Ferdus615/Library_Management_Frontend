@@ -1,10 +1,11 @@
 import {
   AdminDashboardData,
-  MemberDashboardData,
   ActivityLog,
   PendingRequest,
   OverdueBookDetail,
   PendingFine,
+  MemberDetails,
+  BorrowedBooks,
 } from "../types/admin";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
@@ -30,8 +31,7 @@ async function fetchFromApi(endpoint: string) {
 export const adminService = {
   getStats: (): Promise<AdminDashboardData> => fetchFromApi("/dashboard/admin"),
 
-  getMemberStats: (): Promise<MemberDashboardData> =>
-    fetchFromApi("/dashboard/member"),
+  getMembers: (): Promise<MemberDetails[]> => fetchFromApi("/user"),
 
   // These mapping since backend doesn't have specific dashboard sub-endpoints yet
   getActivity: async (): Promise<ActivityLog[]> => {
@@ -47,6 +47,10 @@ export const adminService = {
   getOverdue: async (): Promise<OverdueBookDetail[]> => {
     const overdues = await fetchFromApi("/dashboard/admin/overdue");
     return overdues;
+  },
+
+  getBorrowedBooks: async (): Promise<BorrowedBooks[]> => {
+    return await fetchFromApi("/loan");
   },
 
   getFines: (): Promise<PendingFine[]> => fetchFromApi("/fine"),

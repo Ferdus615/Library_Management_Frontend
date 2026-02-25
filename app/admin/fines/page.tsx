@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { adminService } from "@/services/admin.service";
 import { PendingFine } from "@/types/admin";
+import AdminActionButton from "@/components/admin/AdminActionButton";
 
 export default function FinesPage() {
   const [fines, setFines] = useState<PendingFine[]>([]);
@@ -50,7 +51,7 @@ export default function FinesPage() {
                 <th className="px-6 py-4 text-xs font-bold text-zinc-400 uppercase tracking-widest">
                   Status
                 </th>
-                <th className="px-6 py-4 text-xs font-bold text-zinc-400 uppercase tracking-widest text-right">
+                <th className="px-6 py-4 text-xs font-bold text-zinc-400 uppercase tracking-widest text-center">
                   Action
                 </th>
               </tr>
@@ -90,7 +91,7 @@ export default function FinesPage() {
                     </td>
                     <td className="px-6 py-4">
                       <p className="text-sm font-medium text-white">
-                        {fine.loan.book.title}
+                        {fine.book_title}
                       </p>
                       <p className="text-[10px] text-zinc-500 font-mono italic">
                         Due: {new Date(fine.loan.due_date).toLocaleDateString()}
@@ -114,9 +115,11 @@ export default function FinesPage() {
                     </td>
                     <td className="px-6 py-4 text-right">
                       {!fine.paid && (
-                        <button className="px-4 py-2 bg-(--clr-primary-a0)/10 hover:bg-(--clr-primary-a0) text-(--clr-primary-a10) hover:text-white rounded-xl text-xs font-bold transition-all active:scale-95 border border-(--clr-primary-a0)/20">
+                        <AdminActionButton
+                          onClick={() => console.log("Mark Paid", fine.id)}
+                        >
                           Mark Paid
-                        </button>
+                        </AdminActionButton>
                       )}
                     </td>
                   </tr>

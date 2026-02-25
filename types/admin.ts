@@ -24,14 +24,6 @@ export interface MemberDashboardData {
 }
 
 // Keeping these as they might be used in other specific components or if the API expands
-export interface ActivityLog {
-  type: "borrow" | "return" | "register" | "overdue";
-  user: string;
-  target: string;
-  time: string;
-  action: string;
-}
-
 export interface PendingRequest {
   id: string;
   user: {
@@ -48,7 +40,6 @@ export interface PendingRequest {
 }
 
 export interface OverdueBookDetail {
-  issue_date: string | number | Date;
   id: string;
   user: {
     first_name: string;
@@ -57,6 +48,7 @@ export interface OverdueBookDetail {
   book: {
     title: string;
   };
+  issue_date: string;
   due_date: string;
 }
 
@@ -76,7 +68,40 @@ export interface PendingFine {
       title: string;
     };
   };
+  book_title: string;
   total_amount: number;
   paid: boolean;
   paid_at: string | null;
+}
+
+export interface MemberDetails {
+  id: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone: string;
+  address: string;
+  role: string;
+  is_active: boolean;
+}
+
+export interface BorrowedBooks {
+  id: string;
+  user: {
+    id: string;
+    first_name: string;
+    last_name: string;
+    email: string;
+    phone: string;
+  };
+  book: {
+    id: string;
+    title: string;
+    author: string;
+    isbn: string;
+  };
+  issue_date: string;
+  due_date: string;
+  return_date: string | null;
+  status: string;
 }

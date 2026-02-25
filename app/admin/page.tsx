@@ -6,6 +6,8 @@ import { AdminDashboardData, OverdueBookDetail } from "../../types/admin";
 import DashboardStats from "../../components/admin/DashboardStats";
 import OverdueBooks from "../../components/admin/OverdueBooks";
 import { authService } from "@/services/auth.service";
+import { Button } from "@/components/ui/Button";
+import Link from "next/link";
 
 export default function AdminDashboard() {
   const [stats, setStats] = useState<AdminDashboardData | null>(null);
@@ -102,22 +104,27 @@ export default function AdminDashboard() {
 
           {!error && (
             <div className="animate-in fade-in slide-in-from-top-4 duration-500">
-              <div className="relative z-10 flex gap-1">
-                <p className="text-sm font-light">Hello, </p>
-                <h4 className="text-sm font-bold text-white">{userName}.</h4>
+              <div className="relative z-10 flex gap-1 items-center">
+                <p className="text-lg font-light">Hello, </p>
+                <h4 className="text-lg font-bold text-white">{userName}.</h4>
               </div>
-              <p className="text-sm font-extralight">Welcome to book keeper!</p>
+              <p className="text-md font-extralight">Welcome to book keeper!</p>
             </div>
           )}
         </div>
 
         <div className="flex items-center gap-3">
-          <button className="px-6 py-3 text-sm font-bold rounded-2xl bg-white/5 border border-white/10 text-white hover:bg-white/10 transition-all active:scale-95">
+          <Button variant="outline" className="px-6 rounded-2xl font-bold">
             Logs
-          </button>
-          <button className="px-6 py-3 text-sm font-bold rounded-2xl bg-(--clr-primary-a0) text-white shadow-2xl shadow-(--clr-primary-a0)/40 hover:bg-(--clr-primary-a10) transition-all active:scale-95 group flex items-center gap-2">
-            <span>+</span> Catalog Action
-          </button>
+          </Button>
+          <Link href="/admin/books/add">
+            <Button
+              variant="primary"
+              className="px-6 rounded-2xl font-bold gap-2"
+            >
+              <span>+</span> Catalog Action
+            </Button>
+          </Link>
         </div>
       </div>
 
