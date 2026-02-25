@@ -152,4 +152,23 @@ export const adminService = {
       throw new Error(error.message || "Failed to delete category");
     }
   },
+
+  addBook: async (bookData: any): Promise<Book> => {
+    const token = localStorage.getItem("token");
+    const response = await fetch(`${API_URL}/book`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(bookData),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || "Failed to add book");
+    }
+
+    return response.json();
+  },
 };

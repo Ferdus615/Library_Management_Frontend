@@ -83,7 +83,7 @@ export default function AdminCategoryManagementPage() {
               className="bg-white/5 border border-white/10 rounded-2xl py-2.5 pl-11 pr-4 text-sm text-white focus:outline-none focus:border-(--clr-primary-a10)/30 focus:ring-4 focus:ring-(--clr-primary-a10)/5 transition-all w-64"
             />
           </div>
-          <AdminActionButton className="h-[42px] px-6">
+          <AdminActionButton className="h-[42px] px-2 flex items-center gap-2">
             <Plus size={18} />
             Add Category
           </AdminActionButton>
