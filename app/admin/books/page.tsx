@@ -18,11 +18,17 @@ import {
 import Link from "next/link";
 import AdminActionButton from "@/components/ui/ActionButton";
 import Image from "next/image";
+import DeleteModal from "@/components/common/deleteModal";
 
 export default function AdminBooksPage() {
   const [books, setBooks] = useState<Book[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [bookToDelete, setBookToDelete] = useState<{
+    id: string;
+    title: string;
+  } | null>(null);
 
   const fetchBooks = async () => {
     setIsLoading(true);
@@ -41,17 +47,25 @@ export default function AdminBooksPage() {
     fetchBooks();
   }, []);
 
-  const handleDeleteBook = async (id: string, title: string) => {
-    if (confirm(`Are you sure you want to delete "${title}"?`)) {
-      try {
-        await adminService.deleteBook(id);
-        toast.success("Book deleted successfully");
-        fetchBooks();
-      } catch (error) {
-        console.error("Failed to delete book:", error);
-        toast.error("Failed to delete book");
-      }
+  const handleDeleteBook = async (id: string) => {
+    try {
+      await adminService.deleteBook(id);
+      toast.success("Book deleted successfully");
+      fetchBooks();
+    } catch (error) {
+      console.error("Failed to delete book:", error);
+      toast.error("Failed to delete book");
     }
+  };
+
+  const openDeleteModal = (id: string, title: string) => {
+    setBookToDelete({ id, title });
+    setIsDeleteModalOpen(true);
+  };
+
+  const closeDeleteModal = () => {
+    setIsDeleteModalOpen(false);
+    setBookToDelete(null);
   };
 
   const filteredBooks = books.filter(
@@ -290,7 +304,7 @@ export default function AdminBooksPage() {
                           </AdminActionButton>
                         </Link>
                         <AdminActionButton
-                          onClick={() => handleDeleteBook(book.id, book.title)}
+                          onClick={() => openDeleteModal(book.id, book.title)}
                           className="bg-red-500/5 hover:bg-red-500 text-red-500 hover:text-white border-red-500/10"
                         >
                           <Trash2 size={14} />
@@ -304,6 +318,18 @@ export default function AdminBooksPage() {
           </table>
         </div>
       </div>
+
+      <DeleteModal
+        isOpen={isDeleteModalOpen}
+        onClose={closeDeleteModal}
+        onConfirm={() => {
+          if (bookToDelete) {
+            handleDeleteBook(bookToDelete.id);
+            closeDeleteModal();
+          }
+        }}
+        itemName={bookToDelete?.title}
+      />
     </div>
   );
 }

@@ -69,7 +69,7 @@ export default function AdminDashboard() {
           {error && (
             <div className="animate-in fade-in slide-in-from-top-4 duration-500">
               <div className="glass border-(--clr-danger-a0)/30 rounded-2xl p-4 bg-(--clr-danger-a0)/10 flex items-center gap-4 group relative overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-r from-(--clr-danger-a0)/10 to-transparent opacity-50" />
+                <div className="absolute inset-0 bg-linear-to-r from-(--clr-danger-a0)/10 to-transparent opacity-50" />
                 <div className="relative z-10 p-2 bg-(--clr-danger-a0)/20 rounded-xl text-(--clr-danger-a10)">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"

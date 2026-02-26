@@ -8,7 +8,7 @@ interface DeleteModalProps {
   onClose: () => void;
   onConfirm: () => void;
   title?: string;
-  description?: string;
+  description?: "Are you sure you want to delete this item? This action cannot be undone.";
   itemName?: string;
 }
 
