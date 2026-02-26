@@ -103,12 +103,35 @@ export default function AdminDashboard() {
           )}
 
           {!error && (
-            <div className="animate-in fade-in slide-in-from-top-4 duration-500">
-              <div className="relative z-10 flex gap-1 items-center">
-                <p className="text-lg font-light">Hello, </p>
-                <h4 className="text-lg font-bold text-white">{userName}.</h4>
+            <div className="animate-in fade-in slide-in-from-top-4 duration-700">
+              <div className="relative flex flex-col gap-1">
+                <div className="flex items-center gap-3">
+                  <div className="h-0.5 w-8 bg-linear-to-r from-(--clr-primary-a0) to-transparent rounded-full" />
+                  <span className="text-[10px] font-black uppercase tracking-[0.3em] text-(--clr-primary-a10)">
+                    System Overview
+                  </span>
+                </div>
+
+                <h2 className="text-4xl font-black text-white tracking-tight">
+                  <span className="text-transparent bg-clip-text bg-linear-to-br from-white via-white to-white/40">
+                    {(() => {
+                      const hour = new Date().getHours();
+                      if (hour < 12) return "Good Morning";
+                      if (hour < 18) return "Good Afternoon";
+                      return "Good Evening";
+                    })()}
+                    ,
+                  </span>
+                  <span className="ml-3 text-(--clr-primary-a0) drop-shadow-[0_0_15px_rgba(79,109,122,0.3)]">
+                    {user?.first_name || "Admin"}
+                  </span>
+                </h2>
+
+                <p className="text-zinc-500 font-medium max-w-md">
+                  Welcome back to the Book Keeper console. Here's what's
+                  happening in your library today.
+                </p>
               </div>
-              <p className="text-md font-extralight">Welcome to book keeper!</p>
             </div>
           )}
         </div>

@@ -6,7 +6,7 @@ import { PendingFine } from "@/types/admin";
 import AdminActionButton from "@/components/ui/ActionButton";
 import { toast } from "sonner";
 import {
-  BanknoteX,
+  BanknoteArrowDown,
   BanknoteArrowUp,
   User as UserIcon,
   BookOpen,
@@ -66,7 +66,7 @@ export default function FinesPage() {
           {
             label: "Active fine",
             value: stats.active,
-            icon: BanknoteX,
+            icon: BanknoteArrowDown,
             color: "text-(--clr-warning-a10)",
             bg: "bg-(--clr-warning-a10)/10",
           },
