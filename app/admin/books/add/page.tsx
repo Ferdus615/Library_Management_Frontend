@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { adminService } from "@/services/admin.service";
-import { Category } from "@/types/admin";
+import { AddBook, Category } from "@/types/admin";
 import { toast } from "sonner";
 import { ArrowLeft, Save, Image as ImageIcon, Plus } from "lucide-react";
 import Link from "next/link";
@@ -17,13 +17,14 @@ export default function AddBookPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [isFetchingCategories, setIsFetchingCategories] = useState(true);
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<AddBook>({
     title: "",
     author: "",
     isbn: "",
-    publication_year: "",
-    total_copies: "",
-    categoryId: "",
+    publication_year: 0,
+    total_copies: 0,
+    category_id: "",
+    cover_image: "",
   });
 
   const [imageFile, setImageFile] = useState<File | null>(null);
@@ -35,7 +36,7 @@ export default function AddBookPage() {
         const data = await adminService.getCategories();
         setCategories(data);
         if (data.length > 0) {
-          setFormData((prev) => ({ ...prev, categoryId: data[0].id }));
+          setFormData((prev) => ({ ...prev, category_id: data[0].id }));
         }
       } catch (error) {
         console.error("Failed to fetch categories:", error);
@@ -54,7 +55,10 @@ export default function AddBookPage() {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: name === "total_copies" ? parseInt(value) || 0 : value,
+      [name]:
+        name === "total_copies" || name === "publication_year"
+          ? parseInt(value) || 0
+          : value,
     }));
   };
 
@@ -79,16 +83,17 @@ export default function AddBookPage() {
     setIsLoading(true);
 
     try {
-      // In a real scenario, we would upload the image here first
-      // and get the URL. For now, we'll simulate or prepare for it.
       const cover_image = "";
 
+      /* 
+      // Temporarily disabled for testing
       if (imageFile) {
-        // Preparation for image upload
-        // const uploadResult = await uploadService.upload(imageFile);
-        // cover_image = uploadResult.url;
-        toast.info("Image upload is prepared. Sending basic data for now.");
+        toast.loading("Uploading image...", { id: "uploading" });
+        const uploadResult = await uploadService.uploadImage(imageFile);
+        cover_image = uploadResult.url;
+        toast.success("Image uploaded successfully", { id: "uploading" });
       }
+      */
 
       await adminService.addBook({ ...formData, cover_image });
       toast.success("Book added successfully!");
@@ -96,7 +101,7 @@ export default function AddBookPage() {
     } catch (error: unknown) {
       const err = error as Error;
       console.error("Failed to add book:", err);
-      toast.error(err.message || "Failed to add book");
+      toast.error(err.message || "Failed to add book", { id: "uploading" });
     } finally {
       setIsLoading(false);
     }
@@ -178,8 +183,8 @@ export default function AddBookPage() {
               </label>
               <select
                 required
-                name="categoryId"
-                value={formData.categoryId}
+                name="category_id"
+                value={formData.category_id}
                 onChange={handleChange}
                 disabled={isFetchingCategories}
                 className="w-full h-10 bg-white/5 border border-white/10 rounded-md px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-(--clr-primary-a0) transition-all appearance-none cursor-pointer"
@@ -211,10 +216,9 @@ export default function AddBookPage() {
             <Input
               label="Total Copies"
               required
-              type="number"
-              min="1"
+              min={1}
               name="total_copies"
-              value={formData.total_copies.toString()}
+              value={formData.total_copies}
               onChange={handleChange}
               className="bg-white/5 border-white/10 rounded-2xl"
             />
