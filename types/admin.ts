@@ -83,6 +83,7 @@ export interface MemberDetails {
   address: string;
   role: string;
   is_active: boolean;
+  created_at: string;
 }
 
 export interface Book {

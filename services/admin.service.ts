@@ -1,3 +1,4 @@
+import { User } from "@/types/auth";
 import {
   AdminDashboardData,
   MemberDashboardData,
@@ -12,6 +13,7 @@ import {
   BookQueryDto,
   Reservation,
 } from "../types/admin";
+import { authService } from "./auth.service";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
 
@@ -39,6 +41,31 @@ export const adminService = {
     fetchFromApi("/dashboard/member"),
 
   getMembers: (): Promise<MemberDetails[]> => fetchFromApi("/user"),
+
+  getMemberById: (id: string): Promise<MemberDetails> =>
+    fetchFromApi(`/user/${id}`),
+
+  updateMember: async (
+    id: string,
+    data: Partial<MemberDetails>,
+  ): Promise<MemberDetails> => {
+    const token = localStorage.getItem("token");
+    const response = await fetch(`${API_URL}/user/${id}`, {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || "Failed to update member");
+    }
+
+    return response.json();
+  },
 
   getRequests: async (): Promise<PendingRequest[]> => {
     const reservations = await fetchFromApi("/reservation");
@@ -109,13 +136,16 @@ export const adminService = {
 
   cancelReservation: async (reservationId: string): Promise<void> => {
     const token = localStorage.getItem("token");
-    const response = await fetch(`${API_URL}/reservation/${reservationId}`, {
-      method: "PATCH",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
+    const response = await fetch(
+      `${API_URL}/reservation/cancel/${reservationId}`,
+      {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
       },
-    });
+    );
 
     if (!response.ok) {
       const error = await response.json();

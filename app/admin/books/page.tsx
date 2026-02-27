@@ -157,6 +157,7 @@ export default function AdminBooksPage() {
 
         <div className="flex items-center gap-3">
           <div className="relative group">
+            {/* Search Bar */}
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500 group-focus-within:text-(--clr-primary-a10) transition-colors" />
             <input
               type="text"
@@ -167,6 +168,7 @@ export default function AdminBooksPage() {
             />
           </div>
 
+          {/* Category Filter */}
           <div className="relative group min-w-[160px]">
             <Filter className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500 group-focus-within:text-(--clr-primary-a10) transition-colors" />
             <select
@@ -188,6 +190,7 @@ export default function AdminBooksPage() {
             </select>
           </div>
 
+          {/* Add Book Button */}
           <Link href="/admin/books/add">
             <AdminActionButton className="h-[42px] px-3 flex items-center gap-2">
               <Plus size={18} />
@@ -392,11 +395,13 @@ export default function AdminBooksPage() {
                         >
                           <History size={14} />
                         </AdminActionButton>
+
                         <Link href={`/admin/books/edit/${book.id}`}>
                           <AdminActionButton className="bg-white/5 hover:bg-white/10 text-zinc-400 border-white/10">
                             <Edit size={14} />
                           </AdminActionButton>
                         </Link>
+
                         <AdminActionButton
                           onClick={() => openDeleteModal(book.id, book.title)}
                           className="bg-red-500/5 hover:bg-red-500 text-red-500 hover:text-white border-red-500/10"
