@@ -21,8 +21,8 @@ export default function AddBookPage() {
     title: "",
     author: "",
     isbn: "",
-    publication_year: new Date().getFullYear().toString(),
-    total_copies: 1,
+    publication_year: "",
+    total_copies: "",
     categoryId: "",
   });
 

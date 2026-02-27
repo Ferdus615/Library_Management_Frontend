@@ -1,7 +1,7 @@
 "use client";
 
 import { authService } from "@/services/auth.service";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Menu, Search, Command, Bell } from "lucide-react";
 
 interface AdminTopbarProps {
@@ -9,6 +9,14 @@ interface AdminTopbarProps {
 }
 
 export default function AdminTopbar({ onMenuClick }: AdminTopbarProps) {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
+
   const user = authService.getUser();
 
   const userName = user?.first_name + " " + user?.last_name;
@@ -57,10 +65,10 @@ export default function AdminTopbar({ onMenuClick }: AdminTopbarProps) {
         <div className="flex items-center gap-3 border-l-2 border-white/5 pl-5">
           <div className="flex flex-col items-end">
             <span className="text-sm font-bold text-white tracking-tight">
-              {userName}
+              {userName ? userName : ""}
             </span>
             <span className="text-[10px] text-(--clr-primary-a10) font-mono uppercase">
-              Role: {userRole}
+              Role: {userRole ? userRole : ""}
             </span>
           </div>
           <div className="w-10 h-10 rounded-xl bg-linear-to-br from-(--clr-primary-a0) to-(--clr-primary-a10) p-px shadow-lg shadow-(--clr-primary-a0)/20">
