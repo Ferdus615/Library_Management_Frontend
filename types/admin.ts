@@ -90,7 +90,7 @@ export interface Book {
   title: string;
   author: string;
   isbn: string;
-  publication_year: string;
+  publication_year: number;
   total_copies: number;
   available_copies: number;
   damaged_copies: number;
@@ -140,4 +140,31 @@ export interface BorrowedBooks {
   due_date: string;
   return_date: string | null;
   status: string;
+}
+export interface BookQueryDto {
+  title?: string;
+  author?: string;
+  isbn?: string;
+  categoryId?: string;
+  page?: number;
+  limit?: number;
+}
+
+export interface Reservation {
+  id: string;
+  status: string;
+  user: {
+    id: string;
+    first_name: string;
+    last_name: string;
+    email: string;
+  };
+  book: {
+    id: string;
+    title: string;
+    cover_image: string | null;
+  };
+  ready_at: string | null;
+  expires_at: string | null;
+  created_at: string;
 }

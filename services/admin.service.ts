@@ -9,6 +9,8 @@ import {
   Book,
   Category,
   AddBook,
+  BookQueryDto,
+  Reservation,
 } from "../types/admin";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
@@ -144,9 +146,27 @@ export const adminService = {
   getMemberLoans: (userId: string): Promise<BorrowedBooks[]> =>
     fetchFromApi(`/user/loans/${userId}`),
 
-  getBooks: async (): Promise<Book[]> => fetchFromApi("/book"),
+  getBooks: async (query?: BookQueryDto): Promise<Book[]> => {
+    let endpoint = "/book";
+    if (query) {
+      const params = new URLSearchParams();
+      if (query.title) params.append("title", query.title);
+      if (query.author) params.append("author", query.author);
+      if (query.isbn) params.append("isbn", query.isbn);
+      if (query.categoryId) params.append("categoryId", query.categoryId);
+      if (query.page) params.append("page", query.page.toString());
+      if (query.limit) params.append("limit", query.limit.toString());
+
+      const queryString = params.toString();
+      if (queryString) endpoint += `?${queryString}`;
+    }
+    return fetchFromApi(endpoint);
+  },
 
   getCategories: async (): Promise<Category[]> => fetchFromApi("/category"),
+
+  getBookReservations: (id: string): Promise<Reservation[]> =>
+    fetchFromApi(`/book/reservations/${id}`),
 
   deleteBook: async (id: string): Promise<void> => {
     const token = localStorage.getItem("token");
