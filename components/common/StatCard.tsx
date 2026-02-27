@@ -50,7 +50,7 @@ export default function StatCard({
           <p className="text-sm font-medium text-(--clr-surface-a50) mb-1 group-hover:text-(--clr-surface-a70) transition-colors">
             {title}
           </p>
-          <p className="text-3xl font-bold text-(--clr-light-a0) tracking-tight">
+          <p className="text-3xl font-bold text-foreground tracking-tight">
             {typeof value === "number" ? value.toLocaleString() : value}
           </p>
         </div>
@@ -58,7 +58,7 @@ export default function StatCard({
 
       {/* Bottom accent bar */}
       <div
-        className={`absolute bottom-0 left-0 h-1 w-0 bg-gradient-to-r from-transparent via-current to-transparent opacity-50 transition-all duration-500 group-hover:w-full ${colorClass.split(" ")[1]}`}
+        className={`absolute bottom-0 left-0 h-1 w-0 bg-linear-to-r from-transparent via-current to-transparent opacity-50 transition-all duration-500 group-hover:w-full ${colorClass.split(" ")[1]}`}
       />
     </div>
   );

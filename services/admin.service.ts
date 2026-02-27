@@ -1,11 +1,12 @@
 import {
   AdminDashboardData,
-  ActivityLog,
   PendingRequest,
   OverdueBookDetail,
   PendingFine,
   MemberDetails,
   BorrowedBooks,
+  Book,
+  Category,
 } from "../types/admin";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
@@ -33,15 +34,9 @@ export const adminService = {
 
   getMembers: (): Promise<MemberDetails[]> => fetchFromApi("/user"),
 
-  // These mapping since backend doesn't have specific dashboard sub-endpoints yet
-  getActivity: async (): Promise<ActivityLog[]> => {
-    // For now, returning empty or fetching from loans as a placeholder
-    return [];
-  },
-
   getRequests: async (): Promise<PendingRequest[]> => {
     const reservations = await fetchFromApi("/reservation");
-    return reservations.filter((r: PendingRequest) => r.status === "PENDING");
+    return reservations;
   },
 
   getOverdue: async (): Promise<OverdueBookDetail[]> => {
@@ -54,4 +49,126 @@ export const adminService = {
   },
 
   getFines: (): Promise<PendingFine[]> => fetchFromApi("/fine"),
+
+  returnBook: async (loanId: string): Promise<void> => {
+    const token = localStorage.getItem("token");
+    const response = await fetch(`${API_URL}/loan/${loanId}`, {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ return_date: new Date() }),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || "Failed to return book");
+    }
+  },
+
+  updateLoanStatus: async (loanId: string, status: string): Promise<void> => {
+    const token = localStorage.getItem("token");
+    const response = await fetch(`${API_URL}/loan/${loanId}`, {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ status }),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || "Failed to update loan status");
+    }
+  },
+
+  payFine: async (fineId: string): Promise<void> => {
+    const token = localStorage.getItem("token");
+    const response = await fetch(`${API_URL}/fine/pay/${fineId}`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ paid: true, paid_at: new Date() }),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || "Failed to pay fine");
+    }
+  },
+
+  cancelReservation: async (reservationId: string): Promise<void> => {
+    const token = localStorage.getItem("token");
+    const response = await fetch(`${API_URL}/reservation/${reservationId}`, {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || "Failed to cancel reservation");
+    }
+  },
+
+  getBooks: async (): Promise<Book[]> => fetchFromApi("/book"),
+
+  getCategories: async (): Promise<Category[]> => fetchFromApi("/category"),
+
+  deleteBook: async (id: string): Promise<void> => {
+    const token = localStorage.getItem("token");
+    const response = await fetch(`${API_URL}/book/${id}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || "Failed to delete book");
+    }
+  },
+
+  deleteCategory: async (id: string): Promise<void> => {
+    const token = localStorage.getItem("token");
+    const response = await fetch(`${API_URL}/category/${id}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || "Failed to delete category");
+    }
+  },
+
+  addBook: async (bookData: any): Promise<Book> => {
+    const token = localStorage.getItem("token");
+    const response = await fetch(`${API_URL}/book`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(bookData),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || "Failed to add book");
+    }
+
+    return response.json();
+  },
 };

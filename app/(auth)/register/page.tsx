@@ -255,7 +255,8 @@ export default function RegisterPage() {
                 <div>
                   <Button
                     type="submit"
-                    className="w-full text-lg font-semibold py-6 bg-(--clr-primary-a0) hover:bg-(--clr-primary-a10) text-white shadow-lg shadow-(--clr-primary-a0)/30"
+                    className="w-full text-lg font-semibold py-6 bg-(--clr-primary-a0) hover:bg-(--clr-primary-a10)
+                     text-white shadow-lg shadow-(--clr-primary-a0)/30"
                     isLoading={isLoading}
                   >
                     Sign up

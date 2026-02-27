@@ -17,8 +17,9 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     },
     ref,
   ) => {
-    const baseStyles =
-      "inline-flex items-center justify-center rounded-md text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-white dark:ring-offset-gray-950 duration-300 active:scale-95 hover:scale-[1.02]";
+    const baseStyles = `inline-flex items-center justify-center rounded-md text-sm font-medium transition-all 
+    focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none 
+    ring-offset-white dark:ring-offset-gray-950 duration-300 active:scale-95 hover:scale-[1.02]`;
 
     const variants = {
       primary:
