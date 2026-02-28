@@ -111,35 +111,37 @@ export default function MemberProfilePage() {
             <h2 className="text-xl font-bold text-white">Account Details</h2>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-            <div className="space-y-3">
-              <p className="text-[10px] text-zinc-600 font-black uppercase tracking-widest flex items-center gap-2">
-                <Mail size={12} className="text-(--clr-primary-a10)" />
-                User mail
-              </p>
-              <p className="text-lg font-bold text-white bg-white/5 px-4 py-3 rounded-2xl border border-white/5 w-fit">
-                {userInfo.email}
-              </p>
-            </div>
+          <div className="flex flex-col gap-8">
+            <div className="flex flex-wrap gap-8">
+              <div className="space-y-3">
+                <p className="text-[10px] text-zinc-600 font-black uppercase tracking-widest flex items-center gap-2">
+                  <Mail size={12} className="text-(--clr-primary-a10)" />
+                  User mail
+                </p>
+                <p className="text-lg font-bold text-white bg-white/5 px-4 py-3 rounded-2xl border border-white/5 w-fit">
+                  {userInfo.email}
+                </p>
+              </div>
 
-            <div className="space-y-3">
-              <p className="text-[10px] text-zinc-600 font-black uppercase tracking-widest flex items-center gap-2">
-                <Phone size={12} className="text-(--clr-primary-a10)" />
-                Contact Number
-              </p>
-              <p className="text-lg font-bold text-white bg-white/5 px-4 py-3 rounded-2xl border border-white/5 w-fit">
-                {userInfo.phone || "Not Provided"}
-              </p>
-            </div>
+              <div className="space-y-3">
+                <p className="text-[10px] text-zinc-600 font-black uppercase tracking-widest flex items-center gap-2">
+                  <Phone size={12} className="text-(--clr-primary-a10)" />
+                  Contact Number
+                </p>
+                <p className="text-lg font-bold text-white bg-white/5 px-4 py-3 rounded-2xl border border-white/5 w-fit">
+                  {userInfo.phone || "Not Provided"}
+                </p>
+              </div>
 
-            <div className="space-y-3">
-              <p className="text-[10px] text-zinc-600 font-black uppercase tracking-widest flex items-center gap-2">
-                <Shield size={12} className="text-(--clr-primary-a10)" />
-                User Role
-              </p>
-              <p className="text-lg font-bold text-white bg-white/5 px-4 py-3 rounded-2xl border border-white/5 w-fit">
-                {roleLabel}
-              </p>
+              <div className="space-y-3">
+                <p className="text-[10px] text-zinc-600 font-black uppercase tracking-widest flex items-center gap-2">
+                  <Shield size={12} className="text-(--clr-primary-a10)" />
+                  User Role
+                </p>
+                <p className="text-lg font-bold text-white bg-white/5 px-4 py-3 rounded-2xl border border-white/5 w-fit">
+                  {roleLabel}
+                </p>
+              </div>
             </div>
 
             <div className="sm:col-span-2 space-y-3">
