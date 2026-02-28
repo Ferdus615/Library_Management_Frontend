@@ -1,3 +1,4 @@
+import { User } from "@/types/auth";
 import {
   AdminDashboardData,
   MemberDashboardData,
@@ -9,7 +10,10 @@ import {
   Book,
   Category,
   AddBook,
+  BookQueryDto,
+  Reservation,
 } from "../types/admin";
+import { authService } from "./auth.service";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
 
@@ -37,6 +41,31 @@ export const adminService = {
     fetchFromApi("/dashboard/member"),
 
   getMembers: (): Promise<MemberDetails[]> => fetchFromApi("/user"),
+
+  getMemberById: (id: string): Promise<MemberDetails> =>
+    fetchFromApi(`/user/${id}`),
+
+  updateMember: async (
+    id: string,
+    data: Partial<MemberDetails>,
+  ): Promise<MemberDetails> => {
+    const token = localStorage.getItem("token");
+    const response = await fetch(`${API_URL}/user/${id}`, {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || "Failed to update member");
+    }
+
+    return response.json();
+  },
 
   getRequests: async (): Promise<PendingRequest[]> => {
     const reservations = await fetchFromApi("/reservation");
@@ -107,13 +136,16 @@ export const adminService = {
 
   cancelReservation: async (reservationId: string): Promise<void> => {
     const token = localStorage.getItem("token");
-    const response = await fetch(`${API_URL}/reservation/${reservationId}`, {
-      method: "PATCH",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
+    const response = await fetch(
+      `${API_URL}/reservation/cancel/${reservationId}`,
+      {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
       },
-    });
+    );
 
     if (!response.ok) {
       const error = await response.json();
@@ -144,9 +176,27 @@ export const adminService = {
   getMemberLoans: (userId: string): Promise<BorrowedBooks[]> =>
     fetchFromApi(`/user/loans/${userId}`),
 
-  getBooks: async (): Promise<Book[]> => fetchFromApi("/book"),
+  getBooks: async (query?: BookQueryDto): Promise<Book[]> => {
+    let endpoint = "/book";
+    if (query) {
+      const params = new URLSearchParams();
+      if (query.title) params.append("title", query.title);
+      if (query.author) params.append("author", query.author);
+      if (query.isbn) params.append("isbn", query.isbn);
+      if (query.categoryId) params.append("categoryId", query.categoryId);
+      if (query.page) params.append("page", query.page.toString());
+      if (query.limit) params.append("limit", query.limit.toString());
+
+      const queryString = params.toString();
+      if (queryString) endpoint += `?${queryString}`;
+    }
+    return fetchFromApi(endpoint);
+  },
 
   getCategories: async (): Promise<Category[]> => fetchFromApi("/category"),
+
+  getBookReservations: (id: string): Promise<Reservation[]> =>
+    fetchFromApi(`/book/reservations/${id}`),
 
   deleteBook: async (id: string): Promise<void> => {
     const token = localStorage.getItem("token");

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import { authService } from "@/services/auth.service";
 import { User } from "@/types/auth";
 import {
@@ -15,15 +15,43 @@ import {
   Settings,
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
+import { adminService } from "@/services/admin.service";
+import { MemberDetails } from "@/types/admin";
+import router from "next/router";
+import { toast } from "sonner";
 
 export default function MemberProfilePage() {
-  const [user] = useState<User | null>(() => authService.getUser());
+  const [userInfo, setUserInfo] = useState<MemberDetails>();
+  const [isLoading, setIsLoading] = useState(true);
+
+  const fetchUser = async () => {
+    try {
+      const user = authService.getUser();
+      if (!user) {
+        router.push("/login");
+        return;
+      }
+
+      const userId = user.id;
+      const userInfo = await adminService.getMemberById(userId);
+      setUserInfo(userInfo);
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to load user data");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchUser();
+  }, []);
 
   const handleLogout = () => {
     authService.logout();
   };
 
-  if (!user) {
+  if (!userInfo) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] gap-6 animate-in fade-in duration-700">
         <div className="w-16 h-16 border-[3px] border-white/5 border-t-(--clr-primary-a0) rounded-full animate-spin shadow-lg shadow-(--clr-primary-a0)/20" />
@@ -31,8 +59,9 @@ export default function MemberProfilePage() {
     );
   }
 
-  const userName = `${user.first_name} ${user.last_name}`;
-  const roleLabel = user.role.charAt(0).toUpperCase() + user.role.slice(1);
+  const userName = `${userInfo.first_name} ${userInfo.last_name}`;
+  const roleLabel =
+    userInfo.role.charAt(0).toUpperCase() + userInfo.role.slice(1);
 
   return (
     <div className="space-y-8 max-w-5xl mx-auto">
@@ -53,12 +82,12 @@ export default function MemberProfilePage() {
                 {userName}
               </h1>
               <span className="px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 text-[10px] font-black uppercase tracking-widest border border-emerald-500/20">
-                {user.is_active ? "Verified Member" : "Inactive"}
+                {userInfo.is_active ? "Verified Member" : "Inactive"}
               </span>
             </div>
             <p className="text-zinc-500 font-medium flex items-center justify-center md:justify-start gap-2">
               <Mail size={14} />
-              {user.email}
+              {userInfo.email}
             </p>
           </div>
 
@@ -101,7 +130,7 @@ export default function MemberProfilePage() {
                 Contact Number
               </p>
               <p className="text-lg font-bold text-white bg-white/5 px-4 py-3 rounded-2xl border border-white/5 w-fit">
-                {user.phone || "Not Provided"}
+                {userInfo.phone || "Not Provided"}
               </p>
             </div>
 
@@ -111,7 +140,7 @@ export default function MemberProfilePage() {
                 Primary Address
               </p>
               <p className="text-lg font-bold text-white bg-white/5 px-6 py-4 rounded-2xl border border-white/5">
-                {user.address ||
+                {userInfo.address ||
                   "No address on file. Please update your records at the front desk."}
               </p>
             </div>
@@ -138,7 +167,7 @@ export default function MemberProfilePage() {
             <p className="text-[10px] text-zinc-600 font-black uppercase tracking-widest">
               Member Since
             </p>
-            <p className="text-sm font-bold text-white mt-1">Winter 2026</p>
+            <p className="text-sm font-bold text-white mt-1">{userInfo.created_at}</p>
           </div>
         </div>
       </div>
