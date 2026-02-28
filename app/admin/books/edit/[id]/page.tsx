@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import { adminService } from "@/services/admin.service";
-import { AddBook, Category } from "@/types/admin";
+import { Category, Book } from "@/types/admin";
 import { toast } from "sonner";
 import { ArrowLeft, Save, Image as ImageIcon, Plus } from "lucide-react";
 import Link from "next/link";
@@ -11,13 +11,16 @@ import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import Image from "next/image";
 
-export default function AddBookPage() {
+export default function EditBookPage() {
   const router = useRouter();
+  const params = useParams();
+  const id = params.id as string;
+
   const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [isFetchingCategories, setIsFetchingCategories] = useState(true);
+  const [isFetchingData, setIsFetchingData] = useState(true);
 
-  const [formData, setFormData] = useState<AddBook>({
+  const [formData, setFormData] = useState({
     title: "",
     author: "",
     isbn: "",
@@ -31,23 +34,38 @@ export default function AddBookPage() {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchCategories = async () => {
+    const fetchData = async () => {
       try {
-        const data = await adminService.getCategories();
-        setCategories(data);
-        if (data.length > 0) {
-          setFormData((prev) => ({ ...prev, category_id: data[0].id }));
+        const [catsData, bookData] = await Promise.all([
+          adminService.getCategories(),
+          adminService.getBookById(id),
+        ]);
+
+        setCategories(catsData);
+        setFormData({
+          title: bookData.title,
+          author: bookData.author,
+          isbn: bookData.isbn,
+          publication_year: parseInt(bookData.publication_year),
+          total_copies: bookData.total_copies,
+          category_id: bookData.category?.id || "",
+          cover_image: bookData.cover_image || "",
+        });
+
+        if (bookData.cover_image) {
+          setImagePreview(bookData.cover_image);
         }
       } catch (error) {
-        console.error("Failed to fetch categories:", error);
-        toast.error("Failed to load categories");
+        console.error("Failed to fetch data:", error);
+        toast.error("Failed to load book data");
+        router.push("/admin/books");
       } finally {
-        setIsFetchingCategories(false);
+        setIsFetchingData(false);
       }
     };
 
-    fetchCategories();
-  }, []);
+    if (id) fetchData();
+  }, [id, router]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
@@ -83,10 +101,10 @@ export default function AddBookPage() {
     setIsLoading(true);
 
     try {
-      const cover_image = "";
+      let cover_image = formData.cover_image;
 
-      /* 
-      // Temporarily disabled for testing
+      // Image upload logic temporarily disabled for testing like in Add Book
+      /*
       if (imageFile) {
         toast.loading("Uploading image...", { id: "uploading" });
         const uploadResult = await uploadService.uploadImage(imageFile);
@@ -95,17 +113,27 @@ export default function AddBookPage() {
       }
       */
 
-      await adminService.addBook({ ...formData, cover_image });
-      toast.success("Book added successfully!");
+      await adminService.updateBook(id, { ...formData, cover_image });
+      toast.success("Book updated successfully!");
       router.push("/admin/books");
-    } catch (error: unknown) {
-      const err = error as Error;
-      console.error("Failed to add book:", err);
-      toast.error(err.message || "Failed to add book", { id: "uploading" });
+    } catch (error: any) {
+      console.error("Failed to update book:", error);
+      toast.error(error.message || "Failed to update book");
     } finally {
       setIsLoading(false);
     }
   };
+
+  if (isFetchingData) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[60vh] gap-6 animate-in fade-in duration-700">
+        <div className="w-16 h-16 border-[3px] border-white/5 border-t-(--clr-primary-a0) rounded-full animate-spin shadow-lg shadow-(--clr-primary-a0)/20" />
+        <p className="text-zinc-500 font-mono text-xs uppercase tracking-widest">
+          Retrieving book details...
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -120,63 +148,46 @@ export default function AddBookPage() {
               <ArrowLeft size={20} />
             </Link>
             <h1 className="text-4xl font-black text-white tracking-tight">
-              Add <span className="text-(--clr-primary-a10)">New Book</span>
+              Edit <span className="text-(--clr-primary-a10)">Book</span>
             </h1>
           </div>
           <p className="text-sm text-zinc-500 font-medium ml-12">
-            Fill in the details to add a new title to the library catalog.
+            Update the information for this catalog entry.
           </p>
         </div>
-
-        <Link href="/admin/category-management">
-          <Button
-            variant="outline"
-            className="h-[42px] px-4 flex items-center gap-2 border-white/10 text-zinc-300"
-          >
-            <Plus size={18} />
-            Manage Categories
-          </Button>
-        </Link>
       </div>
 
       {/* Form Section */}
       <div className="glass rounded-3xl border border-white/5 p-8 max-w-4xl">
         <form onSubmit={handleSubmit} className="space-y-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {/* Title */}
             <Input
               label="Book Title"
               required
               name="title"
               value={formData.title}
               onChange={handleChange}
-              placeholder="e.g. The Great Gatsby"
               className="bg-white/5 border-white/10 rounded-2xl"
             />
 
-            {/* Author */}
             <Input
               label="Author Name"
               required
               name="author"
               value={formData.author}
               onChange={handleChange}
-              placeholder="e.g. F. Scott Fitzgerald"
               className="bg-white/5 border-white/10 rounded-2xl"
             />
 
-            {/* ISBN */}
             <Input
               label="ISBN Number"
               required
               name="isbn"
               value={formData.isbn}
               onChange={handleChange}
-              placeholder="e.g. 978-0743273565"
               className="bg-white/5 border-white/10 rounded-2xl"
             />
 
-            {/* Category */}
             <div className="space-y-2">
               <label className="text-sm font-medium leading-none text-(--clr-surface-a50)">
                 Category
@@ -186,33 +197,25 @@ export default function AddBookPage() {
                 name="category_id"
                 value={formData.category_id}
                 onChange={handleChange}
-                disabled={isFetchingCategories}
                 className="w-full h-10 bg-white/5 border border-white/10 rounded-md px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-(--clr-primary-a0) transition-all appearance-none cursor-pointer"
               >
-                {isFetchingCategories ? (
-                  <option>Loading categories...</option>
-                ) : (
-                  categories.map((cat) => (
-                    <option key={cat.id} value={cat.id} className="bg-zinc-900">
-                      {cat.name}
-                    </option>
-                  ))
-                )}
+                {categories.map((cat) => (
+                  <option key={cat.id} value={cat.id} className="bg-zinc-900">
+                    {cat.name}
+                  </option>
+                ))}
               </select>
             </div>
 
-            {/* Publication Year */}
             <Input
               label="Publication Year"
               required
               name="publication_year"
               value={formData.publication_year}
               onChange={handleChange}
-              placeholder="e.g. 1925"
               className="bg-white/5 border-white/10 rounded-2xl"
             />
 
-            {/* Total Copies */}
             <Input
               label="Total Copies"
               required
@@ -223,7 +226,6 @@ export default function AddBookPage() {
               className="bg-white/5 border-white/10 rounded-2xl"
             />
 
-            {/* Image Upload Selection */}
             <div className="md:col-span-2 space-y-4">
               <div className="space-y-2">
                 <label className="text-sm font-medium leading-none text-(--clr-surface-a50) flex items-center gap-2">
@@ -258,8 +260,7 @@ export default function AddBookPage() {
                   )}
                   <div className="flex-1">
                     <p className="text-xs text-zinc-400 mb-2">
-                      Upload a high-quality cover image for the book. Supports
-                      JPG, PNG (Max 5MB).
+                      Upload a new cover image or keep the current one.
                     </p>
                     <input
                       type="file"
@@ -290,7 +291,7 @@ export default function AddBookPage() {
               className="px-8 py-3 flex items-center gap-2 min-w-[140px] justify-center"
             >
               <Save size={18} />
-              Add Book
+              Save Changes
             </Button>
           </div>
         </form>

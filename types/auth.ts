@@ -5,6 +5,8 @@ export interface User {
   last_name: string;
   role: string;
   is_active: boolean;
+  phone?: string;
+  address?: string;
 }
 
 export interface AuthResponse {

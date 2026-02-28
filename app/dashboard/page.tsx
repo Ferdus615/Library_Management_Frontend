@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { adminService } from "../../services/admin.service";
 import { MemberDashboardData } from "../../types/admin";
+import Link from "next/link";
 import MemberStats from "../../components/dashboard/MemberStats";
 
 export default function Dashboard() {
@@ -84,9 +85,12 @@ export default function Dashboard() {
                   Timeline
                 </h2>
               </div>
-              <button className="text-xs font-bold text-zinc-500 hover:text-white transition-colors uppercase tracking-widest border-b border-white/10 pb-1">
+              <Link
+                href="/dashboard/history"
+                className="text-xs font-bold text-zinc-500 hover:text-white transition-colors uppercase tracking-widest border-b border-white/10 pb-1"
+              >
                 Full History
-              </button>
+              </Link>
             </div>
 
             <div className="flex flex-col items-center justify-center py-16 text-center border-2 border-dashed border-white/5 rounded-[2rem] bg-black/20">
@@ -113,9 +117,12 @@ export default function Dashboard() {
                 Your reading journey hasn&apos;t started yet. Let&apos;s find
                 something worth your time.
               </p>
-              <button className="px-10 py-4 bg-white text-black font-black rounded-2xl hover:scale-105 active:scale-95 transition-all shadow-xl shadow-white/10 hover:shadow-white/20">
+              <Link
+                href="/dashboard/books"
+                className="px-10 py-4 bg-white text-black font-black rounded-2xl hover:scale-105 active:scale-95 transition-all shadow-xl shadow-white/10 hover:shadow-white/20 inline-block"
+              >
                 Browse Archives
-              </button>
+              </Link>
             </div>
           </div>
         </div>

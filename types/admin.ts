@@ -101,6 +101,16 @@ export interface Book {
   } | null;
 }
 
+export interface AddBook {
+  title: string;
+  author: string;
+  isbn: string;
+  publication_year: number;
+  total_copies: number;
+  category_id: string;
+  cover_image: string | null;
+}
+
 export interface Category {
   id: string;
   name: string;

@@ -1,5 +1,6 @@
 import {
   AdminDashboardData,
+  MemberDashboardData,
   PendingRequest,
   OverdueBookDetail,
   PendingFine,
@@ -7,6 +8,7 @@ import {
   BorrowedBooks,
   Book,
   Category,
+  AddBook,
 } from "../types/admin";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
@@ -31,6 +33,8 @@ async function fetchFromApi(endpoint: string) {
 
 export const adminService = {
   getStats: (): Promise<AdminDashboardData> => fetchFromApi("/dashboard/admin"),
+  getMemberStats: (): Promise<MemberDashboardData> =>
+    fetchFromApi("/dashboard/member"),
 
   getMembers: (): Promise<MemberDetails[]> => fetchFromApi("/user"),
 
@@ -117,6 +121,29 @@ export const adminService = {
     }
   },
 
+  reserveBook: async (userId: string, bookId: string): Promise<void> => {
+    const token = localStorage.getItem("token");
+    const response = await fetch(`${API_URL}/reservation`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ user_id: userId, book_id: bookId }),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || "Failed to reserve book");
+    }
+  },
+
+  getMemberReservations: (userId: string): Promise<PendingRequest[]> =>
+    fetchFromApi(`/user/reservations/${userId}`),
+
+  getMemberLoans: (userId: string): Promise<BorrowedBooks[]> =>
+    fetchFromApi(`/user/loans/${userId}`),
+
   getBooks: async (): Promise<Book[]> => fetchFromApi("/book"),
 
   getCategories: async (): Promise<Category[]> => fetchFromApi("/category"),
@@ -153,7 +180,7 @@ export const adminService = {
     }
   },
 
-  addBook: async (bookData: any): Promise<Book> => {
+  addBook: async (bookData: AddBook): Promise<Book> => {
     const token = localStorage.getItem("token");
     const response = await fetch(`${API_URL}/book`, {
       method: "POST",
@@ -171,4 +198,25 @@ export const adminService = {
 
     return response.json();
   },
+
+  updateBook: async (id: string, bookData: Partial<AddBook>): Promise<Book> => {
+    const token = localStorage.getItem("token");
+    const response = await fetch(`${API_URL}/book/${id}`, {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(bookData),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || "Failed to update book");
+    }
+
+    return response.json();
+  },
+
+  getBookById: (id: string): Promise<Book> => fetchFromApi(`/book/${id}`),
 };
