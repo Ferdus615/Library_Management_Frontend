@@ -2,11 +2,11 @@
 
 import React, { ButtonHTMLAttributes } from "react";
 
-interface AdminActionButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+interface ActionButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
 }
 
-const AdminActionButton: React.FC<AdminActionButtonProps> = ({
+const ActionButton: React.FC<ActionButtonProps> = ({
   children,
   className = "",
   ...props
@@ -21,4 +21,4 @@ const AdminActionButton: React.FC<AdminActionButtonProps> = ({
   );
 };
 
-export default AdminActionButton;
+export default ActionButton;
