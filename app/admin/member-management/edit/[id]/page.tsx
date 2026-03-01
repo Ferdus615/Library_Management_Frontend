@@ -241,7 +241,7 @@ export default function EditMemberPage() {
               variant="primary"
               type="submit"
               isLoading={isLoading}
-              className="px-10 py-3 flex items-center gap-2 min-w-[170px] justify-center bg-linear-to-br from-(--clr-primary-a0) to-(--clr-primary-a10) font-black text-sm"
+              className="px-10 py-3 flex items-center gap-2 min-w-[170px] justify-center bg-linear-to-br from-(--clr-success-a0) to-(--clr-success-a10) font-black text-sm"
             >
               <Save size={18} />
               Update Account

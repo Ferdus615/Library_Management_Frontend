@@ -288,7 +288,7 @@ export default function EditBookPage() {
               variant="primary"
               type="submit"
               isLoading={isLoading}
-              className="px-8 py-3 flex items-center gap-2 min-w-[140px] justify-center"
+              className="px-8 py-3 flex items-center gap-2 min-w-[140px] justify-center bg-linear-to-br from-(--clr-success-a0) to-(--clr-success-a10) font-black text-sm"
             >
               <Save size={18} />
               Save Changes
