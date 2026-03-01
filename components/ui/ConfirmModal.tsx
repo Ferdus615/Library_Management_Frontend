@@ -39,7 +39,7 @@ export default function ConfirmModal({
 
   return (
     <div className="fixed inset-0 z-100 flex items-center justify-center bg-black/50 backdrop-blur-xs">
-      <div className="bg-(--clr-info-a0)/30 border border-(--clr-surface-a50)/30 rounded-2xl p-6 w-full max-w-sm shadow-2xl relative animate-in fade-in zoom-in duration-200">
+      <div className="bg-(--clr-info-a0)/20 border border-(--clr-surface-a50)/30 rounded-2xl p-6 w-full max-w-sm shadow-2xl relative animate-in fade-in zoom-in duration-200">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-bold text-(--clr-info-a10)">{title}</h2>
           <button

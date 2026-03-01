@@ -15,11 +15,18 @@ import {
   BookOpen,
 } from "lucide-react";
 import ActionButton from "@/components/ui/ActionButton";
+import DeleteModal from "@/components/ui/deleteModal";
 
 export default function AdminCategoryManagementPage() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
+
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [categoryToDelete, setCategoryToDelete] = useState<{
+    id: string;
+    name: string;
+  } | null>(null);
 
   const fetchCategories = async () => {
     setIsLoading(true);
@@ -37,6 +44,16 @@ export default function AdminCategoryManagementPage() {
   useEffect(() => {
     fetchCategories();
   }, []);
+
+  const openDeleteModal = (id: string, name: string) => {
+    setCategoryToDelete({ id, name });
+    setIsDeleteModalOpen(true);
+  };
+
+  const closeDeleteModal = () => {
+    setIsDeleteModalOpen(false);
+    setCategoryToDelete(null);
+  };
 
   const handleDeleteCategory = async (id: string) => {
     try {
@@ -193,11 +210,8 @@ export default function AdminCategoryManagementPage() {
                           <Edit size={14} />
                         </ActionButton>
                         <ActionButton
-                          onClick={() => handleDeleteCategory(cat.id)}
+                          onClick={() => openDeleteModal(cat.id, cat.name)}
                           className="bg-red-500/5 hover:bg-red-500 text-red-500 hover:text-white border-red-500/10"
-                          confirmTitle="Delete Category"
-                          confirmMessage={`Are you sure you want to delete category "${cat.name}"? This might affect books in this category.`}
-                          confirmText="Delete Category"
                         >
                           <Trash2 size={14} />
                         </ActionButton>
@@ -210,6 +224,18 @@ export default function AdminCategoryManagementPage() {
           </table>
         </div>
       </div>
+
+      <DeleteModal
+        isOpen={isDeleteModalOpen}
+        onClose={closeDeleteModal}
+        onConfirm={() => {
+          if (categoryToDelete) {
+            handleDeleteCategory(categoryToDelete.id);
+            closeDeleteModal();
+          }
+        }}
+        itemName={categoryToDelete?.name}
+      />
     </div>
   );
 }
