@@ -1,4 +1,3 @@
-import { User } from "@/types/auth";
 import {
   AdminDashboardData,
   MemberDashboardData,
@@ -13,7 +12,6 @@ import {
   BookQueryDto,
   Reservation,
 } from "../types/admin";
-import { authService } from "./auth.service";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
 
@@ -175,6 +173,9 @@ export const adminService = {
 
   getMemberLoans: (userId: string): Promise<BorrowedBooks[]> =>
     fetchFromApi(`/user/loans/${userId}`),
+
+  getMemberFines: (userId: string): Promise<PendingFine[]> =>
+    fetchFromApi(`/user/fines/${userId}`),
 
   getBooks: async (query?: BookQueryDto): Promise<Book[]> => {
     let endpoint = "/book";

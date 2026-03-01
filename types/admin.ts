@@ -64,7 +64,9 @@ export interface PendingFine {
     id: string;
     issue_date: string;
     due_date: string;
-    book: {
+    return_date: string | null;
+    status: string;
+    book?: {
       title: string;
     };
   };

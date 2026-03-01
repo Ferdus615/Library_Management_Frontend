@@ -105,12 +105,12 @@ export default function AdminDashboard() {
           {!error && (
             <div className="animate-in fade-in slide-in-from-top-4 duration-700">
               <div className="relative flex flex-col gap-1">
-                <div className="flex items-center gap-3">
+                {/* <div className="flex items-center gap-3">
                   <div className="h-0.5 w-8 bg-linear-to-r from-(--clr-primary-a0) to-transparent rounded-full" />
                   <span className="text-[10px] font-black uppercase tracking-[0.3em] text-(--clr-primary-a10)">
                     System Overview
                   </span>
-                </div>
+                </div> */}
 
                 <h2 className="text-4xl font-black text-white tracking-tight">
                   <span className="text-transparent bg-clip-text bg-linear-to-br from-white via-white to-white/40">
@@ -128,7 +128,7 @@ export default function AdminDashboard() {
                 </h2>
 
                 <p className="text-zinc-500 font-medium max-w-md">
-                  Welcome back to the Book Keeper console. Here's what's
+                  Welcome back to the Book Keeper console. Here&apos;s what&apos;s
                   happening in your library today.
                 </p>
               </div>

@@ -1,10 +1,10 @@
 "use client";
 
-import React, { use, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { authService } from "@/services/auth.service";
-import { User } from "@/types/auth";
 import {
   User as UserIcon,
+  IdCard,
   Mail,
   Shield,
   Activity,
@@ -67,10 +67,10 @@ export default function MemberProfilePage() {
     <div className="space-y-8 max-w-5xl mx-auto">
       {/* Header Profile Section */}
       <div className="glass p-10 rounded-[3rem] border-white/5 relative overflow-hidden group">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-(--clr-primary-a0)/20 to-transparent blur-3xl -translate-y-1/2 translate-x-1/2" />
+        <div className="absolute top-0 right-0 w-96 h-96 to-transparent blur-3xl -translate-y-1/2 translate-x-1/2" />
 
         <div className="relative flex flex-col md:flex-row items-center gap-8">
-          <div className="w-32 h-32 rounded-[2.5rem] bg-gradient-to-br from-(--clr-primary-a0) to-(--clr-primary-a20) p-1 shadow-2xl shadow-(--clr-primary-a0)/30">
+          <div className="w-32 h-32 rounded-[2.5rem] bg-linear-to-br from-(--clr-primary-a0) to-(--clr-primary-a20) p-1 shadow-2xl shadow-(--clr-primary-a0)/30">
             <div className="w-full h-full rounded-[2.3rem] bg-(--clr-surface-a0) flex items-center justify-center border border-white/10">
               <UserIcon size={48} className="text-(--clr-primary-a10)" />
             </div>
@@ -78,16 +78,14 @@ export default function MemberProfilePage() {
 
           <div className="flex-1 text-center md:text-left space-y-2">
             <div className="flex flex-wrap items-center justify-center md:justify-start gap-3">
-              <h1 className="text-4xl font-black text-white tracking-tight">
-                {userName}
-              </h1>
-              <span className="px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 text-[10px] font-black uppercase tracking-widest border border-emerald-500/20">
+              <h1 className="text-4xl font-black tracking-tight">{userName}</h1>
+              <span className="px-3 py-1 rounded-full bg-emerald-500/10 text-(--clr-success-a10) text-[10px] font-black uppercase tracking-widest border border-emerald-500/20">
                 {userInfo.is_active ? "Verified Member" : "Inactive"}
               </span>
             </div>
             <p className="text-zinc-500 font-medium flex items-center justify-center md:justify-start gap-2">
-              <Mail size={14} />
-              {userInfo.email}
+              <IdCard size={14} />
+              {userInfo.id}
             </p>
           </div>
 
@@ -113,25 +111,37 @@ export default function MemberProfilePage() {
             <h2 className="text-xl font-bold text-white">Account Details</h2>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
-            <div className="space-y-3">
-              <p className="text-[10px] text-zinc-600 font-black uppercase tracking-widest flex items-center gap-2">
-                <Shield size={12} className="text-(--clr-primary-a10)" />
-                Security Role
-              </p>
-              <p className="text-lg font-bold text-white bg-white/5 px-4 py-3 rounded-2xl border border-white/5 w-fit">
-                {roleLabel}
-              </p>
-            </div>
+          <div className="flex flex-col gap-8">
+            <div className="flex flex-wrap gap-8">
+              <div className="space-y-3">
+                <p className="text-[10px] text-zinc-600 font-black uppercase tracking-widest flex items-center gap-2">
+                  <Mail size={12} className="text-(--clr-primary-a10)" />
+                  User mail
+                </p>
+                <p className="text-lg font-bold text-white bg-white/5 px-4 py-3 rounded-2xl border border-white/5 w-fit">
+                  {userInfo.email}
+                </p>
+              </div>
 
-            <div className="space-y-3">
-              <p className="text-[10px] text-zinc-600 font-black uppercase tracking-widest flex items-center gap-2">
-                <Phone size={12} className="text-(--clr-primary-a10)" />
-                Contact Number
-              </p>
-              <p className="text-lg font-bold text-white bg-white/5 px-4 py-3 rounded-2xl border border-white/5 w-fit">
-                {userInfo.phone || "Not Provided"}
-              </p>
+              <div className="space-y-3">
+                <p className="text-[10px] text-zinc-600 font-black uppercase tracking-widest flex items-center gap-2">
+                  <Phone size={12} className="text-(--clr-primary-a10)" />
+                  Contact Number
+                </p>
+                <p className="text-lg font-bold text-white bg-white/5 px-4 py-3 rounded-2xl border border-white/5 w-fit">
+                  {userInfo.phone || "Not Provided"}
+                </p>
+              </div>
+
+              <div className="space-y-3">
+                <p className="text-[10px] text-zinc-600 font-black uppercase tracking-widest flex items-center gap-2">
+                  <Shield size={12} className="text-(--clr-primary-a10)" />
+                  User Role
+                </p>
+                <p className="text-lg font-bold text-white bg-white/5 px-4 py-3 rounded-2xl border border-white/5 w-fit">
+                  {roleLabel}
+                </p>
+              </div>
             </div>
 
             <div className="sm:col-span-2 space-y-3">
@@ -149,7 +159,7 @@ export default function MemberProfilePage() {
 
         {/* Membership Badge / Quick Stats */}
         <div className="flex flex-col gap-6">
-          <div className="glass p-8 rounded-[2.5rem] border-white/5 bg-gradient-to-br from-indigo-500/10 to-transparent flex-1 flex flex-col items-center justify-center text-center">
+          <div className="glass p-8 rounded-[2.5rem] border-white/5 bg-linear-to-br from-indigo-500/10 to-transparent flex-1 flex flex-col items-center justify-center text-center">
             <div className="w-16 h-16 rounded-2xl bg-indigo-500/10 flex items-center justify-center text-indigo-400 mb-4">
               <Activity size={32} />
             </div>
@@ -167,7 +177,9 @@ export default function MemberProfilePage() {
             <p className="text-[10px] text-zinc-600 font-black uppercase tracking-widest">
               Member Since
             </p>
-            <p className="text-sm font-bold text-white mt-1">{userInfo.created_at}</p>
+            <p className="text-sm font-bold text-white mt-1">
+              {userInfo.created_at}
+            </p>
           </div>
         </div>
       </div>

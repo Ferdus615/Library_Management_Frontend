@@ -104,10 +104,10 @@ export default function MyBorrowsPage() {
             return (
               <div
                 key={loan.id}
-                className="glass group relative flex flex-col md:flex-row items-center gap-6 p-6 rounded-[2rem] border border-white/5 hover:border-white/10 transition-all duration-300"
+                className="glass group relative flex flex-col md:flex-row items-center gap-6 p-6 rounded-4xl border border-white/5 hover:border-white/10 transition-all duration-300"
               >
                 {/* Book Thumbnail */}
-                <div className="relative w-24 h-32 rounded-xl overflow-hidden bg-white/5 flex-shrink-0 shadow-2xl">
+                <div className="relative w-16 h-24 rounded-xl overflow-hidden bg-white/5 shrink-0 shadow-2xl">
                   {loan.book.cover_image ? (
                     <Image
                       src={loan.book.cover_image}
@@ -139,10 +139,10 @@ export default function MyBorrowsPage() {
                       </span>
                     )}
                   </div>
-                  <h3 className="text-xl font-bold text-white truncate group-hover:text-(--clr-primary-a10) transition-colors">
+                  <h3 className="text-sm font-medium text-white truncate group-hover:text-(--clr-primary-a10) transition-colors">
                     {loan.book.title}
                   </h3>
-                  <p className="text-sm text-zinc-500 font-medium">
+                  <p className="text-xs text-zinc-500 font-medium">
                     {loan.book.author}
                   </p>
                 </div>
