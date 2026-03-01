@@ -125,7 +125,7 @@ export default function ReservationsTable({
                     </span>
                   </td>
 
-                  <td className="px-6 py-4 text-right border-l border-(--clr-info-a10)/10 align-middle">
+                  <td className="px-6 py-4 text-right border-l border-(--clr-surface-a30)/20 align-middle">
                     <div className="flex items-center justify-end gap-2">
                       <ActionButton
                         onClick={() => onReceive(res.id)}

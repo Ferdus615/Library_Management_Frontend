@@ -247,7 +247,7 @@ export default function AdminMemberManagementPage() {
                         {member.is_active ? "Active" : "Blocked"}
                       </span>
                     </td>
-                    <td className="px-6 py-5 text-right font-bold transition-all active:scale-95 cursor-pointer border border-(--clr-primary-a10)/20">
+                    <td className="px-6 py-5 text-right font-bold transition-all active:scale-95 cursor-pointer border border-(--clr-surface-a30)/20">
                       <div className="flex justify-end gap-2">
                         <Link
                           href={`/admin/member-management/edit/${member.id}`}

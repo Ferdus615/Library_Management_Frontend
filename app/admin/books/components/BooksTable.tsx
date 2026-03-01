@@ -110,22 +110,25 @@ export default function BooksTable({
                           </div>
                         )}
                       </div>
+
                       <div>
                         <p className="text-sm font-bold text-white group-hover:text-(--clr-primary-a10) transition-colors">
                           {book.title}
                         </p>
-                        <p className="text-xs text-zinc-500">
-                          by {book.author}
-                        </p>
-                        <p className="text-[10px] text-zinc-600 font-mono mt-0.5">
-                          ISBN: {book.isbn}
-                        </p>
+                        <span className="flex items-center gap-5 mt-1">
+                          <p className="text-xs text-zinc-500">
+                            by {book.author}
+                          </p>
+                          <p className="text-[10px] text-zinc-600 font-mono">
+                            ISBN: {book.isbn}
+                          </p>
+                        </span>
                       </div>
                     </div>
                   </td>
 
                   {/* Category */}
-                  <td className="px-6 py-4">
+                  <td className="px-6 py-4 text-center">
                     <span
                       className={`${book.category ? "px-3 py-1 bg-white/5 text-zinc-400 text-[10px] font-bold rounded-full uppercase tracking-wider" : "text-zinc-600"}`}
                     >
@@ -164,7 +167,7 @@ export default function BooksTable({
                   </td>
 
                   {/* Actions */}
-                  <td className="px-6 py-4 text-right">
+                  <td className="px-6 py-4 text-right border border-(--clr-surface-a30)/20">
                     <div className="flex items-center justify-end gap-2">
                       <ActionButton
                         onClick={() => onViewReservations(book.id, book.title)}

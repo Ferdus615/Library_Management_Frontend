@@ -204,7 +204,7 @@ export default function AdminCategoryManagementPage() {
                         </span>
                       </div>
                     </td>
-                    <td className="px-6 py-4 text-right border border-(--clr-primary-a0)/20">
+                    <td className="px-6 py-4 text-right border border-(--clr-surface-a30)/20">
                       <div className="flex items-center justify-end gap-2">
                         <ActionButton className="bg-white/5 hover:bg-white/10 text-zinc-400 border-white/10">
                           <Edit size={14} />

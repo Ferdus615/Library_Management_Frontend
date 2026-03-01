@@ -315,7 +315,7 @@ export default function AdminBorrowedBooksPage() {
                         {item.status}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-right border border-(--clr-primary-a0)/20">
+                    <td className="px-6 py-4 text-right border border-(--clr-surface-a30)/20">
                       {item.status !== "returned" ? (
                         <div className="flex items-center justify-end gap-2">
                           <ActionButton

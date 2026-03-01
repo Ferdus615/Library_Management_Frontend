@@ -198,7 +198,7 @@ export default function FinesPage() {
                         {fine.paid ? "Paid" : "Unpaid"}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-right border border-(--clr-primary-a0)/20">
+                    <td className="px-6 py-4 text-right border border-(--clr-surface-a30)/20">
                       {!fine.paid && (
                         <ActionButton
                           onClick={() => handlePayFine(fine.id)}
