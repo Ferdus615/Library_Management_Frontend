@@ -70,12 +70,12 @@ export default function AdminBorrowedBooksPage() {
       {/* Header Section */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div className="space-y-2">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-(--clr-primary-a0)/10 border border-(--clr-primary-a0)/20">
+          {/* <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-(--clr-primary-a0)/10 border border-(--clr-primary-a0)/20">
             <BookOpen className="w-3.5 h-3.5 text-(--clr-primary-a10)" />
             <span className="text-[10px] font-bold uppercase tracking-wider text-(--clr-primary-a10)">
               Circulation Management
             </span>
-          </div>
+          </div> */}
           <h1 className="text-4xl font-black text-white tracking-tight">
             Borrowed <span className="text-(--clr-primary-a10)">Books</span>
           </h1>

@@ -79,3 +79,19 @@ export const authService = {
     }
   },
 };
+async function fetchFromApi(endpoint: string) {
+  const token = authService.getToken();
+  const response = await fetch(`${API_URL}${endpoint}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.message || `Failed to fetch from ${endpoint}`);
+  }
+
+  return response.json();
+}

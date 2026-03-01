@@ -15,11 +15,6 @@ export default function AdminLayout({
     <div className="min-h-screen bg-(--clr-surface-a0) selection:bg-(--clr-primary-a0)/30 selection:text-(--clr-light-a0)">
       {/* Dynamic Background - Unified with User Dashboard */}
       <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
-        {/* Animated Radial Gradients */}
-        <div className="absolute -top-[10%] -left-[10%] w-[40%] h-[40%] rounded-full bg-(--clr-primary-a0) opacity-20 blur-[120px]" />
-        <div className="absolute top-[20%] -right-[5%] w-[30%] h-[30%] rounded-full bg-(--clr-info-a0) opacity-10 blur-[100px]" />
-        <div className="absolute -bottom-[10%] left-[20%] w-[35%] h-[35%] rounded-full bg-(--clr-success-a0) opacity-10 blur-[120px]" />
-
         {/* Sophisticated Grid */}
         <div
           className="absolute inset-0 opacity-[0.03]"

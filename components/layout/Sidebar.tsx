@@ -140,7 +140,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
       >
         {/* Logo Section */}
         <div className="flex items-center gap-3 px-6 py-8 border-b border-white/5 relative group">
-          <div className="absolute inset-0 bg-gradient-to-r from-(--clr-primary-a0)/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+          <div className="absolute inset-0 bg-linear-to-r from-(--clr-primary-a0)/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
           <div className="relative flex items-center gap-3">
             <div className="p-2 bg-(--clr-primary-a0)/20 rounded-xl">
               <Image

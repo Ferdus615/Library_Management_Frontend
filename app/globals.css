@@ -9,12 +9,19 @@
   --clr-light-a0: #f3eeee;
 
   /** Theme primary colors */
-  --clr-primary-a0: #4f6d7a; /* Primary color */
+  /* --clr-primary-a0: #4f6d7a; 
   --clr-primary-a10: #627c88;
   --clr-primary-a20: #748b96;
   --clr-primary-a30: #879ba4;
   --clr-primary-a40: #9aabb3;
-  --clr-primary-a50: #aebbc2;
+  --clr-primary-a50: #aebbc2; */
+
+  --clr-primary-a0: #e6903b;
+  --clr-primary-a10: #eb9c51;
+  --clr-primary-a20: #f0a867;
+  --clr-primary-a30: #f4b47c;
+  --clr-primary-a40: #f7c192;
+  --clr-primary-a50: #facda7;
 
   /** Theme surface colors */
   --clr-surface-a0: #121220; /* Surface color */

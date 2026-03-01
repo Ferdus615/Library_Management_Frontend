@@ -17,6 +17,7 @@ import {
   User as UserIcon,
 } from "lucide-react";
 import { toast } from "sonner";
+import Link from "next/link";
 
 export default function AdminMemberManagementPage() {
   const [members, setMembers] = useState<MemberDetails[]>([]);
@@ -246,12 +247,14 @@ export default function AdminMemberManagementPage() {
                         {member.is_active ? "Active" : "Blocked"}
                       </span>
                     </td>
-                    <td className="px-6 py-5 text-right font-bold transition-all active:scale-95 border border-(--clr-primary-a0)/20 hover:cursor-pointer ">
-                      <AdminActionButton
-                        onClick={() => console.log("Edit", member.id)}
-                      >
-                        Edit
-                      </AdminActionButton>
+                    <td className="px-6 py-5 text-right font-bold transition-all active:scale-95 cursor-pointer border border-(--clr-primary-a10)/20">
+                      <div className="flex justify-end gap-2">
+                        <Link
+                          href={`/admin/member-management/edit/${member.id}`}
+                        >
+                          <AdminActionButton>Edit</AdminActionButton>
+                        </Link>
+                      </div>
                     </td>
                   </tr>
                 ))
