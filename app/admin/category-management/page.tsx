@@ -38,20 +38,14 @@ export default function AdminCategoryManagementPage() {
     fetchCategories();
   }, []);
 
-  const handleDeleteCategory = async (id: string, name: string) => {
-    if (
-      confirm(
-        `Are you sure you want to delete category "${name}"? This might affect books in this category.`,
-      )
-    ) {
-      try {
-        await adminService.deleteCategory(id);
-        toast.success("Category deleted successfully");
-        fetchCategories();
-      } catch (error) {
-        console.error("Failed to delete category:", error);
-        toast.error("Failed to delete category");
-      }
+  const handleDeleteCategory = async (id: string) => {
+    try {
+      await adminService.deleteCategory(id);
+      toast.success("Category deleted successfully");
+      fetchCategories();
+    } catch (error) {
+      console.error("Failed to delete category:", error);
+      toast.error("Failed to delete category");
     }
   };
 
@@ -199,8 +193,11 @@ export default function AdminCategoryManagementPage() {
                           <Edit size={14} />
                         </ActionButton>
                         <ActionButton
-                          onClick={() => handleDeleteCategory(cat.id, cat.name)}
+                          onClick={() => handleDeleteCategory(cat.id)}
                           className="bg-red-500/5 hover:bg-red-500 text-red-500 hover:text-white border-red-500/10"
+                          confirmTitle="Delete Category"
+                          confirmMessage={`Are you sure you want to delete category "${cat.name}"? This might affect books in this category.`}
+                          confirmText="Delete Category"
                         >
                           <Trash2 size={14} />
                         </ActionButton>

@@ -200,7 +200,12 @@ export default function FinesPage() {
                     </td>
                     <td className="px-6 py-4 text-right border border-(--clr-primary-a0)/20">
                       {!fine.paid && (
-                        <ActionButton onClick={() => handlePayFine(fine.id)}>
+                        <ActionButton
+                          onClick={() => handlePayFine(fine.id)}
+                          confirmTitle="Settle Fine"
+                          confirmMessage={`Are you sure you want to mark this fine of $${fine.total_amount.toFixed(2)} for "${fine.book_title}" as paid?`}
+                          confirmText="Mark as Paid"
+                        >
                           Paid
                         </ActionButton>
                       )}

@@ -321,6 +321,9 @@ export default function AdminBorrowedBooksPage() {
                           <ActionButton
                             onClick={() => handleReturn(item.id)}
                             className="bg-zinc-800 hover:bg-emerald-600 border-white/5 hover:border-emerald-500 transition-all duration-300"
+                            confirmTitle="Return Book"
+                            confirmMessage={`Are you sure you want to mark "${item.book.title}" as returned?`}
+                            confirmText="Mark as Returned"
                           >
                             <div className="flex items-center gap-2">
                               <RotateCcw className="w-3.5 h-3.5 translate-y-px" />

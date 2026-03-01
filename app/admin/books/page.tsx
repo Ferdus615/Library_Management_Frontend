@@ -26,7 +26,6 @@ import {
 import Link from "next/link";
 import ActionButton from "@/components/ui/ActionButton";
 import Image from "next/image";
-import DeleteModal from "@/components/common/deleteModal";
 
 export default function AdminBooksPage() {
   const [books, setBooks] = useState<Book[]>([]);
@@ -36,12 +35,6 @@ export default function AdminBooksPage() {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
-
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [bookToDelete, setBookToDelete] = useState<{
-    id: string;
-    title: string;
-  } | null>(null);
 
   const [isReservationsModalOpen, setIsReservationsModalOpen] = useState(false);
   const [selectedBookForReservations, setSelectedBookForReservations] =
@@ -119,16 +112,6 @@ export default function AdminBooksPage() {
     } finally {
       setIsLoadingReservations(false);
     }
-  };
-
-  const openDeleteModal = (id: string, title: string) => {
-    setBookToDelete({ id, title });
-    setIsDeleteModalOpen(true);
-  };
-
-  const closeDeleteModal = () => {
-    setIsDeleteModalOpen(false);
-    setBookToDelete(null);
   };
 
   const closeReservationsModal = () => {
@@ -403,8 +386,11 @@ export default function AdminBooksPage() {
                         </Link>
 
                         <ActionButton
-                          onClick={() => openDeleteModal(book.id, book.title)}
+                          onClick={() => handleDeleteBook(book.id)}
                           className="bg-red-500/5 hover:bg-red-500 text-red-500 hover:text-white border-red-500/10"
+                          confirmTitle="Delete Book"
+                          confirmMessage={`Are you sure you want to delete "${book.title}"? This action cannot be undone.`}
+                          confirmText="Delete Book"
                         >
                           <Trash2 size={14} />
                         </ActionButton>
@@ -544,18 +530,6 @@ export default function AdminBooksPage() {
           </div>
         </div>
       )}
-
-      <DeleteModal
-        isOpen={isDeleteModalOpen}
-        onClose={closeDeleteModal}
-        onConfirm={() => {
-          if (bookToDelete) {
-            handleDeleteBook(bookToDelete.id);
-            closeDeleteModal();
-          }
-        }}
-        itemName={bookToDelete?.title}
-      />
     </div>
   );
 }

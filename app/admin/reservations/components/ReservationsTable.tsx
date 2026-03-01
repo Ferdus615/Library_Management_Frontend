@@ -130,6 +130,9 @@ export default function ReservationsTable({
                       <ActionButton
                         onClick={() => onReceive(res.id)}
                         className="bg-(--clr-success-a10)/10 border-(--clr-success-a10)/20 text-(--clr-success-a10) hover:bg-(--clr-success-a0) hover:text-white"
+                        confirmTitle="Receive Book"
+                        confirmMessage={`Are you sure you want to mark "${res.book.title}" as received?`}
+                        confirmText="Mark Received"
                       >
                         Received
                       </ActionButton>
@@ -137,6 +140,9 @@ export default function ReservationsTable({
                       <ActionButton
                         onClick={() => onCancel(res.id)}
                         className="bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white border-red-500/20"
+                        confirmTitle="Cancel Reservation"
+                        confirmMessage={`Are you sure you want to cancel the reservation for "${res.book.title}"?`}
+                        confirmText="Cancel Reservation"
                       >
                         <div className="flex items-center gap-1">
                           <XCircle size={14} />
