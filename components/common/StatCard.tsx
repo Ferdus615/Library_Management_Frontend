@@ -19,7 +19,7 @@ export default function StatCard({
   trend,
 }: StatCardProps) {
   return (
-    <div className="group relative overflow-hidden rounded-2xl bg-(--clr-surface-tonal-a0) border border-(--clr-surface-a20) p-6 transition-all duration-300 hover:border-(--clr-primary-a0)/50 hover:shadow-2xl hover:shadow-black/40 hover:-translate-y-1">
+    <div className="group relative overflow-hidden rounded-2xl bg-(--clr-surface-tonal-a0) border border-(--clr-surface-a20) p-6 transition-all duration-300 hover:border-(--clr-primary-a0)/30 hover:shadow-2xl hover:shadow-black/40 hover:-translate-y-1">
       {/* Background Glow */}
       <div
         className={`absolute -right-4 -top-4 h-24 w-24 rounded-full opacity-10 blur-2xl transition-opacity group-hover:opacity-20 ${colorClass.split(" ")[0]}`}
