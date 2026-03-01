@@ -17,6 +17,7 @@ export default function AddBookPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [isFetchingCategories, setIsFetchingCategories] = useState(true);
 
+  // need to fix backend also
   const [formData, setFormData] = useState({
     title: "",
     author: "",
