@@ -12,7 +12,7 @@ import {
   XCircle,
   Activity,
 } from "lucide-react";
-import AdminActionButton from "@/components/ui/ActionButton";
+import ActionButton from "@/components/ui/ActionButton";
 
 export default function ReservationsPage() {
   const [reservations, setReservations] = useState<PendingRequest[]>([]);
@@ -34,6 +34,17 @@ export default function ReservationsPage() {
   useEffect(() => {
     fetchReservations();
   }, []);
+
+  const handleReservationReceived = async (id: string) => {
+    try {
+      await adminService.receiveReservation(id);
+      toast.success("Reservation received successfully");
+      fetchReservations();
+    } catch (error) {
+      console.error("Failed to receive reservation:", error);
+      toast.error("Failed to receive reservation");
+    }
+  };
 
   const handleCancelReservation = async (id: string) => {
     try {
@@ -230,8 +241,16 @@ export default function ReservationsPage() {
                         {res.status}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-right border border-(--clr-primary-a0)/20">
-                      <AdminActionButton
+
+                    <td className="flex items-center gap-2 px-6 py-7 text-right border-l border-(--clr-info-a10)/10">
+                      <ActionButton
+                        onClick={() => handleReservationReceived(res.id)}
+                        className="bg-(--clr-success-a10)/10 border-(--clr-success-a10)/20 text-(--clr-success-a10) hover:bg-(--clr-success-a0) hover:text-white"
+                      >
+                        Received
+                      </ActionButton>
+
+                      <ActionButton
                         onClick={() => handleCancelReservation(res.id)}
                         className="bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white border-red-500/20"
                       >
@@ -239,7 +258,7 @@ export default function ReservationsPage() {
                           <XCircle size={14} />
                           Cancel
                         </div>
-                      </AdminActionButton>
+                      </ActionButton>
                     </td>
                   </tr>
                 ))

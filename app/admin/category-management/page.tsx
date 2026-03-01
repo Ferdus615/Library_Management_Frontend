@@ -14,7 +14,7 @@ import {
   AlignLeft,
   BookOpen,
 } from "lucide-react";
-import AdminActionButton from "@/components/ui/ActionButton";
+import ActionButton from "@/components/ui/ActionButton";
 
 export default function AdminCategoryManagementPage() {
   const [categories, setCategories] = useState<Category[]>([]);
@@ -83,10 +83,10 @@ export default function AdminCategoryManagementPage() {
               className="bg-white/5 border border-white/10 rounded-2xl py-2.5 pl-11 pr-4 text-sm text-white focus:outline-none focus:border-(--clr-primary-a10)/30 focus:ring-4 focus:ring-(--clr-primary-a10)/5 transition-all w-64"
             />
           </div>
-          <AdminActionButton className="h-[42px] px-2 flex items-center gap-2">
+          <ActionButton className="h-[42px] px-2 flex items-center gap-2">
             <Plus size={18} />
             Add Category
-          </AdminActionButton>
+          </ActionButton>
         </div>
       </div>
 
@@ -195,15 +195,15 @@ export default function AdminCategoryManagementPage() {
                     </td>
                     <td className="px-6 py-4 text-right border border-(--clr-primary-a0)/20">
                       <div className="flex items-center justify-end gap-2">
-                        <AdminActionButton className="bg-white/5 hover:bg-white/10 text-zinc-400 border-white/10">
+                        <ActionButton className="bg-white/5 hover:bg-white/10 text-zinc-400 border-white/10">
                           <Edit size={14} />
-                        </AdminActionButton>
-                        <AdminActionButton
+                        </ActionButton>
+                        <ActionButton
                           onClick={() => handleDeleteCategory(cat.id, cat.name)}
                           className="bg-red-500/5 hover:bg-red-500 text-red-500 hover:text-white border-red-500/10"
                         >
                           <Trash2 size={14} />
-                        </AdminActionButton>
+                        </ActionButton>
                       </div>
                     </td>
                   </tr>

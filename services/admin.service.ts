@@ -175,6 +175,25 @@ export const adminService = {
     }
   },
 
+  receiveReservation: async (reservationID: string): Promise<void> => {
+    const token = localStorage.getItem("token");
+    const response = await fetch(
+      `${API_URL}/reservation/receive/${reservationID}`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      },
+    );
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || "Failed to receive reservation");
+    }
+  },
+
   cancelReservation: async (reservationId: string): Promise<void> => {
     const token = localStorage.getItem("token");
     const response = await fetch(

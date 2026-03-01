@@ -15,7 +15,7 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
-import AdminActionButton from "@/components/ui/ActionButton";
+import ActionButton from "@/components/ui/ActionButton";
 import Image from "next/image";
 
 export default function MemberBooksPage() {
@@ -243,21 +243,21 @@ export default function MemberBooksPage() {
                   </div>
 
                   {book.available_copies > 0 ? (
-                    <AdminActionButton
+                    <ActionButton
                       onClick={() => handleBorrow(book.id)}
                       className="w-full h-11 text-sm bg-(--clr-success-a0)/10 hover:bg-(--clr-success-a0) text-(--clr-success-a10) hover:text-black border-(--clr-success-a0)/20"
                     >
                       <CheckCircle2 size={14} className="mr-2 inline-block" />
                       Borrow Book
-                    </AdminActionButton>
+                    </ActionButton>
                   ) : (
-                    <AdminActionButton
+                    <ActionButton
                       onClick={() => handleReserve(book.id)}
                       className="w-full h-11 text-sm"
                     >
                       <Bookmark size={14} className="mr-2 inline-block" />
                       Join Waitlist
-                    </AdminActionButton>
+                    </ActionButton>
                   )}
                 </div>
               </div>

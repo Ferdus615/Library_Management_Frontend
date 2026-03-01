@@ -3,7 +3,7 @@
 import { adminService } from "@/services/admin.service";
 import { MemberDetails } from "@/types/admin";
 import React, { useEffect, useState } from "react";
-import AdminActionButton from "@/components/ui/ActionButton";
+import ActionButton from "@/components/ui/ActionButton";
 import {
   Users,
   UserCheck,
@@ -252,7 +252,7 @@ export default function AdminMemberManagementPage() {
                         <Link
                           href={`/admin/member-management/edit/${member.id}`}
                         >
-                          <AdminActionButton>Edit</AdminActionButton>
+                          <ActionButton>Edit</ActionButton>
                         </Link>
                       </div>
                     </td>

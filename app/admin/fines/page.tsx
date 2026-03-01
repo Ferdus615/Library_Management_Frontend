@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { adminService } from "@/services/admin.service";
 import { PendingFine } from "@/types/admin";
-import AdminActionButton from "@/components/ui/ActionButton";
+import ActionButton from "@/components/ui/ActionButton";
 import { toast } from "sonner";
 import {
   BanknoteArrowDown,
@@ -200,11 +200,9 @@ export default function FinesPage() {
                     </td>
                     <td className="px-6 py-4 text-right border border-(--clr-primary-a0)/20">
                       {!fine.paid && (
-                        <AdminActionButton
-                          onClick={() => handlePayFine(fine.id)}
-                        >
+                        <ActionButton onClick={() => handlePayFine(fine.id)}>
                           Paid
-                        </AdminActionButton>
+                        </ActionButton>
                       )}
                     </td>
                   </tr>

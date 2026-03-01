@@ -24,7 +24,7 @@ import {
   Clock,
 } from "lucide-react";
 import Link from "next/link";
-import AdminActionButton from "@/components/ui/ActionButton";
+import ActionButton from "@/components/ui/ActionButton";
 import Image from "next/image";
 import DeleteModal from "@/components/common/deleteModal";
 
@@ -192,10 +192,10 @@ export default function AdminBooksPage() {
 
           {/* Add Book Button */}
           <Link href="/admin/books/add">
-            <AdminActionButton className="h-[42px] px-3 flex items-center gap-2">
+            <ActionButton className="h-[42px] px-3 flex items-center gap-2">
               <Plus size={18} />
               <span className="hidden sm:inline">Add Book</span>
-            </AdminActionButton>
+            </ActionButton>
           </Link>
         </div>
       </div>
@@ -388,26 +388,26 @@ export default function AdminBooksPage() {
                     </td>
                     <td className="px-6 py-4 text-right">
                       <div className="flex items-center justify-end gap-2">
-                        <AdminActionButton
+                        <ActionButton
                           onClick={() => fetchReservations(book.id, book.title)}
                           className="bg-white/5 hover:bg-white/10 text-cyan-500 border-white/10"
                           title="View Reservations"
                         >
                           <History size={14} />
-                        </AdminActionButton>
+                        </ActionButton>
 
                         <Link href={`/admin/books/edit/${book.id}`}>
-                          <AdminActionButton className="bg-white/5 hover:bg-white/10 text-zinc-400 border-white/10">
+                          <ActionButton className="bg-white/5 hover:bg-white/10 text-zinc-400 border-white/10">
                             <Edit size={14} />
-                          </AdminActionButton>
+                          </ActionButton>
                         </Link>
 
-                        <AdminActionButton
+                        <ActionButton
                           onClick={() => openDeleteModal(book.id, book.title)}
                           className="bg-red-500/5 hover:bg-red-500 text-red-500 hover:text-white border-red-500/10"
                         >
                           <Trash2 size={14} />
-                        </AdminActionButton>
+                        </ActionButton>
                       </div>
                     </td>
                   </tr>
