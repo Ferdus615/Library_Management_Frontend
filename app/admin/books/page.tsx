@@ -4,7 +4,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { adminService } from "@/services/admin.service";
 import { Book, Category, Reservation } from "@/types/admin";
 import { toast } from "sonner";
-import { Search, Filter, Plus } from "lucide-react";
+import { Search, Filter, Plus, X } from "lucide-react";
 import Link from "next/link";
 import ActionButton from "@/components/ui/ActionButton";
 import DeleteModal from "@/components/ui/deleteModal";
@@ -133,15 +133,25 @@ export default function AdminBooksPage() {
 
         <div className="flex items-center gap-3">
           {/* Search */}
-          <div className="relative group">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500 group-focus-within:text-(--clr-primary-a10) transition-colors" />
+          <div className="relative group w-full sm:w-64">
+            <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
+              <Search className="w-4 h-4 text-zinc-500 group-focus-within:text-(--clr-primary-a10) transition-colors" />
+            </div>
             <input
               type="text"
               placeholder="Search title..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="bg-white/5 border border-white/10 rounded-2xl py-2.5 pl-11 pr-4 text-sm text-white focus:outline-none focus:border-(--clr-primary-a10)/30 focus:ring-4 focus:ring-(--clr-primary-a10)/5 transition-all w-48 sm:w-64"
+              className="w-full bg-white/5 border border-white/10 rounded-2xl py-2.5 pl-11 pr-10 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-(--clr-primary-a0)/50 focus:border-(--clr-primary-a0)/50 transition-all"
             />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery("")}
+                className="absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded-full text-zinc-500 hover:text-white transition-colors"
+              >
+                <X size={14} />
+              </button>
+            )}
           </div>
 
           {/* Category Filter */}

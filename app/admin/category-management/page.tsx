@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { adminService } from "@/services/admin.service";
 import { Category } from "@/types/admin";
 import { toast } from "sonner";
@@ -13,14 +13,21 @@ import {
   Hash,
   AlignLeft,
   BookOpen,
+  ChevronLeft,
+  ChevronRight,
+  X,
 } from "lucide-react";
 import ActionButton from "@/components/ui/ActionButton";
 import DeleteModal from "@/components/ui/deleteModal";
+import Link from "next/link";
+
+const ITEMS_PER_PAGE = 8;
 
 export default function AdminCategoryManagementPage() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [categoryToDelete, setCategoryToDelete] = useState<{
@@ -45,6 +52,11 @@ export default function AdminCategoryManagementPage() {
     fetchCategories();
   }, []);
 
+  // Reset to page 1 whenever the search query changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery]);
+
   const openDeleteModal = (id: string, name: string) => {
     setCategoryToDelete({ id, name });
     setIsDeleteModalOpen(true);
@@ -66,12 +78,36 @@ export default function AdminCategoryManagementPage() {
     }
   };
 
-  const filteredCategories = categories.filter((cat) =>
-    cat.name.toLowerCase().includes(searchQuery.toLowerCase()),
+  // Filtered list based on search query
+  const filteredCategories = useMemo(
+    () =>
+      categories.filter(
+        (cat) =>
+          cat.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          (cat.description || "")
+            .toLowerCase()
+            .includes(searchQuery.toLowerCase()),
+      ),
+    [categories, searchQuery],
   );
+
+  // Pagination derived values
+  const totalPages = Math.max(
+    1,
+    Math.ceil(filteredCategories.length / ITEMS_PER_PAGE),
+  );
+  const paginatedCategories = filteredCategories.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE,
+  );
+
+  const goToPage = (page: number) => {
+    setCurrentPage(Math.min(Math.max(1, page), totalPages));
+  };
 
   return (
     <div className="space-y-6">
+      {/* Page Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div className="flex flex-col gap-2">
           <h1 className="text-4xl font-black text-white tracking-tight">
@@ -82,28 +118,12 @@ export default function AdminCategoryManagementPage() {
             Organize books into genres and subject areas.
           </p>
         </div>
-
-        <div className="flex items-center gap-3">
-          <div className="relative group">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500 group-focus-within:text-(--clr-primary-a10) transition-colors" />
-            <input
-              type="text"
-              placeholder="Search categories..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="bg-white/5 border border-white/10 rounded-2xl py-2.5 pl-11 pr-4 text-sm text-white focus:outline-none focus:border-(--clr-primary-a10)/30 focus:ring-4 focus:ring-(--clr-primary-a10)/5 transition-all w-64"
-            />
-          </div>
-          <ActionButton className="h-[42px] px-2 flex items-center gap-2">
-            <Plus size={18} />
-            Add Category
-          </ActionButton>
-        </div>
       </div>
 
-      {/* Stats Section */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="glass group relative overflow-hidden p-6 rounded-3xl border border-white/5 transition-all hover:border-white/10">
+      {/* Stats + Controls Row */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
+        {/* Stat Card */}
+        <div className="glass group relative overflow-hidden p-6 rounded-3xl border border-white/5 transition-all hover:border-white/10 min-w-[200px]">
           <div className="absolute -right-4 -bottom-4 opacity-5 group-hover:opacity-10 transition-opacity">
             <Tag size={120} />
           </div>
@@ -121,7 +141,48 @@ export default function AdminCategoryManagementPage() {
             </div>
           </div>
         </div>
+
+        {/* Search + Add Button */}
+        <div className="flex items-center gap-3">
+          <div className="relative group">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500 group-focus-within:text-(--clr-primary-a10) transition-colors" />
+            <input
+              type="text"
+              placeholder="Search categories..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="bg-white/5 border border-white/10 rounded-2xl py-2.5 pl-11 pr-10 text-sm text-white focus:outline-none focus:border-(--clr-primary-a10)/30 focus:ring-4 focus:ring-(--clr-primary-a10)/5 transition-all w-64"
+            />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery("")}
+                className="absolute right-3 top-1/2 -translate-y-1/2 p-0.5 rounded-full text-zinc-500 hover:text-white transition-colors"
+              >
+                <X size={14} />
+              </button>
+            )}
+          </div>
+
+          <Link href="/admin/category-management/add">
+            <ActionButton className="h-[42px] px-4 flex items-center gap-2">
+              <Plus size={18} />
+              Add Category
+            </ActionButton>
+          </Link>
+        </div>
       </div>
+
+      {/* Search result hint */}
+      {searchQuery && !isLoading && (
+        <p className="text-xs text-zinc-500">
+          Found{" "}
+          <span className="font-bold text-white">
+            {filteredCategories.length}
+          </span>{" "}
+          {filteredCategories.length === 1 ? "category" : "categories"} matching
+          &ldquo;{searchQuery}&rdquo;
+        </p>
+      )}
 
       {/* Categories Table */}
       <div className="glass rounded-3xl border-white/5 overflow-hidden">
@@ -157,58 +218,75 @@ export default function AdminCategoryManagementPage() {
                 <tr>
                   <td colSpan={4} className="px-6 py-12 text-center">
                     <div className="flex flex-col items-center gap-2">
-                      <div className="w-8 h-8 border-2 border-(--clr-primary-a10) border-t-transparent rounded-full animate-spin"></div>
+                      <div className="w-8 h-8 border-2 border-(--clr-primary-a10) border-t-transparent rounded-full animate-spin" />
                       <p className="text-sm text-zinc-500 font-medium">
                         Loading categories...
                       </p>
                     </div>
                   </td>
                 </tr>
-              ) : filteredCategories.length === 0 ? (
+              ) : paginatedCategories.length === 0 ? (
                 <tr>
-                  <td colSpan={4} className="px-6 py-12 text-center">
-                    <div className="flex flex-col items-center gap-2 opacity-20">
+                  <td colSpan={4} className="px-6 py-16 text-center">
+                    <div className="flex flex-col items-center gap-3 opacity-30">
                       <Tag size={48} className="text-zinc-500" />
                       <p className="text-lg font-bold text-zinc-400">
-                        No categories found
+                        {searchQuery
+                          ? "No categories match your search"
+                          : "No categories found"}
                       </p>
                     </div>
                   </td>
                 </tr>
               ) : (
-                filteredCategories.map((cat) => (
+                paginatedCategories.map((cat) => (
                   <tr
                     key={cat.id}
                     className="border-b border-white/5 hover:bg-white/5 transition-colors group"
                   >
                     <td className="px-6 py-4">
-                      <p className="text-sm font-bold text-white group-hover:text-(--clr-primary-a10) transition-colors">
-                        {cat.name}
-                      </p>
-                      <p className="text-[10px] text-zinc-600 font-mono mt-0.5">
-                        ID: {cat.id}
-                      </p>
+                      <div className="flex items-center gap-3">
+                        <div className="p-2 rounded-xl bg-indigo-500/10 shrink-0">
+                          <Tag className="w-3.5 h-3.5 text-indigo-400" />
+                        </div>
+                        <div>
+                          <p className="text-sm font-bold text-white group-hover:text-(--clr-primary-a10) transition-colors">
+                            {cat.name}
+                          </p>
+                          <p className="text-[10px] text-zinc-600 font-mono mt-0.5">
+                            ID: {cat.id}
+                          </p>
+                        </div>
+                      </div>
                     </td>
                     <td className="px-6 py-4">
                       <p className="text-sm text-zinc-400 line-clamp-1">
-                        {cat.description || "No description provided."}
+                        {cat.description || (
+                          <span className="text-zinc-600 italic">
+                            No description provided.
+                          </span>
+                        )}
                       </p>
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-2">
                         <span className="text-sm font-black text-white">
-                          {cat._count?.books || 0}
+                          {cat._count?.books ?? 0}
                         </span>
                         <span className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider">
                           Books
                         </span>
                       </div>
                     </td>
-                    <td className="px-6 py-4 text-right border border-(--clr-surface-a30)/20">
+                    <td className="px-6 py-4 text-right">
                       <div className="flex items-center justify-end gap-2">
-                        <ActionButton className="bg-white/5 hover:bg-white/10 text-zinc-400 border-white/10">
-                          <Edit size={14} />
-                        </ActionButton>
+                        <Link
+                          href={`/admin/category-management/edit/${cat.id}`}
+                        >
+                          <ActionButton className="bg-white/5 hover:bg-white/10 text-zinc-400 border-white/10">
+                            <Edit size={14} />
+                          </ActionButton>
+                        </Link>
                         <ActionButton
                           onClick={() => openDeleteModal(cat.id, cat.name)}
                           className="bg-red-500/5 hover:bg-red-500 text-red-500 hover:text-white border-red-500/10"
@@ -223,6 +301,69 @@ export default function AdminCategoryManagementPage() {
             </tbody>
           </table>
         </div>
+
+        {/* Pagination Footer */}
+        {!isLoading && filteredCategories.length > 0 && (
+          <div className="flex items-center justify-between px-6 py-4 border-t border-white/5 bg-white/2">
+            {/* Page info */}
+            <p className="text-xs text-zinc-500">
+              Showing{" "}
+              <span className="font-bold text-zinc-300">
+                {(currentPage - 1) * ITEMS_PER_PAGE + 1}
+              </span>
+              {" – "}
+              <span className="font-bold text-zinc-300">
+                {Math.min(
+                  currentPage * ITEMS_PER_PAGE,
+                  filteredCategories.length,
+                )}
+              </span>{" "}
+              of{" "}
+              <span className="font-bold text-zinc-300">
+                {filteredCategories.length}
+              </span>{" "}
+              categories
+            </p>
+
+            {/* Page controls */}
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => goToPage(currentPage - 1)}
+                disabled={currentPage === 1}
+                className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-zinc-400 hover:text-white transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+              >
+                <ChevronLeft size={16} />
+              </button>
+
+              {/* Page number pills */}
+              <div className="flex items-center gap-1">
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                  (page) => (
+                    <button
+                      key={page}
+                      onClick={() => goToPage(page)}
+                      className={`w-8 h-8 rounded-xl text-xs font-bold transition-all ${
+                        page === currentPage
+                          ? "bg-(--clr-primary-a10) text-white shadow-lg"
+                          : "bg-white/5 text-zinc-400 hover:bg-white/10 hover:text-white"
+                      }`}
+                    >
+                      {page}
+                    </button>
+                  ),
+                )}
+              </div>
+
+              <button
+                onClick={() => goToPage(currentPage + 1)}
+                disabled={currentPage === totalPages}
+                className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-zinc-400 hover:text-white transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+              >
+                <ChevronRight size={16} />
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
       <DeleteModal

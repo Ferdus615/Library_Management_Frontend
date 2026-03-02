@@ -123,6 +123,11 @@ export interface Category {
   };
 }
 
+export interface AddCategory {
+  name: string;
+  description: string;
+}
+
 export interface BorrowedBooks {
   id: string;
   user: {

@@ -9,6 +9,7 @@ import {
   Book,
   Category,
   AddBook,
+  AddCategory,
   BookQueryDto,
   Reservation,
 } from "../types/admin";
@@ -274,6 +275,47 @@ export const adminService = {
       const error = await response.json();
       throw new Error(error.message || "Failed to delete category");
     }
+  },
+
+  addCategory: async (categoryData: AddCategory): Promise<Category> => {
+    const token = localStorage.getItem("token");
+    const response = await fetch(`${API_URL}/category`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(categoryData),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || "Failed to add category");
+    }
+
+    return response.json();
+  },
+
+  updateCategory: async (
+    id: string,
+    categoryData: Partial<AddCategory>,
+  ): Promise<Category> => {
+    const token = localStorage.getItem("token");
+    const response = await fetch(`${API_URL}/category/${id}`, {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(categoryData),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || "Failed to update category");
+    }
+
+    return response.json();
   },
 
   addBook: async (bookData: AddBook): Promise<Book> => {

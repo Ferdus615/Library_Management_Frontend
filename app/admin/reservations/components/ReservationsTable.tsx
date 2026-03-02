@@ -6,6 +6,9 @@ import {
   Activity,
   XCircle,
   Clock,
+  Search,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import { PendingRequest } from "@/types/admin";
 import ActionButton from "@/components/ui/ActionButton";
@@ -15,6 +18,13 @@ interface ReservationsTableProps {
   isLoading: boolean;
   onReceive: (id: string) => Promise<void>;
   onCancel: (id: string) => Promise<void>;
+  searchQuery: string;
+  clearSearch: () => void;
+  totalResults: number;
+  currentPage: number;
+  totalPages: number;
+  goToPage: (page: number) => void;
+  itemsPerPage: number;
 }
 
 export default function ReservationsTable({
@@ -22,6 +32,13 @@ export default function ReservationsTable({
   isLoading,
   onReceive,
   onCancel,
+  searchQuery,
+  clearSearch,
+  totalResults,
+  currentPage,
+  totalPages,
+  goToPage,
+  itemsPerPage,
 }: ReservationsTableProps) {
   return (
     <div className="glass rounded-3xl border-white/5 overflow-hidden">
@@ -63,11 +80,11 @@ export default function ReservationsTable({
               <tr>
                 <td
                   colSpan={5}
-                  className="px-6 py-12 text-center text-zinc-500"
+                  className="px-6 py-24 text-center text-zinc-500"
                 >
-                  <div className="flex flex-col items-center gap-2">
-                    <div className="w-8 h-8 border-2 border-(--clr-primary-a10) border-t-transparent rounded-full animate-spin"></div>
-                    <p className="text-sm font-medium">
+                  <div className="flex flex-col items-center gap-4">
+                    <div className="w-12 h-12 border-4 border-(--clr-primary-a0)/20 border-t-(--clr-primary-a10) rounded-full animate-spin" />
+                    <p className="font-medium animate-pulse">
                       Loading reservations...
                     </p>
                   </div>
@@ -77,15 +94,32 @@ export default function ReservationsTable({
               <tr>
                 <td
                   colSpan={5}
-                  className="px-6 py-12 text-center text-zinc-500"
+                  className="px-6 py-24 text-center text-zinc-500"
                 >
-                  <Clock className="w-12 h-12 mx-auto mb-4 opacity-20" />
-                  <p className="text-lg font-bold text-zinc-400">
-                    No pending reservations
-                  </p>
-                  <p className="text-sm text-zinc-600">
-                    All requests have been processed.
-                  </p>
+                  <div className="flex flex-col items-center gap-3 opacity-30">
+                    {searchQuery ? (
+                      <Search className="w-10 h-10 text-zinc-700" />
+                    ) : (
+                      <Clock className="w-10 h-10 text-zinc-700" />
+                    )}
+                    <p className="text-zinc-500 font-medium text-lg font-bold">
+                      {searchQuery
+                        ? "No reservations match your search"
+                        : "No pending reservations"}
+                    </p>
+                    {searchQuery ? (
+                      <button
+                        onClick={clearSearch}
+                        className="text-xs text-(--clr-primary-a10) font-bold hover:underline underline-offset-4"
+                      >
+                        Clear all filters
+                      </button>
+                    ) : (
+                      <p className="text-sm text-zinc-600">
+                        All requests have been processed.
+                      </p>
+                    )}
+                  </div>
                 </td>
               </tr>
             ) : (
@@ -157,6 +191,60 @@ export default function ReservationsTable({
           </tbody>
         </table>
       </div>
+
+      {/* Pagination Footer */}
+      {!isLoading && totalResults > 0 && (
+        <div className="flex items-center justify-between px-6 py-4 border-t border-white/5 bg-white/2">
+          <p className="text-xs text-zinc-500">
+            Showing{" "}
+            <span className="font-bold text-zinc-300">
+              {(currentPage - 1) * itemsPerPage + 1}
+            </span>
+            {" – "}
+            <span className="font-bold text-zinc-300">
+              {Math.min(currentPage * itemsPerPage, totalResults)}
+            </span>{" "}
+            of <span className="font-bold text-zinc-300">{totalResults}</span>{" "}
+            records
+          </p>
+
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => goToPage(currentPage - 1)}
+              disabled={currentPage === 1}
+              className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-zinc-400 hover:text-white transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+            >
+              <ChevronLeft size={16} />
+            </button>
+
+            <div className="flex items-center gap-1">
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                (page) => (
+                  <button
+                    key={page}
+                    onClick={() => goToPage(page)}
+                    className={`w-8 h-8 rounded-xl text-xs font-bold transition-all ${
+                      page === currentPage
+                        ? "bg-(--clr-primary-a10) text-white shadow-lg"
+                        : "bg-white/5 text-zinc-400 hover:bg-white/10 hover:text-white"
+                    }`}
+                  >
+                    {page}
+                  </button>
+                ),
+              )}
+            </div>
+
+            <button
+              onClick={() => goToPage(currentPage + 1)}
+              disabled={currentPage === totalPages}
+              className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-zinc-400 hover:text-white transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+            >
+              <ChevronRight size={16} />
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
