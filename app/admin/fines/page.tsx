@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { adminService } from "@/services/admin.service";
 import { PendingFine } from "@/types/admin";
-import AdminActionButton from "@/components/ui/ActionButton";
+import ActionButton from "@/components/ui/ActionButton";
 import { toast } from "sonner";
 import {
   BanknoteArrowDown,
@@ -198,13 +198,16 @@ export default function FinesPage() {
                         {fine.paid ? "Paid" : "Unpaid"}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-right border border-(--clr-primary-a0)/20">
+                    <td className="px-6 py-4 text-right border border-(--clr-surface-a30)/20">
                       {!fine.paid && (
-                        <AdminActionButton
+                        <ActionButton
                           onClick={() => handlePayFine(fine.id)}
+                          confirmTitle="Settle Fine"
+                          confirmMessage={`Are you sure you want to mark this fine of $${fine.total_amount.toFixed(2)} for "${fine.book_title}" as paid?`}
+                          confirmText="Mark as Paid"
                         >
                           Paid
-                        </AdminActionButton>
+                        </ActionButton>
                       )}
                     </td>
                   </tr>

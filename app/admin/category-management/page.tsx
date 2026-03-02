@@ -14,12 +14,19 @@ import {
   AlignLeft,
   BookOpen,
 } from "lucide-react";
-import AdminActionButton from "@/components/ui/ActionButton";
+import ActionButton from "@/components/ui/ActionButton";
+import DeleteModal from "@/components/ui/deleteModal";
 
 export default function AdminCategoryManagementPage() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
+
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [categoryToDelete, setCategoryToDelete] = useState<{
+    id: string;
+    name: string;
+  } | null>(null);
 
   const fetchCategories = async () => {
     setIsLoading(true);
@@ -38,20 +45,24 @@ export default function AdminCategoryManagementPage() {
     fetchCategories();
   }, []);
 
-  const handleDeleteCategory = async (id: string, name: string) => {
-    if (
-      confirm(
-        `Are you sure you want to delete category "${name}"? This might affect books in this category.`,
-      )
-    ) {
-      try {
-        await adminService.deleteCategory(id);
-        toast.success("Category deleted successfully");
-        fetchCategories();
-      } catch (error) {
-        console.error("Failed to delete category:", error);
-        toast.error("Failed to delete category");
-      }
+  const openDeleteModal = (id: string, name: string) => {
+    setCategoryToDelete({ id, name });
+    setIsDeleteModalOpen(true);
+  };
+
+  const closeDeleteModal = () => {
+    setIsDeleteModalOpen(false);
+    setCategoryToDelete(null);
+  };
+
+  const handleDeleteCategory = async (id: string) => {
+    try {
+      await adminService.deleteCategory(id);
+      toast.success("Category deleted successfully");
+      fetchCategories();
+    } catch (error) {
+      console.error("Failed to delete category:", error);
+      toast.error("Failed to delete category");
     }
   };
 
@@ -83,10 +94,10 @@ export default function AdminCategoryManagementPage() {
               className="bg-white/5 border border-white/10 rounded-2xl py-2.5 pl-11 pr-4 text-sm text-white focus:outline-none focus:border-(--clr-primary-a10)/30 focus:ring-4 focus:ring-(--clr-primary-a10)/5 transition-all w-64"
             />
           </div>
-          <AdminActionButton className="h-[42px] px-2 flex items-center gap-2">
+          <ActionButton className="h-[42px] px-2 flex items-center gap-2">
             <Plus size={18} />
             Add Category
-          </AdminActionButton>
+          </ActionButton>
         </div>
       </div>
 
@@ -193,17 +204,17 @@ export default function AdminCategoryManagementPage() {
                         </span>
                       </div>
                     </td>
-                    <td className="px-6 py-4 text-right border border-(--clr-primary-a0)/20">
+                    <td className="px-6 py-4 text-right border border-(--clr-surface-a30)/20">
                       <div className="flex items-center justify-end gap-2">
-                        <AdminActionButton className="bg-white/5 hover:bg-white/10 text-zinc-400 border-white/10">
+                        <ActionButton className="bg-white/5 hover:bg-white/10 text-zinc-400 border-white/10">
                           <Edit size={14} />
-                        </AdminActionButton>
-                        <AdminActionButton
-                          onClick={() => handleDeleteCategory(cat.id, cat.name)}
+                        </ActionButton>
+                        <ActionButton
+                          onClick={() => openDeleteModal(cat.id, cat.name)}
                           className="bg-red-500/5 hover:bg-red-500 text-red-500 hover:text-white border-red-500/10"
                         >
                           <Trash2 size={14} />
-                        </AdminActionButton>
+                        </ActionButton>
                       </div>
                     </td>
                   </tr>
@@ -213,6 +224,18 @@ export default function AdminCategoryManagementPage() {
           </table>
         </div>
       </div>
+
+      <DeleteModal
+        isOpen={isDeleteModalOpen}
+        onClose={closeDeleteModal}
+        onConfirm={() => {
+          if (categoryToDelete) {
+            handleDeleteCategory(categoryToDelete.id);
+            closeDeleteModal();
+          }
+        }}
+        itemName={categoryToDelete?.name}
+      />
     </div>
   );
 }

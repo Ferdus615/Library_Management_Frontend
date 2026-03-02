@@ -9,6 +9,7 @@ import {
   LayoutDashboard,
   Book,
   BookOpenCheck,
+  LibraryBig,
   CircleDollarSign,
   CalendarCheck,
   Users,
@@ -51,6 +52,11 @@ const navItems: NavItem[] = [
     label: "Member Management",
     href: "/admin/member-management",
     icon: <Users className="h-5 w-5" />,
+  },
+  {
+    label: "Category Management",
+    href: "/admin/category-management",
+    icon: <LibraryBig className="h-5 w-5" />,
   },
 ];
 

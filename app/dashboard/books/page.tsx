@@ -15,7 +15,7 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
-import AdminActionButton from "@/components/ui/ActionButton";
+import ActionButton from "@/components/ui/ActionButton";
 import Image from "next/image";
 
 export default function MemberBooksPage() {
@@ -71,6 +71,22 @@ export default function MemberBooksPage() {
     }, 500);
     return () => clearTimeout(timer);
   }, [searchQuery]);
+
+  const handleBorrow = async (bookId: string) => {
+    if (!user) {
+      toast.error("Please log in to borrow books");
+      return;
+    }
+
+    try {
+      await adminService.borrowBook(user.id, bookId);
+      toast.success("Book borrowed successfully!");
+      fetchBooks();
+    } catch (error: unknown) {
+      const err = error as Error;
+      toast.error(err.message || "Failed to borrow book");
+    }
+  };
 
   const handleReserve = async (bookId: string) => {
     if (!user) {
@@ -141,7 +157,7 @@ export default function MemberBooksPage() {
           {[...Array(8)].map((_, i) => (
             <div
               key={i}
-              className="glass rounded-[2rem] h-[500px] animate-pulse border-white/5"
+              className="glass rounded-4xl h-[500px] animate-pulse border-white/5"
             />
           ))}
         </div>
@@ -159,10 +175,10 @@ export default function MemberBooksPage() {
             {books.map((book) => (
               <div
                 key={book.id}
-                className="glass group relative flex flex-col rounded-[2rem] border border-white/5 overflow-hidden hover:border-white/10 transition-all duration-300"
+                className="glass group relative flex flex-col rounded-4xl border border-white/5 overflow-hidden hover:border-white/10 transition-all duration-300"
               >
                 {/* Cover Image */}
-                <div className="relative aspect-[3/4] overflow-hidden bg-white/5">
+                <div className="relative aspect-3/4 overflow-hidden bg-white/5">
                   {book.cover_image ? (
                     <Image
                       src={book.cover_image}
@@ -227,18 +243,21 @@ export default function MemberBooksPage() {
                   </div>
 
                   {book.available_copies > 0 ? (
-                    <div className="flex items-center justify-center gap-2 py-2 text-xs font-bold text-zinc-500 bg-white/5 rounded-xl border border-white/5">
-                      <CheckCircle2 size={14} className="text-emerald-500" />
-                      Visit Library to Issue
-                    </div>
+                    <ActionButton
+                      onClick={() => handleBorrow(book.id)}
+                      className="w-full h-11 text-sm bg-(--clr-success-a0)/10 hover:bg-(--clr-success-a0) text-(--clr-success-a10) hover:text-black border-(--clr-success-a0)/20"
+                    >
+                      <CheckCircle2 size={14} className="mr-2 inline-block" />
+                      Borrow Book
+                    </ActionButton>
                   ) : (
-                    <AdminActionButton
+                    <ActionButton
                       onClick={() => handleReserve(book.id)}
-                      className="w-full h-11 text-sm bg-amber-500/10 hover:bg-amber-500 text-amber-500 hover:text-black border-amber-500/20"
+                      className="w-full h-11 text-sm"
                     >
                       <Bookmark size={14} className="mr-2 inline-block" />
                       Join Waitlist
-                    </AdminActionButton>
+                    </ActionButton>
                   )}
                 </div>
               </div>

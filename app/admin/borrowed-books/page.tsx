@@ -12,7 +12,7 @@ import {
   ArrowRightLeft,
   RotateCcw,
 } from "lucide-react";
-import AdminActionButton from "@/components/ui/ActionButton";
+import ActionButton from "@/components/ui/ActionButton";
 import { BorrowedBooks } from "@/types/admin";
 import { adminService } from "@/services/admin.service";
 import { toast } from "sonner"; // Assuming sonner is available for notifications
@@ -277,7 +277,7 @@ export default function AdminBorrowedBooksPage() {
                         <div className="flex items-center gap-2">
                           <div className="w-1 h-1 rounded-full bg-emerald-500" />
                           <span className="text-[10px] text-zinc-400">
-                            Out:{" "}
+                            Issued:{" "}
                             {new Date(item.issue_date).toLocaleDateString()}
                           </span>
                         </div>
@@ -315,18 +315,21 @@ export default function AdminBorrowedBooksPage() {
                         {item.status}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-right border border-(--clr-primary-a0)/20">
+                    <td className="px-6 py-4 text-right border border-(--clr-surface-a30)/20">
                       {item.status !== "returned" ? (
                         <div className="flex items-center justify-end gap-2">
-                          <AdminActionButton
+                          <ActionButton
                             onClick={() => handleReturn(item.id)}
                             className="bg-zinc-800 hover:bg-emerald-600 border-white/5 hover:border-emerald-500 transition-all duration-300"
+                            confirmTitle="Return Book"
+                            confirmMessage={`Are you sure you want to mark "${item.book.title}" as returned?`}
+                            confirmText="Mark as Returned"
                           >
                             <div className="flex items-center gap-2">
                               <RotateCcw className="w-3.5 h-3.5 translate-y-px" />
                               <span>Return</span>
                             </div>
-                          </AdminActionButton>
+                          </ActionButton>
                         </div>
                       ) : (
                         <div className="text-[10px] text-zinc-600 font-bold uppercase tracking-widest italic pr-4">
