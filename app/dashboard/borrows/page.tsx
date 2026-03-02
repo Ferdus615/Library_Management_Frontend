@@ -126,7 +126,7 @@ export default function MyBorrowsPage() {
                 <div className="flex-1 min-w-0 text-center md:text-left">
                   <div className="flex flex-wrap items-center justify-center md:justify-start gap-2 mb-2">
                     <span
-                      className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-[9px] font-medium uppercase tracking-wider border ${status.color}`}
+                      className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider border ${status.color}`}
                     >
                       <status.icon size={12} />
                       {status.label}
@@ -139,7 +139,7 @@ export default function MyBorrowsPage() {
                       </span>
                     )}
                   </div>
-                  <h3 className="text-[18px] font-medium text-white truncate group-hover:text-(--clr-primary-a10) transition-colors">
+                  <h3 className="text-sm font-medium text-white truncate group-hover:text-(--clr-primary-a10) transition-colors">
                     {loan.book.title}
                   </h3>
                   <p className="text-xs text-zinc-500 font-medium">

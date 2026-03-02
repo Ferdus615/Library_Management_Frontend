@@ -5,9 +5,9 @@ import { adminService } from "@/services/admin.service";
 import { authService } from "@/services/auth.service";
 import { BorrowedBooks, PendingRequest, PendingFine } from "@/types/admin";
 import { toast } from "sonner";
-import LoanHistory from "@/components/member/history/LoanHistory";
-import ReservationHistory from "@/components/member/history/ReservationHistory";
-import FineHistory from "@/components/member/history/FineHistory";
+import LoanHistory from "@/components/dashboard/LoanHistory";
+import ReservationHistory from "@/components/dashboard/ReservationHistory";
+import FineHistory from "@/components/dashboard/FineHistory";
 
 export default function HistoryPage() {
   const [activeTab, setActiveTab] = useState<

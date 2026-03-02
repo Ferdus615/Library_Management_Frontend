@@ -141,7 +141,7 @@ export default function MemberBooksPage() {
           {[...Array(8)].map((_, i) => (
             <div
               key={i}
-              className="glass rounded-4xl h-[500px] animate-pulse border-white/5"
+              className="glass rounded-[2rem] h-[500px] animate-pulse border-white/5"
             />
           ))}
         </div>
@@ -159,10 +159,10 @@ export default function MemberBooksPage() {
             {books.map((book) => (
               <div
                 key={book.id}
-                className="glass group relative flex flex-col rounded-4xl border border-white/5 overflow-hidden hover:border-white/10 transition-all duration-300"
+                className="glass group relative flex flex-col rounded-[2rem] border border-white/5 overflow-hidden hover:border-white/10 transition-all duration-300"
               >
                 {/* Cover Image */}
-                <div className="relative aspect-3/4 overflow-hidden bg-white/5">
+                <div className="relative aspect-[3/4] overflow-hidden bg-white/5">
                   {book.cover_image ? (
                     <Image
                       src={book.cover_image}
