@@ -3,6 +3,8 @@ import Link from "next/link";
 import { authService } from "../../services/auth.service";
 import { User } from "../../types/auth";
 
+import NotificationDropdown from "./NotificationDropdown";
+
 interface TopbarProps {
   onMenuClick: () => void;
 }
@@ -79,23 +81,7 @@ export default function Topbar({ onMenuClick }: TopbarProps) {
       <div className="flex items-center gap-4">
         {/* Quick Actions */}
         <div className="flex items-center gap-2 pr-4 border-r border-white/5">
-          <button className="p-2.5 rounded-xl text-zinc-400 hover:bg-white/5 hover:text-white transition-all duration-200 relative group">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={2}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
-              />
-            </svg>
-            <span className="absolute top-2.5 right-2.5 w-2 h-2 bg-(--clr-danger-a10) rounded-full ring-2 ring-(--clr-surface-tonal-a0) group-hover:ring-transparent transition-all" />
-          </button>
+          <NotificationDropdown />
 
           <button
             className="p-2.5 rounded-xl text-zinc-400 hover:bg-white/5 hover:text-white transition-all duration-200"
@@ -133,7 +119,7 @@ export default function Topbar({ onMenuClick }: TopbarProps) {
             </p>
           </div>
           <div className="relative">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-(--clr-primary-a0) to-(--clr-primary-a20) p-[1px]">
+            <div className="w-10 h-10 rounded-xl bg-linear-to-br from-(--clr-primary-a0) to-(--clr-primary-a20) p-px">
               <div className="w-full h-full rounded-[11px] bg-(--clr-surface-a10) flex items-center justify-center text-sm font-bold text-white group-hover:bg-transparent transition-colors">
                 {getInitials()}
               </div>

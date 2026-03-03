@@ -2,7 +2,8 @@
 
 import { authService } from "@/services/auth.service";
 import React, { useEffect, useState } from "react";
-import { Menu, Search, Command, Bell } from "lucide-react";
+import { Menu, Search, Command } from "lucide-react";
+import NotificationDropdown from "./NotificationDropdown";
 
 interface AdminTopbarProps {
   onMenuClick: () => void;
@@ -54,12 +55,7 @@ export default function AdminTopbar({ onMenuClick }: AdminTopbarProps) {
 
       <div className="flex items-center gap-4">
         {/* Notification Button */}
-        <div>
-          <button className="relative group p-2.5 rounded-xl text-zinc-500 hover:bg-white/5 hover:text-white transition-all duration-300">
-            <Bell className="h-5 w-5 group-hover:animate-bounce" />
-            <span className="absolute top-2.5 right-2.5 w-2 h-2 bg-(--clr-danger-a0) rounded-full border-2 border-(--clr-surface-a0) shadow-[0_0_8px_rgba(156,33,33,0.6)]" />
-          </button>
-        </div>
+        <NotificationDropdown />
 
         {/* initials */}
         <div className="flex items-center gap-3 border-l-2 border-white/5 pl-5">
