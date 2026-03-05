@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import {
   BookOpen,
   Calendar,
@@ -11,23 +11,29 @@ import {
   AlertCircle,
   ArrowRightLeft,
   RotateCcw,
+  ChevronLeft,
+  ChevronRight,
+  X,
 } from "lucide-react";
-import AdminActionButton from "@/components/ui/ActionButton";
+import ActionButton from "@/components/ui/ActionButton";
 import { BorrowedBooks } from "@/types/admin";
 import { adminService } from "@/services/admin.service";
 import { toast } from "sonner"; // Assuming sonner is available for notifications
 import Image from "next/image";
 
+const ITEMS_PER_PAGE = 8;
+
 export default function AdminBorrowedBooksPage() {
   const [borrowedBooks, setBorrowedBooks] = useState<BorrowedBooks[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
 
   const fetchBorrows = async () => {
     try {
       setIsLoading(true);
       const data = await adminService.getBorrowedBooks();
-      setBorrowedBooks(data);
+      setBorrowedBooks(data || []);
     } catch (error) {
       console.error("Failed to fetch borrows", error);
       toast.error("Failed to load borrowed books data");
@@ -40,6 +46,11 @@ export default function AdminBorrowedBooksPage() {
     fetchBorrows();
   }, []);
 
+  // Reset to page 1 whenever search query changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery]);
+
   const handleReturn = async (loanId: string) => {
     try {
       await adminService.returnBook(loanId);
@@ -51,13 +62,31 @@ export default function AdminBorrowedBooksPage() {
     }
   };
 
-  const filteredBooks = borrowedBooks.filter(
-    (item) =>
-      item.book.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.user.first_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.user.last_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.user.email.toLowerCase().includes(searchQuery.toLowerCase()),
+  const filteredBooks = useMemo(() => {
+    return borrowedBooks.filter(
+      (item) =>
+        item.book.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.user.first_name
+          .toLowerCase()
+          .includes(searchQuery.toLowerCase()) ||
+        item.user.last_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.user.email.toLowerCase().includes(searchQuery.toLowerCase()),
+    );
+  }, [borrowedBooks, searchQuery]);
+
+  // Pagination derived values
+  const totalPages = Math.max(
+    1,
+    Math.ceil(filteredBooks.length / ITEMS_PER_PAGE),
   );
+  const paginatedBooks = filteredBooks.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE,
+  );
+
+  const goToPage = (page: number) => {
+    setCurrentPage(Math.min(Math.max(1, page), totalPages));
+  };
 
   const stats = {
     active: borrowedBooks.filter((b) => b.status === "issued").length,
@@ -70,12 +99,6 @@ export default function AdminBorrowedBooksPage() {
       {/* Header Section */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div className="space-y-2">
-          {/* <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-(--clr-primary-a0)/10 border border-(--clr-primary-a0)/20">
-            <BookOpen className="w-3.5 h-3.5 text-(--clr-primary-a10)" />
-            <span className="text-[10px] font-bold uppercase tracking-wider text-(--clr-primary-a10)">
-              Circulation Management
-            </span>
-          </div> */}
           <h1 className="text-4xl font-black text-white tracking-tight">
             Borrowed <span className="text-(--clr-primary-a10)">Books</span>
           </h1>
@@ -95,8 +118,16 @@ export default function AdminBorrowedBooksPage() {
             placeholder="Search member or book..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-white/5 border border-white/10 rounded-2xl py-3 pl-12 pr-4 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-(--clr-primary-a0)/50 focus:border-(--clr-primary-a0)/50 transition-all"
+            className="w-full bg-white/5 border border-white/10 rounded-2xl py-3 pl-12 pr-10 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-(--clr-primary-a0)/50 focus:border-(--clr-primary-a0)/50 transition-all"
           />
+          {searchQuery && (
+            <button
+              onClick={() => setSearchQuery("")}
+              className="absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded-full text-zinc-500 hover:text-white transition-colors"
+            >
+              <X size={14} />
+            </button>
+          )}
         </div>
       </div>
 
@@ -204,25 +235,29 @@ export default function AdminBorrowedBooksPage() {
                     </div>
                   </td>
                 </tr>
-              ) : filteredBooks.length === 0 ? (
+              ) : paginatedBooks.length === 0 ? (
                 <tr>
                   <td colSpan={5} className="px-8 py-24 text-center">
-                    <div className="flex flex-col items-center gap-3">
+                    <div className="flex flex-col items-center gap-3 opacity-30">
                       <Search className="w-10 h-10 text-zinc-700" />
-                      <p className="text-zinc-500 font-medium">
-                        No borrowed books matching your criteria.
+                      <p className="text-zinc-500 font-medium text-lg font-bold">
+                        {searchQuery
+                          ? "No borrowed books match your search"
+                          : "No borrowed books found"}
                       </p>
-                      <button
-                        onClick={() => setSearchQuery("")}
-                        className="text-xs text-(--clr-primary-a10) font-bold hover:underline underline-offset-4"
-                      >
-                        Clear all filters
-                      </button>
+                      {searchQuery && (
+                        <button
+                          onClick={() => setSearchQuery("")}
+                          className="text-xs text-(--clr-primary-a10) font-bold hover:underline underline-offset-4"
+                        >
+                          Clear all filters
+                        </button>
+                      )}
                     </div>
                   </td>
                 </tr>
               ) : (
-                filteredBooks.map((item) => (
+                paginatedBooks.map((item) => (
                   <tr
                     key={item.id}
                     className="group hover:bg-white/2 transition-colors"
@@ -277,7 +312,7 @@ export default function AdminBorrowedBooksPage() {
                         <div className="flex items-center gap-2">
                           <div className="w-1 h-1 rounded-full bg-emerald-500" />
                           <span className="text-[10px] text-zinc-400">
-                            Out:{" "}
+                            Issued:{" "}
                             {new Date(item.issue_date).toLocaleDateString()}
                           </span>
                         </div>
@@ -315,18 +350,21 @@ export default function AdminBorrowedBooksPage() {
                         {item.status}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-right border border-(--clr-primary-a0)/20">
+                    <td className="px-6 py-4 text-right">
                       {item.status !== "returned" ? (
                         <div className="flex items-center justify-end gap-2">
-                          <AdminActionButton
+                          <ActionButton
                             onClick={() => handleReturn(item.id)}
                             className="bg-zinc-800 hover:bg-emerald-600 border-white/5 hover:border-emerald-500 transition-all duration-300"
+                            confirmTitle="Return Book"
+                            confirmMessage={`Are you sure you want to mark "${item.book.title}" as returned?`}
+                            confirmText="Mark as Returned"
                           >
                             <div className="flex items-center gap-2">
                               <RotateCcw className="w-3.5 h-3.5 translate-y-px" />
                               <span>Return</span>
                             </div>
-                          </AdminActionButton>
+                          </ActionButton>
                         </div>
                       ) : (
                         <div className="text-[10px] text-zinc-600 font-bold uppercase tracking-widest italic pr-4">
@@ -340,6 +378,63 @@ export default function AdminBorrowedBooksPage() {
             </tbody>
           </table>
         </div>
+
+        {/* Pagination Footer */}
+        {!isLoading && filteredBooks.length > 0 && (
+          <div className="flex items-center justify-between px-8 py-4 border-t border-white/5 bg-white/2">
+            <p className="text-xs text-zinc-500">
+              Showing{" "}
+              <span className="font-bold text-zinc-300">
+                {(currentPage - 1) * ITEMS_PER_PAGE + 1}
+              </span>
+              {" – "}
+              <span className="font-bold text-zinc-300">
+                {Math.min(currentPage * ITEMS_PER_PAGE, filteredBooks.length)}
+              </span>{" "}
+              of{" "}
+              <span className="font-bold text-zinc-300">
+                {filteredBooks.length}
+              </span>{" "}
+              records
+            </p>
+
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => goToPage(currentPage - 1)}
+                disabled={currentPage === 1}
+                className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-zinc-400 hover:text-white transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+              >
+                <ChevronLeft size={16} />
+              </button>
+
+              <div className="flex items-center gap-1">
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                  (page) => (
+                    <button
+                      key={page}
+                      onClick={() => goToPage(page)}
+                      className={`w-8 h-8 rounded-xl text-xs font-bold transition-all ${
+                        page === currentPage
+                          ? "bg-(--clr-primary-a10) text-white shadow-lg"
+                          : "bg-white/5 text-zinc-400 hover:bg-white/10 hover:text-white"
+                      }`}
+                    >
+                      {page}
+                    </button>
+                  ),
+                )}
+              </div>
+
+              <button
+                onClick={() => goToPage(currentPage + 1)}
+                disabled={currentPage === totalPages}
+                className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-zinc-400 hover:text-white transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+              >
+                <ChevronRight size={16} />
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -9,6 +9,7 @@ import {
   Book,
   Category,
   AddBook,
+  AddCategory,
   BookQueryDto,
   Reservation,
 } from "../types/admin";
@@ -79,6 +80,32 @@ export const adminService = {
     return await fetchFromApi("/loan");
   },
 
+  borrowBook: async (
+    userId: string,
+    bookId: string,
+  ): Promise<BorrowedBooks> => {
+    const token = localStorage.getItem("token");
+    const response = await fetch(`${API_URL}/loan`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        user_id: userId,
+        book_id: bookId,
+        due_date: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
+      }),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || "Failed to borrow book!");
+    }
+
+    return response.json();
+  },
+
   getFines: (): Promise<PendingFine[]> => fetchFromApi("/fine"),
 
   returnBook: async (loanId: string): Promise<void> => {
@@ -132,6 +159,42 @@ export const adminService = {
     }
   },
 
+  reserveBook: async (userId: string, bookId: string): Promise<void> => {
+    const token = localStorage.getItem("token");
+    const response = await fetch(`${API_URL}/reservation`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ user_id: userId, book_id: bookId }),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || "Failed to reserve book");
+    }
+  },
+
+  receiveReservation: async (reservationID: string): Promise<void> => {
+    const token = localStorage.getItem("token");
+    const response = await fetch(
+      `${API_URL}/reservation/receive/${reservationID}`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      },
+    );
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || "Failed to receive reservation");
+    }
+  },
+
   cancelReservation: async (reservationId: string): Promise<void> => {
     const token = localStorage.getItem("token");
     const response = await fetch(
@@ -148,23 +211,6 @@ export const adminService = {
     if (!response.ok) {
       const error = await response.json();
       throw new Error(error.message || "Failed to cancel reservation");
-    }
-  },
-
-  reserveBook: async (userId: string, bookId: string): Promise<void> => {
-    const token = localStorage.getItem("token");
-    const response = await fetch(`${API_URL}/reservation`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ user_id: userId, book_id: bookId }),
-    });
-
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message || "Failed to reserve book");
     }
   },
 
@@ -229,6 +275,47 @@ export const adminService = {
       const error = await response.json();
       throw new Error(error.message || "Failed to delete category");
     }
+  },
+
+  addCategory: async (categoryData: AddCategory): Promise<Category> => {
+    const token = localStorage.getItem("token");
+    const response = await fetch(`${API_URL}/category`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(categoryData),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || "Failed to add category");
+    }
+
+    return response.json();
+  },
+
+  updateCategory: async (
+    id: string,
+    categoryData: Partial<AddCategory>,
+  ): Promise<Category> => {
+    const token = localStorage.getItem("token");
+    const response = await fetch(`${API_URL}/category/${id}`, {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(categoryData),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || "Failed to update category");
+    }
+
+    return response.json();
   },
 
   addBook: async (bookData: AddBook): Promise<Book> => {

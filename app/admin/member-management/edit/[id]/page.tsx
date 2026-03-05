@@ -9,6 +9,7 @@ import { ArrowLeft, Save, Shield, Activity } from "lucide-react";
 import Link from "next/link";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
+import ConfirmModal from "@/components/ui/ConfirmModal";
 
 export default function EditMemberPage() {
   const router = useRouter();
@@ -17,6 +18,7 @@ export default function EditMemberPage() {
 
   const [isLoading, setIsLoading] = useState(false);
   const [isFetchingData, setIsFetchingData] = useState(true);
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
 
   const [formData, setFormData] = useState<Partial<MemberDetails>>({
     first_name: "",
@@ -70,8 +72,13 @@ export default function EditMemberPage() {
     }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    setIsConfirmModalOpen(true);
+  };
+
+  const handleConfirmUpdate = async () => {
+    setIsConfirmModalOpen(false);
     setIsLoading(true);
 
     try {
@@ -121,7 +128,7 @@ export default function EditMemberPage() {
 
       {/* Form Section */}
       <div className="glass rounded-3xl border border-white/5 p-8 max-w-4xl">
-        <form onSubmit={handleSubmit} className="space-y-8">
+        <form onSubmit={handleFormSubmit} className="space-y-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {/* First Name */}
             <Input
@@ -241,7 +248,7 @@ export default function EditMemberPage() {
               variant="primary"
               type="submit"
               isLoading={isLoading}
-              className="px-10 py-3 flex items-center gap-2 min-w-[170px] justify-center bg-linear-to-br from-(--clr-primary-a0) to-(--clr-primary-a10) font-black text-sm"
+              className="px-10 py-3 flex items-center gap-2 min-w-[170px] justify-center bg-linear-to-br from-(--clr-success-a0) to-(--clr-success-a10) font-black text-sm"
             >
               <Save size={18} />
               Update Account
@@ -249,6 +256,15 @@ export default function EditMemberPage() {
           </div>
         </form>
       </div>
+      {/* Confirm Modal */}
+      <ConfirmModal
+        isOpen={isConfirmModalOpen}
+        onClose={() => setIsConfirmModalOpen(false)}
+        onConfirm={handleConfirmUpdate}
+        title="Update Member Status"
+        message={`Are you sure you want to save the changes for ${formData.first_name} ${formData.last_name}?`}
+        confirmText="Save Changes"
+      />
     </div>
   );
 }

@@ -10,12 +10,14 @@ import Link from "next/link";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import Image from "next/image";
+import ConfirmModal from "@/components/ui/ConfirmModal";
 
 export default function AddBookPage() {
   const router = useRouter();
   const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isFetchingCategories, setIsFetchingCategories] = useState(true);
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
 
   const [formData, setFormData] = useState<AddBook>({
     title: "",
@@ -78,8 +80,13 @@ export default function AddBookPage() {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    setIsConfirmModalOpen(true);
+  };
+
+  const handleConfirmAdd = async () => {
+    setIsConfirmModalOpen(false);
     setIsLoading(true);
 
     try {
@@ -141,7 +148,7 @@ export default function AddBookPage() {
 
       {/* Form Section */}
       <div className="glass rounded-3xl border border-white/5 p-8 max-w-4xl">
-        <form onSubmit={handleSubmit} className="space-y-8">
+        <form onSubmit={handleFormSubmit} className="space-y-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {/* Title */}
             <Input
@@ -295,6 +302,15 @@ export default function AddBookPage() {
           </div>
         </form>
       </div>
+      {/* Confirm Modal */}
+      <ConfirmModal
+        isOpen={isConfirmModalOpen}
+        onClose={() => setIsConfirmModalOpen(false)}
+        onConfirm={handleConfirmAdd}
+        title="Add New Book"
+        message={`Are you sure you want to add "${formData.title}" to the library catalog?`}
+        confirmText="Add Book"
+      />
     </div>
   );
 }

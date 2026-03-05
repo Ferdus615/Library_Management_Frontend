@@ -10,6 +10,7 @@ import Link from "next/link";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import Image from "next/image";
+import ConfirmModal from "@/components/ui/ConfirmModal";
 
 export default function EditBookPage() {
   const router = useRouter();
@@ -19,6 +20,7 @@ export default function EditBookPage() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isFetchingData, setIsFetchingData] = useState(true);
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
 
   const [formData, setFormData] = useState({
     title: "",
@@ -96,8 +98,13 @@ export default function EditBookPage() {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    setIsConfirmModalOpen(true);
+  };
+
+  const handleConfirmUpdate = async () => {
+    setIsConfirmModalOpen(false);
     setIsLoading(true);
 
     try {
@@ -159,7 +166,7 @@ export default function EditBookPage() {
 
       {/* Form Section */}
       <div className="glass rounded-3xl border border-white/5 p-8 max-w-4xl">
-        <form onSubmit={handleSubmit} className="space-y-8">
+        <form onSubmit={handleFormSubmit} className="space-y-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <Input
               label="Book Title"
@@ -288,7 +295,7 @@ export default function EditBookPage() {
               variant="primary"
               type="submit"
               isLoading={isLoading}
-              className="px-8 py-3 flex items-center gap-2 min-w-[140px] justify-center"
+              className="px-8 py-3 flex items-center gap-2 min-w-[140px] justify-center bg-linear-to-br from-(--clr-success-a0) to-(--clr-success-a10) font-black text-sm"
             >
               <Save size={18} />
               Save Changes
@@ -296,6 +303,15 @@ export default function EditBookPage() {
           </div>
         </form>
       </div>
+      {/* Confirm Modal */}
+      <ConfirmModal
+        isOpen={isConfirmModalOpen}
+        onClose={() => setIsConfirmModalOpen(false)}
+        onConfirm={handleConfirmUpdate}
+        title="Save Changes"
+        message={`Are you sure you want to save the changes for "${formData.title}"?`}
+        confirmText="Save Changes"
+      />
     </div>
   );
 }
