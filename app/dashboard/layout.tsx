@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Sidebar from "../../components/layout/Sidebar";
 import Topbar from "../../components/layout/Topbar";
-import AuthGuard from "../../components/AuthGuard";
+import AuthGuard from "../../components/common/AuthGuard";
 
 export default function DashboardLayout({
   children,
@@ -14,7 +14,7 @@ export default function DashboardLayout({
 
   return (
     <AuthGuard>
-      <div className="min-h-screen bg-(--clr-surface-a0) selection:bg-(--clr-primary-a0)/30 selection:text-(--clr-light-a0)">
+      <div className="min-h-screen bg-(--clr-surface-a0) selection:bg-(--clr-primary-a0)/30 selection:text-foreground">
         {/* Dynamic Background */}
         <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
           {/* Sophisticated Grid */}

@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import AdminSidebar from "../../components/layout/AdminSidebar";
 import AdminTopbar from "../../components/layout/AdminTopbar";
-import AuthGuard from "../../components/AuthGuard";
+import AuthGuard from "../../components/common/AuthGuard";
 
 export default function AdminLayout({
   children,
@@ -14,8 +14,8 @@ export default function AdminLayout({
 
   return (
     <AuthGuard>
-      <div className="min-h-screen bg-(--clr-surface-a0) selection:bg-(--clr-primary-a0)/30 selection:text-(--clr-light-a0)">
-        {/* Dynamic Background - Unified with User Dashboard */}
+      <div className="min-h-screen bg-(--clr-surface-a0) selection:bg-(--clr-primary-a0)/30 selection:text-foreground">
+        {/* Dynamic Background */}
         <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
           {/* Sophisticated Grid */}
           <div

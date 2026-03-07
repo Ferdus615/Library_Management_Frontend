@@ -85,7 +85,7 @@ export const authService = {
       const exp = payload.exp;
       if (!exp) return false;
       return Date.now() >= exp * 1000;
-    } catch (e) {
+    } catch (error) {
       return true;
     }
   },

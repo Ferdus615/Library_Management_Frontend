@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { IBM_Plex_Sans, IBM_Plex_Serif, IBM_Plex_Mono } from "next/font/google";
+import { Toaster } from "sonner";
 import "./globals.css";
 
 const ibmPlexSans = IBM_Plex_Sans({
@@ -42,6 +43,22 @@ export default function RootLayout({
         className={`${ibmPlexSans.variable} ${ibmPlexSerif.variable} ${ibmPlexMono.variable} antialiased`}
       >
         {children}
+        <Toaster
+          position="top-right"
+          toastOptions={{
+            className: "glass-toast",
+            classNames: {
+              title: "toast-title",
+              description: "toast-description",
+              closeButton: "toast-close-btn",
+              success: "glass-toast-success",
+              error: "glass-toast-error",
+              info: "glass-toast-info",
+              warning: "glass-toast-warning",
+            },
+          }}
+          closeButton
+        />
       </body>
     </html>
   );

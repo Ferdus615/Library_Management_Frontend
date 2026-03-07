@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { authService } from "../services/auth.service";
+import { authService } from "../../services/auth.service";
 
 export default function AuthGuard({ children }: { children: React.ReactNode }) {
   const router = useRouter();
