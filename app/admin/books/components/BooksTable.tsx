@@ -84,7 +84,7 @@ export default function BooksTable({
                 <td colSpan={4} className="px-6 py-24 text-center">
                   <div className="flex flex-col items-center gap-3 opacity-30">
                     <Search className="w-12 h-12 text-zinc-700" />
-                    <p className="text-zinc-500 font-medium text-lg font-bold">
+                    <p className="text-zinc-500 font-medium text-lg">
                       No books found in this view
                     </p>
                     <p className="text-sm text-zinc-600 max-w-xs">
