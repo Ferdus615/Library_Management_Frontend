@@ -165,7 +165,7 @@ export default function NotificationBell() {
                       !notification.is_read ? "bg-white/3" : ""
                     }`}
                   >
-                    <div className="mt-1 flex-shrink-0">
+                    <div className="mt-1 shrink-0">
                       {getIcon(notification.type)}
                     </div>
                     <div className="flex-1 space-y-1">
@@ -179,13 +179,18 @@ export default function NotificationBell() {
                         >
                           {notification.title}
                         </p>
-                        <span className="text-[10px] text-zinc-600 font-mono flex-shrink-0">
-                          {formatDistanceToNow(
-                            new Date(notification.created_at),
-                            {
-                              addSuffix: true,
-                            },
-                          )}
+                        <span className="text-[10px] text-zinc-600 font-mono shrink-0">
+                          {(() => {
+                            try {
+                              const date = new Date(notification.created_at);
+                              if (isNaN(date.getTime())) return "just now";
+                              return formatDistanceToNow(date, {
+                                addSuffix: true,
+                              });
+                            } catch {
+                              return "just now";
+                            }
+                          })()}
                         </span>
                       </div>
                       <p className="text-xs text-zinc-500 leading-relaxed font-medium">
@@ -211,7 +216,7 @@ export default function NotificationBell() {
                       </div>
                     </div>
                     {!notification.is_read && (
-                      <div className="absolute top-4 right-4 w-1.5 h-1.5 rounded-full bg-(--clr-primary-a0) shadow-[0_0_8px_rgba(var(--clr-primary-a0-rgb),0.5)]" />
+                      <div className="absolute top-4 right-3 w-1.5 h-1.5 rounded-full bg-(--clr-primary-a0) shadow-[0_0_8px_rgba(var(--clr-primary-a0-rgb),0.5)]" />
                     )}
                   </div>
                 ))}
