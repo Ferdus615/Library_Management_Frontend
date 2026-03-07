@@ -13,11 +13,18 @@ import {
   BookQueryDto,
   Reservation,
 } from "../types/admin";
+import { authService } from "./auth.service";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
 
 async function fetchFromApi(endpoint: string) {
   const token = localStorage.getItem("token");
+
+  if (token && authService.isTokenExpired(token)) {
+    authService.logout();
+    throw new Error("Session expired. Please login again.");
+  }
+
   console.log(`Fetching from: ${API_URL}${endpoint}`);
   const response = await fetch(`${API_URL}${endpoint}`, {
     headers: {
@@ -25,6 +32,11 @@ async function fetchFromApi(endpoint: string) {
       "Content-Type": "application/json",
     },
   });
+
+  if (response.status === 401) {
+    authService.logout();
+    throw new Error("Unauthorized. Please login again.");
+  }
 
   if (!response.ok) {
     const error = await response.json();
