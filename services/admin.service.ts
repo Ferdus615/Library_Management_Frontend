@@ -243,7 +243,7 @@ export const adminService = {
   getCategories: async (): Promise<Category[]> => fetchFromApi("/category"),
 
   getBookReservations: (id: string): Promise<Reservation[]> =>
-    fetchFromApi(`/book/reservations/${id}`),
+    fetchFromApi(`/reservation/book/${id}`),
 
   deleteBook: async (id: string): Promise<void> => {
     const token = localStorage.getItem("token");

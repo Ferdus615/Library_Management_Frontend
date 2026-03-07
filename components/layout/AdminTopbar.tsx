@@ -3,7 +3,6 @@
 import { authService } from "@/services/auth.service";
 import React, { useEffect, useState } from "react";
 import { Menu, Search, Command } from "lucide-react";
-import NotificationDropdown from "./NotificationDropdown";
 
 interface AdminTopbarProps {
   onMenuClick: () => void;
@@ -55,7 +54,6 @@ export default function AdminTopbar({ onMenuClick }: AdminTopbarProps) {
 
       <div className="flex items-center gap-4">
         {/* Notification Button */}
-        <NotificationDropdown />
 
         {/* initials */}
         <div className="flex items-center gap-3 border-l-2 border-white/5 pl-5">

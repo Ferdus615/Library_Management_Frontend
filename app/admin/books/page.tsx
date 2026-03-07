@@ -155,7 +155,7 @@ export default function AdminBooksPage() {
           </div>
 
           {/* Category Filter */}
-          <div className="relative group min-w-[160px]">
+          <div className="relative group w-[250px]">
             <Filter className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500 group-focus-within:text-(--clr-primary-a10) transition-colors" />
             <select
               value={selectedCategory}
