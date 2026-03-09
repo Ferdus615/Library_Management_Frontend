@@ -3,28 +3,29 @@
 import { authService } from "@/services/auth.service";
 import React, { useEffect, useState } from "react";
 import { Menu, Search, Command } from "lucide-react";
+import NotificationBell from "../ui/NotificationBell";
+import { User } from "@/types/auth";
 
 interface AdminTopbarProps {
   onMenuClick: () => void;
 }
 
 export default function AdminTopbar({ onMenuClick }: AdminTopbarProps) {
-  const [mounted, setMounted] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
-    setMounted(true);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setUser(authService.getUser());
   }, []);
 
-  if (!mounted) return null;
+  const userName = user ? `${user.first_name} ${user.last_name}` : "";
+  const userRole = user?.role || "";
 
-  const user = authService.getUser();
-
-  const userName = user?.first_name + " " + user?.last_name;
-  const userRole = user?.role;
   const getInitials = () => {
-    const firstName = user?.first_name[0] || "?";
-    const lastName = user?.last_name[0] || "?";
-    return firstName + lastName;
+    if (!user) return "??";
+    const firstName = user.first_name[0] || "?";
+    const lastName = user.last_name[0] || "?";
+    return (firstName + lastName).toUpperCase();
   };
 
   return (
@@ -54,6 +55,7 @@ export default function AdminTopbar({ onMenuClick }: AdminTopbarProps) {
 
       <div className="flex items-center gap-4">
         {/* Notification Button */}
+        <NotificationBell />
 
         {/* initials */}
         <div className="flex items-center gap-3 border-l-2 border-white/5 pl-5">

@@ -78,15 +78,37 @@ export const authService = {
       window.location.href = "/login";
     }
   },
+
+  isTokenExpired: (token: string): boolean => {
+    try {
+      const payload = JSON.parse(atob(token.split(".")[1]));
+      const exp = payload.exp;
+      if (!exp) return false;
+      return Date.now() >= exp * 1000;
+    } catch (error) {
+      return true;
+    }
+  },
 };
 async function fetchFromApi(endpoint: string) {
   const token = authService.getToken();
+
+  if (token && authService.isTokenExpired(token)) {
+    authService.logout();
+    throw new Error("Session expired. Please login again.");
+  }
+
   const response = await fetch(`${API_URL}${endpoint}`, {
     headers: {
       Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
     },
   });
+
+  if (response.status === 401) {
+    authService.logout();
+    throw new Error("Unauthorized. Please login again.");
+  }
 
   if (!response.ok) {
     const error = await response.json();

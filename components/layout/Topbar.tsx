@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { authService } from "../../services/auth.service";
 import { User } from "../../types/auth";
+import NotificationBell from "../ui/NotificationBell";
 
 interface TopbarProps {
   onMenuClick: () => void;
@@ -11,9 +12,8 @@ export default function Topbar({ onMenuClick }: TopbarProps) {
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
-    const userData = authService.getUser();
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    setUser(userData);
+    setUser(authService.getUser());
   }, []);
 
   const getInitials = () => {
@@ -79,6 +79,7 @@ export default function Topbar({ onMenuClick }: TopbarProps) {
       <div className="flex items-center gap-4">
         {/* Quick Actions */}
         <div className="flex items-center gap-2 pr-4 border-r border-white/5">
+          <NotificationBell />
           <button
             className="p-2.5 rounded-xl text-zinc-400 hover:bg-white/5 hover:text-white transition-all duration-200"
             title="Logout"

@@ -179,6 +179,56 @@
   .glow-success {
     box-shadow: 0 0 20px rgba(34, 148, 110, 0.3);
   }
+
+  /* Premium Sonner Toast Customization */
+  .glass-toast {
+    background: rgba(18, 18, 32, 0.8) !important;
+    backdrop-filter: blur(16px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 1rem !important;
+    padding: 1rem !important;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4) !important;
+    color: white !important;
+    font-family: var(--font-sans) !important;
+  }
+
+  .glass-toast-success {
+    border-color: rgba(34, 148, 110, 0.3) !important;
+  }
+
+  .glass-toast-error {
+    border-color: rgba(156, 33, 33, 0.3) !important;
+  }
+
+  .glass-toast-info {
+    border-color: rgba(33, 73, 138, 0.3) !important;
+  }
+
+  .glass-toast-warning {
+    border-color: rgba(168, 122, 42, 0.3) !important;
+  }
+
+  .toast-title {
+    font-weight: 700 !important;
+    font-size: 0.875rem !important;
+    letter-spacing: -0.01em !important;
+  }
+
+  .toast-description {
+    color: rgba(255, 255, 255, 0.6) !important;
+    font-size: 0.75rem !important;
+    font-weight: 500 !important;
+  }
+
+  .toast-close-btn {
+    color: rgba(255, 255, 255, 0.4) !important;
+    transition: color 0.2s !important;
+  }
+
+  .toast-close-btn:hover {
+    color: white !important;
+  }
 }
 
 body {

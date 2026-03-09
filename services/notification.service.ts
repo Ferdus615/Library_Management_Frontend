@@ -1,66 +1,63 @@
 import { authService } from "./auth.service";
+import { Notification } from "../types/notification";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
 
-export interface Notification {
-  id: string;
-  title: string;
-  message: string;
-  type: string;
-  is_read: boolean;
-  created_at: string;
+async function fetchFromApi(endpoint: string, options: RequestInit = {}) {
+  const token = authService.getToken();
+
+  if (token && authService.isTokenExpired(token)) {
+    authService.logout();
+    throw new Error("Session expired. Please login again.");
+  }
+
+  const response = await fetch(`${API_URL}${endpoint}`, {
+    ...options,
+    headers: {
+      ...options.headers,
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (response.status === 401) {
+    authService.logout();
+    throw new Error("Unauthorized. Please login again.");
+  }
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.message || `Failed to fetch from ${endpoint}`);
+  }
+
+  if (response.status === 204) return;
+  return response.json();
 }
 
 export const notificationService = {
   getNotifications: async (): Promise<Notification[]> => {
-    const token = authService.getToken();
     const user = authService.getUser();
-    const response = await fetch(`${API_URL}/notification/${user?.id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
-
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message || "Failed to fetch notifications");
-    }
-
-    return response.json();
+    if (!user) return [];
+    return fetchFromApi(`/notification/${user.id}`);
   },
 
   markAsRead: async (id: string): Promise<Notification> => {
-    const token = authService.getToken();
-    const response = await fetch(`${API_URL}/notification/${id}/read`, {
+    return fetchFromApi(`/notification/${id}/read`, {
       method: "PATCH",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
     });
-
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message || "Failed to mark notification as read");
-    }
-
-    return response.json();
   },
 
   deleteNotification: async (id: string): Promise<void> => {
-    const token = authService.getToken();
-    const response = await fetch(`${API_URL}/notification/${id}`, {
+    return fetchFromApi(`/notification/${id}`, {
       method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
     });
+  },
 
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message || "Failed to delete notification");
-    }
+  markAllAsRead: async (): Promise<void> => {
+    const user = authService.getUser();
+    if (!user) return;
+    return fetchFromApi(`/notification/read-all/${user.id}`, {
+      method: "PATCH",
+    });
   },
 };
