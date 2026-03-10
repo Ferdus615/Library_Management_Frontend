@@ -118,6 +118,7 @@ export interface Category {
   id: string;
   name: string;
   description: string;
+  bookCount?: number;
   _count?: {
     books: number;
   };
@@ -156,6 +157,55 @@ export interface BookQueryDto {
   categoryId?: string;
   page?: number;
   limit?: number;
+}
+
+export interface PaginatedBookResponse {
+  data: Book[];
+  total: number;
+}
+
+export interface UserQueryDto {
+  search?: string;
+  page?: number;
+  limit?: number;
+}
+
+export interface PaginatedUserResponse {
+  data: MemberDetails[];
+  total: number;
+}
+
+export interface LoanQueryDto {
+  search?: string;
+  page?: number;
+  limit?: number;
+}
+
+export interface PaginatedLoanResponse {
+  data: BorrowedBooks[];
+  total: number;
+}
+
+export interface ReservationQueryDto {
+  search?: string;
+  page?: number;
+  limit?: number;
+}
+
+export interface PaginatedReservationResponse {
+  data: Reservation[];
+  total: number;
+}
+
+export interface CategoryQueryDto {
+  search?: string;
+  page?: number;
+  limit?: number;
+}
+
+export interface PaginatedCategoryResponse {
+  data: Category[];
+  total: number;
 }
 
 export interface FineQueryDto {

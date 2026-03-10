@@ -25,9 +25,20 @@ const ITEMS_PER_PAGE = 8;
 
 export default function AdminCategoryManagementPage() {
   const [categories, setCategories] = useState<Category[]>([]);
+  const [totalRecords, setTotalRecords] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+
+  // Debounce search query
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearch(searchQuery);
+      setCurrentPage(1); // Reset to page 1 on search
+    }, 500);
+    return () => clearTimeout(handler);
+  }, [searchQuery]);
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [categoryToDelete, setCategoryToDelete] = useState<{
@@ -38,8 +49,13 @@ export default function AdminCategoryManagementPage() {
   const fetchCategories = async () => {
     setIsLoading(true);
     try {
-      const data = await adminService.getCategories();
-      setCategories(data);
+      const data = await adminService.getCategories({
+        page: currentPage,
+        limit: ITEMS_PER_PAGE,
+        search: debouncedSearch,
+      });
+      setCategories(data.data || []);
+      setTotalRecords(data.total || 0);
     } catch (error) {
       console.error("Failed to fetch categories:", error);
       toast.error("Failed to fetch categories");
@@ -50,12 +66,7 @@ export default function AdminCategoryManagementPage() {
 
   useEffect(() => {
     fetchCategories();
-  }, []);
-
-  // Reset to page 1 whenever the search query changes
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [searchQuery]);
+  }, [currentPage, debouncedSearch]);
 
   const openDeleteModal = (id: string, name: string) => {
     setCategoryToDelete({ id, name });
@@ -78,28 +89,9 @@ export default function AdminCategoryManagementPage() {
     }
   };
 
-  // Filtered list based on search query
-  const filteredCategories = useMemo(
-    () =>
-      categories.filter(
-        (cat) =>
-          cat.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          (cat.description || "")
-            .toLowerCase()
-            .includes(searchQuery.toLowerCase()),
-      ),
-    [categories, searchQuery],
-  );
-
   // Pagination derived values
-  const totalPages = Math.max(
-    1,
-    Math.ceil(filteredCategories.length / ITEMS_PER_PAGE),
-  );
-  const paginatedCategories = filteredCategories.slice(
-    (currentPage - 1) * ITEMS_PER_PAGE,
-    currentPage * ITEMS_PER_PAGE,
-  );
+  const totalPages = Math.max(1, Math.ceil(totalRecords / ITEMS_PER_PAGE));
+  const paginatedCategories = categories;
 
   const goToPage = (page: number) => {
     setCurrentPage(Math.min(Math.max(1, page), totalPages));
@@ -136,7 +128,7 @@ export default function AdminCategoryManagementPage() {
                 Total Categories
               </p>
               <p className="text-3xl font-black text-white mt-0.5">
-                {categories.length}
+                {totalRecords}
               </p>
             </div>
           </div>
@@ -175,12 +167,9 @@ export default function AdminCategoryManagementPage() {
       {/* Search result hint */}
       {searchQuery && !isLoading && (
         <p className="text-xs text-zinc-500">
-          Found{" "}
-          <span className="font-bold text-white">
-            {filteredCategories.length}
-          </span>{" "}
-          {filteredCategories.length === 1 ? "category" : "categories"} matching
-          &ldquo;{searchQuery}&rdquo;
+          Found <span className="font-bold text-white">{totalRecords}</span>{" "}
+          {totalRecords === 1 ? "category" : "categories"} matching &ldquo;
+          {searchQuery}&rdquo;
         </p>
       )}
 
@@ -271,13 +260,14 @@ export default function AdminCategoryManagementPage() {
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-2">
                         <span className="text-sm font-black text-white">
-                          {cat._count?.books ?? 0}
+                          {cat.bookCount ?? 0}
                         </span>
                         <span className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider">
                           Books
                         </span>
                       </div>
                     </td>
+
                     <td className="px-6 py-4 text-right">
                       <div className="flex items-center justify-end gap-2">
                         <Link
@@ -303,7 +293,7 @@ export default function AdminCategoryManagementPage() {
         </div>
 
         {/* Pagination Footer */}
-        {!isLoading && filteredCategories.length > 0 && (
+        {!isLoading && totalRecords > 0 && (
           <div className="flex items-center justify-between px-6 py-4 border-t border-white/5 bg-white/2">
             {/* Page info */}
             <p className="text-xs text-zinc-500">
@@ -313,15 +303,9 @@ export default function AdminCategoryManagementPage() {
               </span>
               {" – "}
               <span className="font-bold text-zinc-300">
-                {Math.min(
-                  currentPage * ITEMS_PER_PAGE,
-                  filteredCategories.length,
-                )}
+                {Math.min(currentPage * ITEMS_PER_PAGE, totalRecords)}
               </span>{" "}
-              of{" "}
-              <span className="font-bold text-zinc-300">
-                {filteredCategories.length}
-              </span>{" "}
+              of <span className="font-bold text-zinc-300">{totalRecords}</span>{" "}
               categories
             </p>
 

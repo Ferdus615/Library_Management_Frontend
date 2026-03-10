@@ -20,36 +20,48 @@ import Image from "next/image";
 
 export default function MemberBooksPage() {
   const [books, setBooks] = useState<Book[]>([]);
+  const [totalRecords, setTotalRecords] = useState(0);
   const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(8); // 8 per page for grid layout
   const [user, setUser] = useState<User | null>(null);
 
+  // Debounce search query
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearch(searchQuery);
+      setCurrentPage(1); // Reset to page 1 on search
+    }, 500);
+    return () => clearTimeout(handler);
+  }, [searchQuery]);
+
   const fetchBooks = useCallback(async () => {
     setIsLoading(true);
     try {
-      const booksData = await adminService.getBooks({
-        title: searchQuery || undefined,
+      const data = await adminService.getBooks({
+        title: debouncedSearch || undefined,
         categoryId: selectedCategory === "all" ? undefined : selectedCategory,
         page: currentPage,
         limit: itemsPerPage,
       });
-      setBooks(booksData);
+      setBooks(data.data || []);
+      setTotalRecords(data.total || 0);
     } catch (error) {
       console.error("Failed to fetch books:", error);
       toast.error("Failed to load library catalog");
     } finally {
       setIsLoading(false);
     }
-  }, [searchQuery, selectedCategory, currentPage, itemsPerPage]);
+  }, [debouncedSearch, selectedCategory, currentPage, itemsPerPage]);
 
   const fetchCategories = async () => {
     try {
       const data = await adminService.getCategories();
-      setCategories(data);
+      setCategories(data.data || []);
     } catch (error) {
       console.error("Failed to fetch categories:", error);
     }
@@ -64,13 +76,7 @@ export default function MemberBooksPage() {
     setUser(authService.getUser());
   }, []);
 
-  // Debounce search
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setCurrentPage(1); // Reset to first page on new search
-    }, 500);
-    return () => clearTimeout(timer);
-  }, [searchQuery]);
+  // Debounce search moved to useEffect above
 
   const handleBorrow = async (bookId: string) => {
     if (!user) {
@@ -265,25 +271,47 @@ export default function MemberBooksPage() {
           </div>
 
           {/* Pagination */}
-          <div className="flex items-center justify-center gap-4 pt-4">
-            <button
-              onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-              disabled={currentPage === 1 || isLoading}
-              className="p-3 rounded-2xl bg-white/5 border border-white/5 text-zinc-400 hover:text-white hover:bg-white/10 disabled:opacity-20 transition-all"
-            >
-              <ChevronLeft size={20} />
-            </button>
-            <span className="px-6 py-2 rounded-xl bg-white/5 text-sm font-bold text-white border border-white/5">
-              {currentPage}
-            </span>
-            <button
-              onClick={() => setCurrentPage((p) => p + 1)}
-              disabled={books.length < itemsPerPage || isLoading}
-              className="p-3 rounded-2xl bg-white/5 border border-white/5 text-zinc-400 hover:text-white hover:bg-white/10 disabled:opacity-20 transition-all"
-            >
-              <ChevronRight size={20} />
-            </button>
-          </div>
+          {totalRecords > 0 && (
+            <div className="flex items-center justify-center gap-2 pt-4">
+              <button
+                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                disabled={currentPage === 1 || isLoading}
+                className="p-3 rounded-2xl bg-white/5 border border-white/5 text-zinc-400 hover:text-white hover:bg-white/10 disabled:opacity-20 transition-all"
+              >
+                <ChevronLeft size={20} />
+              </button>
+
+              <div className="flex items-center gap-1">
+                {Array.from(
+                  { length: Math.ceil(totalRecords / itemsPerPage) },
+                  (_, i) => i + 1,
+                ).map((page) => (
+                  <button
+                    key={page}
+                    onClick={() => setCurrentPage(page)}
+                    className={`w-10 h-10 rounded-xl text-sm font-bold transition-all ${
+                      page === currentPage
+                        ? "bg-(--clr-primary-a10) text-white shadow-lg shadow-(--clr-primary-a0)/25"
+                        : "bg-white/5 text-zinc-400 hover:bg-white/10 hover:text-white"
+                    }`}
+                  >
+                    {page}
+                  </button>
+                ))}
+              </div>
+
+              <button
+                onClick={() => setCurrentPage((p) => p + 1)}
+                disabled={
+                  currentPage >= Math.ceil(totalRecords / itemsPerPage) ||
+                  isLoading
+                }
+                className="p-3 rounded-2xl bg-white/5 border border-white/5 text-zinc-400 hover:text-white hover:bg-white/10 disabled:opacity-20 transition-all"
+              >
+                <ChevronRight size={20} />
+              </button>
+            </div>
+          )}
         </div>
       )}
     </div>

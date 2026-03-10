@@ -11,6 +11,15 @@ import {
   AddBook,
   AddCategory,
   BookQueryDto,
+  PaginatedBookResponse,
+  UserQueryDto,
+  PaginatedUserResponse,
+  LoanQueryDto,
+  PaginatedLoanResponse,
+  ReservationQueryDto,
+  PaginatedReservationResponse,
+  CategoryQueryDto,
+  PaginatedCategoryResponse,
   FineQueryDto,
   PaginatedFineResponse,
   Reservation,
@@ -54,7 +63,18 @@ export const adminService = {
   getMemberStats: (): Promise<MemberDashboardData> =>
     fetchFromApi("/dashboard/member"),
 
-  getMembers: (): Promise<MemberDetails[]> => fetchFromApi("/user"),
+  getMembers: (query?: UserQueryDto): Promise<PaginatedUserResponse> => {
+    let endpoint = "/user";
+    if (query) {
+      const params = new URLSearchParams();
+      if (query.search) params.append("search", query.search);
+      if (query.page) params.append("page", query.page.toString());
+      if (query.limit) params.append("limit", query.limit.toString());
+      const queryString = params.toString();
+      if (queryString) endpoint += `?${queryString}`;
+    }
+    return fetchFromApi(endpoint);
+  },
 
   getMemberById: (id: string): Promise<MemberDetails> =>
     fetchFromApi(`/user/${id}`),
@@ -81,9 +101,19 @@ export const adminService = {
     return response.json();
   },
 
-  getRequests: async (): Promise<PendingRequest[]> => {
-    const reservations = await fetchFromApi("/reservation");
-    return reservations;
+  getRequests: async (
+    query?: ReservationQueryDto,
+  ): Promise<PaginatedReservationResponse> => {
+    let endpoint = "/reservation";
+    if (query) {
+      const params = new URLSearchParams();
+      if (query.search) params.append("search", query.search);
+      if (query.page) params.append("page", query.page.toString());
+      if (query.limit) params.append("limit", query.limit.toString());
+      const queryString = params.toString();
+      if (queryString) endpoint += `?${queryString}`;
+    }
+    return fetchFromApi(endpoint);
   },
 
   getOverdue: async (): Promise<OverdueBookDetail[]> => {
@@ -91,8 +121,19 @@ export const adminService = {
     return overdues;
   },
 
-  getBorrowedBooks: async (): Promise<BorrowedBooks[]> => {
-    return await fetchFromApi("/loan");
+  getBorrowedBooks: async (
+    query?: LoanQueryDto,
+  ): Promise<PaginatedLoanResponse> => {
+    let endpoint = "/loan";
+    if (query) {
+      const params = new URLSearchParams();
+      if (query.search) params.append("search", query.search);
+      if (query.page) params.append("page", query.page.toString());
+      if (query.limit) params.append("limit", query.limit.toString());
+      const queryString = params.toString();
+      if (queryString) endpoint += `?${queryString}`;
+    }
+    return await fetchFromApi(endpoint);
   },
 
   borrowBook: async (
@@ -249,7 +290,7 @@ export const adminService = {
   getMemberFines: (userId: string): Promise<PendingFine[]> =>
     fetchFromApi(`/user/fines/${userId}`),
 
-  getBooks: async (query?: BookQueryDto): Promise<Book[]> => {
+  getBooks: async (query?: BookQueryDto): Promise<PaginatedBookResponse> => {
     let endpoint = "/book";
     if (query) {
       const params = new URLSearchParams();
@@ -266,7 +307,20 @@ export const adminService = {
     return fetchFromApi(endpoint);
   },
 
-  getCategories: async (): Promise<Category[]> => fetchFromApi("/category"),
+  getCategories: async (
+    query?: CategoryQueryDto,
+  ): Promise<PaginatedCategoryResponse> => {
+    let endpoint = "/category";
+    if (query) {
+      const params = new URLSearchParams();
+      if (query.search) params.append("search", query.search);
+      if (query.page) params.append("page", query.page.toString());
+      if (query.limit) params.append("limit", query.limit.toString());
+      const queryString = params.toString();
+      if (queryString) endpoint += `?${queryString}`;
+    }
+    return fetchFromApi(endpoint);
+  },
 
   getBookReservations: (id: string): Promise<Reservation[]> =>
     fetchFromApi(`/reservation/book/${id}`),
