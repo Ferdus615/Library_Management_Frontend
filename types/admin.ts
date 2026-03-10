@@ -158,6 +158,19 @@ export interface BookQueryDto {
   limit?: number;
 }
 
+export interface FineQueryDto {
+  search?: string;
+  page?: number;
+  limit?: number;
+}
+
+export interface PaginatedFineResponse {
+  data: PendingFine[];
+  total: number;
+  activeCount: number;
+  paidCount: number;
+}
+
 export interface Reservation {
   id: string;
   status: string;

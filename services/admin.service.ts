@@ -11,8 +11,11 @@ import {
   AddBook,
   AddCategory,
   BookQueryDto,
+  FineQueryDto,
+  PaginatedFineResponse,
   Reservation,
 } from "../types/admin";
+
 import { authService } from "./auth.service";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
@@ -118,7 +121,18 @@ export const adminService = {
     return response.json();
   },
 
-  getFines: (): Promise<PendingFine[]> => fetchFromApi("/fine"),
+  getFines: (query?: FineQueryDto): Promise<PaginatedFineResponse> => {
+    let endpoint = "/fine";
+    if (query) {
+      const params = new URLSearchParams();
+      if (query.search) params.append("search", query.search);
+      if (query.page) params.append("page", query.page.toString());
+      if (query.limit) params.append("limit", query.limit.toString());
+      const queryString = params.toString();
+      if (queryString) endpoint += `?${queryString}`;
+    }
+    return fetchFromApi(endpoint);
+  },
 
   returnBook: async (loanId: string): Promise<void> => {
     const token = localStorage.getItem("token");
