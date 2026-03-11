@@ -440,6 +440,8 @@ export const adminService = {
   },
 
   getBookById: (id: string): Promise<Book> => fetchFromApi(`/book/${id}`),
+  getCategoryById: (id: string): Promise<Category> =>
+    fetchFromApi(`/category/${id}`),
 
   getNotifications: async (
     query?: NotificationQueryDto,
