@@ -21,12 +21,12 @@ export default function NotificationsPage() {
     else setIsLoading(true);
 
     try {
-      const data = await adminService.getNotifications({
+      const response = await adminService.getNotifications({
         page: currentPage,
         limit: ITEMS_PER_PAGE,
       });
-      setNotifications(data.data || []);
-      setTotalRecords(data.total || 0);
+      setNotifications(response.data || []);
+      setTotalRecords(response.total || 0);
     } catch (error) {
       console.error("Failed to fetch notifications:", error);
       toast.error("Failed to fetch system notifications");

@@ -25,6 +25,7 @@ export default function AddBookPage() {
     isbn: "",
     publication_year: 0,
     total_copies: 0,
+    damaged_copies: 0,
     category_id: "",
     cover_image: "",
   });
@@ -35,10 +36,15 @@ export default function AddBookPage() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const data = await adminService.getCategories();
-        setCategories(data);
-        if (data.length > 0) {
-          setFormData((prev) => ({ ...prev, category_id: data[0].id }));
+        const response = await adminService.getCategories();
+        const categoriesList = response.data || [];
+
+        setCategories(categoriesList);
+        if (categoriesList.length > 0) {
+          setFormData((prev) => ({
+            ...prev,
+            category_id: categoriesList[0].id,
+          }));
         }
       } catch (error) {
         console.error("Failed to fetch categories:", error);
@@ -58,7 +64,9 @@ export default function AddBookPage() {
     setFormData((prev) => ({
       ...prev,
       [name]:
-        name === "total_copies" || name === "publication_year"
+        name === "total_copies" ||
+        name === "publication_year" ||
+        name === "damaged_copies"
           ? parseInt(value) || 0
           : value,
     }));
@@ -226,6 +234,16 @@ export default function AddBookPage() {
               min={1}
               name="total_copies"
               value={formData.total_copies}
+              onChange={handleChange}
+              className="bg-white/5 border-white/10 rounded-2xl"
+            />
+
+            <Input
+              label="Damaged Copies"
+              required
+              min={0}
+              name="damaged_copies"
+              value={formData.damaged_copies}
               onChange={handleChange}
               className="bg-white/5 border-white/10 rounded-2xl"
             />

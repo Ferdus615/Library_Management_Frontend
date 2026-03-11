@@ -49,13 +49,13 @@ export default function AdminCategoryManagementPage() {
   const fetchCategories = async () => {
     setIsLoading(true);
     try {
-      const data = await adminService.getCategories({
+      const response = await adminService.getCategories({
         page: currentPage,
         limit: ITEMS_PER_PAGE,
         search: debouncedSearch,
       });
-      setCategories(data.data || []);
-      setTotalRecords(data.total || 0);
+      setCategories(response.data || []);
+      setTotalRecords(response.total || 0);
     } catch (error) {
       console.error("Failed to fetch categories:", error);
       toast.error("Failed to fetch categories");

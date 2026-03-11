@@ -49,14 +49,14 @@ export default function AdminBooksPage() {
   const fetchBooks = useCallback(async () => {
     setIsLoading(true);
     try {
-      const data = await adminService.getBooks({
+      const booksResponse = await adminService.getBooks({
         title: debouncedSearch || undefined,
         categoryId: selectedCategory === "all" ? undefined : selectedCategory,
         page: currentPage,
         limit: itemsPerPage,
       });
-      setBooks(data.data || []);
-      setTotalRecords(data.total || 0);
+      setBooks(booksResponse.data || []);
+      setTotalRecords(booksResponse.total || 0);
     } catch (error) {
       console.error("Failed to fetch books:", error);
       toast.error("Failed to fetch books");

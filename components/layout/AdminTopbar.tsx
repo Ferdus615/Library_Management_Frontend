@@ -36,7 +36,7 @@ export default function AdminTopbar({ onMenuClick }: AdminTopbarProps) {
           className="lg:hidden p-2.5 rounded-xl text-(--clr-surface-a50) hover:bg-white/5 hover:text-white transition-all duration-200"
           aria-label="Toggle menu"
         >
-          <Menu className="h-6 w-6" />
+          <Menu className="h-6 w-6 cursor-pointer" />
         </button>
 
         {/* Premium Search Bar */}

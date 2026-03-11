@@ -169,7 +169,7 @@ export default function AdminSidebar({ isOpen, onClose }: SidebarProps) {
         <div className="mt-auto p-4 mb-5">
           <button
             onClick={handleLogout}
-            className="w-full flex items-center justify-center gap-2 py-2 px-3 rounded-xl border border-white/5 text-(--clr-surface-a50) hover:bg-(--clr-danger-a0)/20 hover:text-(--clr-danger-a10) hover:border-(--clr-danger-a0)/30 transition-all duration-300 group"
+            className="w-full flex items-center justify-center gap-2 py-2 px-3 rounded-xl border border-white/5 text-(--clr-surface-a50) hover:bg-(--clr-danger-a0)/20 hover:text-(--clr-danger-a10) hover:border-(--clr-danger-a0)/30 transition-all duration-300 group cursor-pointer"
           >
             <LogOut className="h-5 w-5 transition-transform group-hover:-translate-x-1" />
             <span className="text-sm font-medium">Sign Out</span>

@@ -27,17 +27,20 @@ interface NotificationsTableProps {
 }
 
 const getIcon = (type: string) => {
-  switch (type) {
-    case "RESERVATION_CREATED":
+  const typeLower = type.toLowerCase();
+  switch (typeLower) {
+    case "reservation_created":
       return <Calendar className="w-5 h-5 text-blue-400" />;
-    case "RESERVATION_READY":
+    case "reservation_ready":
       return <CheckCircle2 className="w-5 h-5 text-green-400" />;
-    case "LOAN_ISSUED":
+    case "loan_issued":
       return <BookOpen className="w-5 h-5 text-purple-400" />;
-    case "LOAN_OVERDUE":
+    case "loan_overdue":
       return <AlertTriangle className="w-5 h-5 text-orange-400" />;
-    case "FINE_CREATED":
-      return <DollarSign className="w-5 h-5 text-red-400" />;
+    case "fine_created":
+      return <DollarSign className="w-5 h-5 text-red-100" />;
+    case "fine_paid":
+      return <CheckCircle2 className="w-5 h-5 text-green-500" />;
     default:
       return <Bell className="w-5 h-5 text-zinc-400" />;
   }
