@@ -239,3 +239,23 @@ export interface Reservation {
   expires_at: string | null;
   created_at: string;
 }
+
+export interface Notification {
+  id: string;
+  user_id: string;
+  title: string;
+  message: string;
+  type: string;
+  read: boolean;
+  created_at?: string;
+}
+
+export interface NotificationQueryDto {
+  page?: number;
+  limit?: number;
+}
+
+export interface PaginatedNotificationResponse {
+  data: Notification[];
+  total: number;
+}

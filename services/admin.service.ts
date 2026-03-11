@@ -23,6 +23,9 @@ import {
   FineQueryDto,
   PaginatedFineResponse,
   Reservation,
+  Notification,
+  NotificationQueryDto,
+  PaginatedNotificationResponse,
 } from "../types/admin";
 
 import { authService } from "./auth.service";
@@ -437,4 +440,18 @@ export const adminService = {
   },
 
   getBookById: (id: string): Promise<Book> => fetchFromApi(`/book/${id}`),
+
+  getNotifications: async (
+    query?: NotificationQueryDto,
+  ): Promise<PaginatedNotificationResponse> => {
+    let endpoint = "/notification";
+    if (query) {
+      const params = new URLSearchParams();
+      if (query.page) params.append("page", query.page.toString());
+      if (query.limit) params.append("limit", query.limit.toString());
+      const queryString = params.toString();
+      if (queryString) endpoint += `?${queryString}`;
+    }
+    return fetchFromApi(endpoint);
+  },
 };
