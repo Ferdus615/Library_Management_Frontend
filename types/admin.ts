@@ -110,6 +110,7 @@ export interface AddBook {
   isbn: string;
   publication_year: number;
   total_copies: number;
+  damaged_copies: number;
   category_id: string;
   cover_image: string | null;
 }
@@ -118,6 +119,7 @@ export interface Category {
   id: string;
   name: string;
   description: string;
+  bookCount?: number;
   _count?: {
     books: number;
   };
@@ -158,6 +160,68 @@ export interface BookQueryDto {
   limit?: number;
 }
 
+export interface PaginatedBookResponse {
+  data: Book[];
+  total: number;
+}
+
+export interface UserQueryDto {
+  search?: string;
+  page?: number;
+  limit?: number;
+}
+
+export interface PaginatedUserResponse {
+  data: MemberDetails[];
+  total: number;
+}
+
+export interface LoanQueryDto {
+  search?: string;
+  page?: number;
+  limit?: number;
+}
+
+export interface PaginatedLoanResponse {
+  data: BorrowedBooks[];
+  total: number;
+}
+
+export interface ReservationQueryDto {
+  search?: string;
+  page?: number;
+  limit?: number;
+}
+
+export interface PaginatedReservationResponse {
+  data: Reservation[];
+  total: number;
+}
+
+export interface CategoryQueryDto {
+  search?: string;
+  page?: number;
+  limit?: number;
+}
+
+export interface PaginatedCategoryResponse {
+  data: Category[];
+  total: number;
+}
+
+export interface FineQueryDto {
+  search?: string;
+  page?: number;
+  limit?: number;
+}
+
+export interface PaginatedFineResponse {
+  data: PendingFine[];
+  total: number;
+  activeCount: number;
+  paidCount: number;
+}
+
 export interface Reservation {
   id: string;
   status: string;
@@ -175,4 +239,24 @@ export interface Reservation {
   ready_at: string | null;
   expires_at: string | null;
   created_at: string;
+}
+
+export interface Notification {
+  id: string;
+  user_id: string;
+  title: string;
+  message: string;
+  type: string;
+  read: boolean;
+  created_at?: string;
+}
+
+export interface NotificationQueryDto {
+  page?: number;
+  limit?: number;
+}
+
+export interface PaginatedNotificationResponse {
+  data: Notification[];
+  total: number;
 }

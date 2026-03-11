@@ -21,6 +21,7 @@ interface BooksTableProps {
   isLoading: boolean;
   currentPage: number;
   itemsPerPage: number;
+  totalRecords: number;
   onPageChange: (page: number) => void;
   onViewReservations: (bookId: string, bookTitle: string) => void;
   onDeleteBook: (bookId: string, bookTitle: string) => void;
@@ -31,10 +32,13 @@ export default function BooksTable({
   isLoading,
   currentPage,
   itemsPerPage,
+  totalRecords,
   onPageChange,
   onViewReservations,
   onDeleteBook,
 }: BooksTableProps) {
+  const totalPages = Math.max(1, Math.ceil(totalRecords / itemsPerPage));
+
   return (
     <div className="glass rounded-3xl border-white/5 overflow-hidden shadow-2xl shadow-black/20">
       <div className="overflow-x-auto">
@@ -208,33 +212,58 @@ export default function BooksTable({
       </div>
 
       {/* Pagination Footer */}
-      <div className="px-8 py-4 border-t border-white/5 flex items-center justify-between bg-white/2">
-        <p className="text-xs text-zinc-500">
-          Showing{" "}
-          <span className="text-zinc-300 font-bold">page {currentPage}</span>
-        </p>
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => onPageChange(Math.max(1, currentPage - 1))}
-            disabled={currentPage === 1 || isLoading}
-            className="p-2 rounded-xl bg-white/5 border border-white/10 text-zinc-400 hover:text-white hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
-          >
-            <ChevronLeft size={18} />
-          </button>
+      {!isLoading && totalRecords > 0 && (
+        <div className="px-8 py-4 border-t border-white/5 flex items-center justify-between bg-white/2">
+          <p className="text-xs text-zinc-500">
+            Showing{" "}
+            <span className="font-bold text-zinc-300">
+              {(currentPage - 1) * itemsPerPage + 1}
+            </span>
+            {" – "}
+            <span className="font-bold text-zinc-300">
+              {Math.min(currentPage * itemsPerPage, totalRecords)}
+            </span>{" "}
+            of <span className="font-bold text-zinc-300">{totalRecords}</span>{" "}
+            books
+          </p>
 
-          <div className="w-8 h-8 rounded-xl bg-(--clr-primary-a10) text-white flex items-center justify-center text-xs font-bold shadow-lg shadow-(--clr-primary-a10)/20">
-            {currentPage}
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => onPageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+              className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-zinc-400 hover:text-white transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+            >
+              <ChevronLeft size={16} />
+            </button>
+
+            <div className="flex items-center gap-1">
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                (page) => (
+                  <button
+                    key={page}
+                    onClick={() => onPageChange(page)}
+                    className={`w-8 h-8 rounded-xl text-xs font-bold transition-all ${
+                      page === currentPage
+                        ? "bg-(--clr-primary-a10) text-white shadow-lg"
+                        : "bg-white/5 text-zinc-400 hover:bg-white/10 hover:text-white"
+                    }`}
+                  >
+                    {page}
+                  </button>
+                ),
+              )}
+            </div>
+
+            <button
+              onClick={() => onPageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+              className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-zinc-400 hover:text-white transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+            >
+              <ChevronRight size={16} />
+            </button>
           </div>
-
-          <button
-            onClick={() => onPageChange(currentPage + 1)}
-            disabled={books.length < itemsPerPage || isLoading}
-            className="p-2 rounded-xl bg-white/5 border border-white/10 text-zinc-400 hover:text-white hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
-          >
-            <ChevronRight size={18} />
-          </button>
         </div>
-      </div>
+      )}
     </div>
   );
 }

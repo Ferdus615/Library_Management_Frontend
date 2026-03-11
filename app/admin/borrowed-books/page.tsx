@@ -25,15 +25,31 @@ const ITEMS_PER_PAGE = 8;
 
 export default function AdminBorrowedBooksPage() {
   const [borrowedBooks, setBorrowedBooks] = useState<BorrowedBooks[]>([]);
+  const [totalRecords, setTotalRecords] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+
+  // Debounce search query
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearch(searchQuery);
+      setCurrentPage(1); // Reset to page 1 on search
+    }, 500);
+    return () => clearTimeout(handler);
+  }, [searchQuery]);
 
   const fetchBorrows = async () => {
     try {
       setIsLoading(true);
-      const data = await adminService.getBorrowedBooks();
-      setBorrowedBooks(data || []);
+      const data = await adminService.getBorrowedBooks({
+        page: currentPage,
+        limit: ITEMS_PER_PAGE,
+        search: debouncedSearch,
+      });
+      setBorrowedBooks(data.data || []);
+      setTotalRecords(data.total || 0);
     } catch (error) {
       console.error("Failed to fetch borrows", error);
       toast.error("Failed to load borrowed books data");
@@ -44,12 +60,7 @@ export default function AdminBorrowedBooksPage() {
 
   useEffect(() => {
     fetchBorrows();
-  }, []);
-
-  // Reset to page 1 whenever search query changes
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [searchQuery]);
+  }, [currentPage, debouncedSearch]);
 
   const handleReturn = async (loanId: string) => {
     try {
@@ -62,36 +73,19 @@ export default function AdminBorrowedBooksPage() {
     }
   };
 
-  const filteredBooks = useMemo(() => {
-    return borrowedBooks.filter(
-      (item) =>
-        item.book.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        item.user.first_name
-          .toLowerCase()
-          .includes(searchQuery.toLowerCase()) ||
-        item.user.last_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        item.user.email.toLowerCase().includes(searchQuery.toLowerCase()),
-    );
-  }, [borrowedBooks, searchQuery]);
-
   // Pagination derived values
-  const totalPages = Math.max(
-    1,
-    Math.ceil(filteredBooks.length / ITEMS_PER_PAGE),
-  );
-  const paginatedBooks = filteredBooks.slice(
-    (currentPage - 1) * ITEMS_PER_PAGE,
-    currentPage * ITEMS_PER_PAGE,
-  );
+  const totalPages = Math.max(1, Math.ceil(totalRecords / ITEMS_PER_PAGE));
+  const paginatedBooks = borrowedBooks;
 
   const goToPage = (page: number) => {
     setCurrentPage(Math.min(Math.max(1, page), totalPages));
   };
 
   const stats = {
-    active: borrowedBooks.filter((b) => b.status === "issued").length,
+    active: borrowedBooks.filter((b) => b.status === "issued").length, // current page only
     overdue: borrowedBooks.filter((b) => b.status === "overdue").length,
     returned: borrowedBooks.filter((b) => b.status === "returned").length,
+    total: totalRecords,
   };
 
   return (
@@ -240,7 +234,7 @@ export default function AdminBorrowedBooksPage() {
                   <td colSpan={5} className="px-8 py-24 text-center">
                     <div className="flex flex-col items-center gap-3 opacity-30">
                       <Search className="w-10 h-10 text-zinc-700" />
-                      <p className="text-zinc-500 font-medium text-lg font-bold">
+                      <p className="text-zinc-500 text-lg font-bold">
                         {searchQuery
                           ? "No borrowed books match your search"
                           : "No borrowed books found"}
@@ -380,7 +374,7 @@ export default function AdminBorrowedBooksPage() {
         </div>
 
         {/* Pagination Footer */}
-        {!isLoading && filteredBooks.length > 0 && (
+        {!isLoading && totalRecords > 0 && (
           <div className="flex items-center justify-between px-8 py-4 border-t border-white/5 bg-white/2">
             <p className="text-xs text-zinc-500">
               Showing{" "}
@@ -389,12 +383,9 @@ export default function AdminBorrowedBooksPage() {
               </span>
               {" – "}
               <span className="font-bold text-zinc-300">
-                {Math.min(currentPage * ITEMS_PER_PAGE, filteredBooks.length)}
+                {Math.min(currentPage * ITEMS_PER_PAGE, totalRecords)}
               </span>{" "}
-              of{" "}
-              <span className="font-bold text-zinc-300">
-                {filteredBooks.length}
-              </span>{" "}
+              of <span className="font-bold text-zinc-300">{totalRecords}</span>{" "}
               records
             </p>
 

@@ -28,6 +28,7 @@ export default function EditBookPage() {
     isbn: "",
     publication_year: 0,
     total_copies: 0,
+    damaged_copies: 0,
     category_id: "",
     cover_image: "",
   });
@@ -38,24 +39,25 @@ export default function EditBookPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [catsData, bookData] = await Promise.all([
+        const [{ data: categoriesList }, bookDetails] = await Promise.all([
           adminService.getCategories(),
           adminService.getBookById(id),
         ]);
 
-        setCategories(catsData);
+        setCategories(categoriesList || []);
         setFormData({
-          title: bookData.title,
-          author: bookData.author,
-          isbn: bookData.isbn,
-          publication_year: parseInt(bookData.publication_year),
-          total_copies: bookData.total_copies,
-          category_id: bookData.category?.id || "",
-          cover_image: bookData.cover_image || "",
+          title: bookDetails.title,
+          author: bookDetails.author,
+          isbn: bookDetails.isbn,
+          publication_year: parseInt(bookDetails.publication_year),
+          total_copies: bookDetails.total_copies,
+          damaged_copies: bookDetails.damaged_copies,
+          category_id: bookDetails.category?.id || "",
+          cover_image: bookDetails.cover_image || "",
         });
 
-        if (bookData.cover_image) {
-          setImagePreview(bookData.cover_image);
+        if (bookDetails.cover_image) {
+          setImagePreview(bookDetails.cover_image);
         }
       } catch (error) {
         console.error("Failed to fetch data:", error);
@@ -76,7 +78,9 @@ export default function EditBookPage() {
     setFormData((prev) => ({
       ...prev,
       [name]:
-        name === "total_copies" || name === "publication_year"
+        name === "total_copies" ||
+        name === "publication_year" ||
+        name === "damaged_copies"
           ? parseInt(value) || 0
           : value,
     }));
@@ -108,19 +112,22 @@ export default function EditBookPage() {
     setIsLoading(true);
 
     try {
-      let cover_image = formData.cover_image;
+      const updateData: any = { ...formData };
 
-      // Image upload logic temporarily disabled for testing like in Add Book
-      /*
+      // Handle cover image
       if (imageFile) {
-        toast.loading("Uploading image...", { id: "uploading" });
-        const uploadResult = await uploadService.uploadImage(imageFile);
-        cover_image = uploadResult.url;
-        toast.success("Image uploaded successfully", { id: "uploading" });
+        // toast.loading("Uploading image...", { id: "uploading" });
+        // const uploadResult = await uploadService.uploadImage(imageFile);
+        // updateData.cover_image = uploadResult.url;
       }
-      */
 
-      await adminService.updateBook(id, { ...formData, cover_image });
+      // If cover_image is empty string, remove it or set to undefined
+      // so it doesn't fail IsUrl validation in backend
+      if (!updateData.cover_image) {
+        delete updateData.cover_image;
+      }
+
+      await adminService.updateBook(id, updateData);
       toast.success("Book updated successfully!");
       router.push("/admin/books");
     } catch (error: any) {
@@ -229,6 +236,16 @@ export default function EditBookPage() {
               min={1}
               name="total_copies"
               value={formData.total_copies}
+              onChange={handleChange}
+              className="bg-white/5 border-white/10 rounded-2xl"
+            />
+
+            <Input
+              label="Damaged Copies"
+              required
+              min={0}
+              name="damaged_copies"
+              value={formData.damaged_copies}
               onChange={handleChange}
               className="bg-white/5 border-white/10 rounded-2xl"
             />

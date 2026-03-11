@@ -22,15 +22,35 @@ const ITEMS_PER_PAGE = 8;
 
 export default function FinesPage() {
   const [fines, setFines] = useState<PendingFine[]>([]);
+  const [totalRecords, setTotalRecords] = useState(0);
+  const [activeCount, setActiveCount] = useState(0);
+  const [paidCount, setPaidCount] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+
+  // Debounce search query
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearch(searchQuery);
+      setCurrentPage(1); // Reset to page 1 on search
+    }, 500);
+    return () => clearTimeout(handler);
+  }, [searchQuery]);
 
   const fetchFines = async () => {
     try {
       setIsLoading(true);
-      const data = await adminService.getFines();
-      setFines(data || []);
+      const response = await adminService.getFines({
+        page: currentPage,
+        limit: ITEMS_PER_PAGE,
+        search: debouncedSearch,
+      });
+      setFines(response.data || []);
+      setTotalRecords(response.total || 0);
+      setActiveCount(response.activeCount || 0);
+      setPaidCount(response.paidCount || 0);
     } catch (error) {
       console.error("Failed to fetch fines:", error);
       toast.error("Failed to fetch fines data");
@@ -41,16 +61,11 @@ export default function FinesPage() {
 
   useEffect(() => {
     fetchFines();
-  }, []);
-
-  // Reset to page 1 whenever search query changes
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [searchQuery]);
+  }, [currentPage, debouncedSearch]);
 
   const stats = {
-    active: fines.filter((fine) => fine.paid === false).length,
-    paid: fines.filter((fine) => fine.paid === true).length,
+    active: activeCount,
+    paid: paidCount,
   };
 
   const handlePayFine = async (fineID: string) => {
@@ -64,26 +79,9 @@ export default function FinesPage() {
     }
   };
 
-  const filteredFines = useMemo(() => {
-    return fines.filter(
-      (fine) =>
-        `${fine.user.first_name} ${fine.user.last_name}`
-          .toLowerCase()
-          .includes(searchQuery.toLowerCase()) ||
-        fine.user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        fine.book_title.toLowerCase().includes(searchQuery.toLowerCase()),
-    );
-  }, [fines, searchQuery]);
-
   // Pagination derived values
-  const totalPages = Math.max(
-    1,
-    Math.ceil(filteredFines.length / ITEMS_PER_PAGE),
-  );
-  const paginatedFines = filteredFines.slice(
-    (currentPage - 1) * ITEMS_PER_PAGE,
-    currentPage * ITEMS_PER_PAGE,
-  );
+  const totalPages = Math.max(1, Math.ceil(totalRecords / ITEMS_PER_PAGE));
+  const paginatedFines = fines;
 
   const goToPage = (page: number) => {
     setCurrentPage(Math.min(Math.max(1, page), totalPages));
@@ -299,7 +297,7 @@ export default function FinesPage() {
         </div>
 
         {/* Pagination Footer */}
-        {!isLoading && filteredFines.length > 0 && (
+        {!isLoading && totalRecords > 0 && (
           <div className="flex items-center justify-between px-6 py-4 border-t border-white/5 bg-white/2">
             <p className="text-xs text-zinc-500">
               Showing{" "}
@@ -308,12 +306,9 @@ export default function FinesPage() {
               </span>
               {" – "}
               <span className="font-bold text-zinc-300">
-                {Math.min(currentPage * ITEMS_PER_PAGE, filteredFines.length)}
+                {Math.min(currentPage * ITEMS_PER_PAGE, totalRecords)}
               </span>{" "}
-              of{" "}
-              <span className="font-bold text-zinc-300">
-                {filteredFines.length}
-              </span>{" "}
+              of <span className="font-bold text-zinc-300">{totalRecords}</span>{" "}
               records
             </p>
 

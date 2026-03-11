@@ -26,15 +26,31 @@ const ITEMS_PER_PAGE = 8;
 
 export default function AdminMemberManagementPage() {
   const [members, setMembers] = useState<MemberDetails[]>([]);
+  const [totalRecords, setTotalRecords] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+
+  // Debounce search query
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearch(searchQuery);
+      setCurrentPage(1); // Reset to page 1 on search
+    }, 500);
+    return () => clearTimeout(handler);
+  }, [searchQuery]);
 
   const fetchMembers = async () => {
     try {
       setIsLoading(true);
-      const data = await adminService.getMembers();
-      setMembers(data || []);
+      const data = await adminService.getMembers({
+        page: currentPage,
+        limit: ITEMS_PER_PAGE,
+        search: debouncedSearch,
+      });
+      setMembers(data.data || []);
+      setTotalRecords(data.total || 0);
     } catch (error) {
       console.error("Failed to fetch members:", error);
       toast.error("Failed to load members data");
@@ -45,39 +61,17 @@ export default function AdminMemberManagementPage() {
 
   useEffect(() => {
     fetchMembers();
-  }, []);
-
-  // Reset to page 1 whenever search query changes
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [searchQuery]);
+  }, [currentPage, debouncedSearch]);
 
   const stats = {
-    total: members.length,
-    active: members.filter((m) => m.is_active).length,
+    total: totalRecords,
+    active: members.filter((m) => m.is_active).length, // These will only be for the current page, which is acceptable unless we add stat endpoints
     blocked: members.filter((m) => !m.is_active).length,
   };
 
-  const filteredMembers = useMemo(() => {
-    return members.filter(
-      (m) =>
-        `${m.first_name} ${m.last_name}`
-          .toLowerCase()
-          .includes(searchQuery.toLowerCase()) ||
-        m.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (m.phone || "").toLowerCase().includes(searchQuery.toLowerCase()),
-    );
-  }, [members, searchQuery]);
-
   // Pagination derived values
-  const totalPages = Math.max(
-    1,
-    Math.ceil(filteredMembers.length / ITEMS_PER_PAGE),
-  );
-  const paginatedMembers = filteredMembers.slice(
-    (currentPage - 1) * ITEMS_PER_PAGE,
-    currentPage * ITEMS_PER_PAGE,
-  );
+  const totalPages = Math.max(1, Math.ceil(totalRecords / ITEMS_PER_PAGE));
+  const paginatedMembers = members;
 
   const goToPage = (page: number) => {
     setCurrentPage(Math.min(Math.max(1, page), totalPages));
@@ -228,7 +222,7 @@ export default function AdminMemberManagementPage() {
                   <td colSpan={6} className="px-6 py-24 text-center">
                     <div className="flex flex-col items-center gap-3 opacity-30">
                       <Search className="w-10 h-10 text-zinc-700" />
-                      <p className="text-zinc-500 font-medium text-lg font-bold">
+                      <p className="text-zinc-500 text-lg font-bold">
                         {searchQuery
                           ? "No members match your search"
                           : "No members found"}
@@ -310,7 +304,7 @@ export default function AdminMemberManagementPage() {
         </div>
 
         {/* Pagination Footer */}
-        {!isLoading && filteredMembers.length > 0 && (
+        {!isLoading && totalRecords > 0 && (
           <div className="flex items-center justify-between px-6 py-4 border-t border-white/5 bg-white/2">
             <p className="text-xs text-zinc-500">
               Showing{" "}
@@ -319,12 +313,9 @@ export default function AdminMemberManagementPage() {
               </span>
               {" – "}
               <span className="font-bold text-zinc-300">
-                {Math.min(currentPage * ITEMS_PER_PAGE, filteredMembers.length)}
+                {Math.min(currentPage * ITEMS_PER_PAGE, totalRecords)}
               </span>{" "}
-              of{" "}
-              <span className="font-bold text-zinc-300">
-                {filteredMembers.length}
-              </span>{" "}
+              of <span className="font-bold text-zinc-300">{totalRecords}</span>{" "}
               members
             </p>
 

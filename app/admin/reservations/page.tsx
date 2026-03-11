@@ -12,15 +12,31 @@ const ITEMS_PER_PAGE = 8;
 
 export default function ReservationsPage() {
   const [reservations, setReservations] = useState<PendingRequest[]>([]);
+  const [totalRecords, setTotalRecords] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+
+  // Debounce search query
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearch(searchQuery);
+      setCurrentPage(1); // Reset to page 1 on search
+    }, 500);
+    return () => clearTimeout(handler);
+  }, [searchQuery]);
 
   const fetchReservations = async () => {
     setIsLoading(true);
     try {
-      const data = await adminService.getRequests();
-      setReservations(data || []);
+      const data = await adminService.getRequests({
+        page: currentPage,
+        limit: ITEMS_PER_PAGE,
+        search: debouncedSearch,
+      });
+      setReservations(data.data || []);
+      setTotalRecords(data.total || 0);
     } catch (error) {
       console.error("Failed to fetch reservations:", error);
       toast.error("Failed to fetch reservations");
@@ -31,12 +47,7 @@ export default function ReservationsPage() {
 
   useEffect(() => {
     fetchReservations();
-  }, []);
-
-  // Reset to page 1 whenever search query changes
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [searchQuery]);
+  }, [currentPage, debouncedSearch]);
 
   const handleReservationReceived = async (id: string) => {
     try {
@@ -60,26 +71,9 @@ export default function ReservationsPage() {
     }
   };
 
-  const filteredReservations = useMemo(() => {
-    return reservations.filter(
-      (res) =>
-        res.book.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        `${res.user.first_name} ${res.user.last_name}`
-          .toLowerCase()
-          .includes(searchQuery.toLowerCase()) ||
-        res.user.id.toLowerCase().includes(searchQuery.toLowerCase()),
-    );
-  }, [reservations, searchQuery]);
-
   // Pagination derived values
-  const totalPages = Math.max(
-    1,
-    Math.ceil(filteredReservations.length / ITEMS_PER_PAGE),
-  );
-  const paginatedReservations = filteredReservations.slice(
-    (currentPage - 1) * ITEMS_PER_PAGE,
-    currentPage * ITEMS_PER_PAGE,
-  );
+  const totalPages = Math.max(1, Math.ceil(totalRecords / ITEMS_PER_PAGE));
+  const paginatedReservations = reservations;
 
   const goToPage = (page: number) => {
     setCurrentPage(Math.min(Math.max(1, page), totalPages));
@@ -132,7 +126,7 @@ export default function ReservationsPage() {
         onCancel={handleCancelReservation}
         searchQuery={searchQuery}
         clearSearch={() => setSearchQuery("")}
-        totalResults={filteredReservations.length}
+        totalResults={totalRecords}
         currentPage={currentPage}
         totalPages={totalPages}
         goToPage={goToPage}

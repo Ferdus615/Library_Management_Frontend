@@ -14,12 +14,23 @@ import BookReservationsModal from "./components/BookReservationsModal";
 
 export default function AdminBooksPage() {
   const [books, setBooks] = useState<Book[]>([]);
+  const [totalRecords, setTotalRecords] = useState(0);
   const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(10);
+  const [itemsPerPage] = useState(8);
+
+  // Debounce search query
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearch(searchQuery);
+      setCurrentPage(1); // Reset to page 1 on search
+    }, 500);
+    return () => clearTimeout(handler);
+  }, [searchQuery]);
 
   // Reservations modal state
   const [isReservationsModalOpen, setIsReservationsModalOpen] = useState(false);
@@ -38,25 +49,26 @@ export default function AdminBooksPage() {
   const fetchBooks = useCallback(async () => {
     setIsLoading(true);
     try {
-      const data = await adminService.getBooks({
-        title: searchQuery || undefined,
+      const booksResponse = await adminService.getBooks({
+        title: debouncedSearch || undefined,
         categoryId: selectedCategory === "all" ? undefined : selectedCategory,
         page: currentPage,
         limit: itemsPerPage,
       });
-      setBooks(data);
+      setBooks(booksResponse.data || []);
+      setTotalRecords(booksResponse.total || 0);
     } catch (error) {
       console.error("Failed to fetch books:", error);
       toast.error("Failed to fetch books");
     } finally {
       setIsLoading(false);
     }
-  }, [searchQuery, selectedCategory, currentPage, itemsPerPage]);
+  }, [debouncedSearch, selectedCategory, currentPage, itemsPerPage]);
 
   const fetchCategories = async () => {
     try {
       const data = await adminService.getCategories();
-      setCategories(data);
+      setCategories(data.data || []);
     } catch (error) {
       console.error("Failed to fetch categories:", error);
     }
@@ -70,11 +82,7 @@ export default function AdminBooksPage() {
     fetchCategories();
   }, []);
 
-  // Debounce search — reset to first page
-  useEffect(() => {
-    const timer = setTimeout(() => setCurrentPage(1), 500);
-    return () => clearTimeout(timer);
-  }, [searchQuery]);
+  // Debounce search moved to useEffect above
 
   const handleDeleteBook = async (id: string) => {
     try {
@@ -195,6 +203,7 @@ export default function AdminBooksPage() {
         isLoading={isLoading}
         currentPage={currentPage}
         itemsPerPage={itemsPerPage}
+        totalRecords={totalRecords}
         onPageChange={setCurrentPage}
         onViewReservations={handleViewReservations}
         onDeleteBook={openDeleteModal}
