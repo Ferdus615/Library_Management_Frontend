@@ -7,7 +7,6 @@ import {
   Clock,
   ChevronLeft,
   ChevronRight,
-  AlertCircle,
   BookOpen,
   Calendar,
   AlertTriangle,
@@ -24,6 +23,7 @@ interface NotificationsTableProps {
   totalPages: number;
   goToPage: (page: number) => void;
   itemsPerPage: number;
+  onMarkAsRead: (id: string) => void;
 }
 
 const getIcon = (type: string) => {
@@ -54,6 +54,7 @@ export default function NotificationsTable({
   totalPages,
   goToPage,
   itemsPerPage,
+  onMarkAsRead,
 }: NotificationsTableProps) {
   if (isLoading) {
     return (
@@ -104,6 +105,9 @@ export default function NotificationsTable({
               </th>
               <th className="px-6 py-5 text-xs font-bold text-zinc-500 uppercase tracking-widest">
                 Status
+              </th>
+              <th className="px-6 py-5 text-xs font-bold text-zinc-500 uppercase tracking-widest text-right">
+                Action
               </th>
             </tr>
           </thead>
@@ -161,6 +165,17 @@ export default function NotificationsTable({
                         New
                       </span>
                     </span>
+                  )}
+                </td>
+                <td className="px-6 py-5 text-right">
+                  {!notification.read && (
+                    <button
+                      onClick={() => onMarkAsRead(notification.id)}
+                      className="px-3 py-1.5 bg-(--clr-primary-a0)/10 hover:bg-(--clr-primary-a0)/20 text-(--clr-primary-a0) text-xs font-bold rounded-lg transition-all active:scale-95 flex items-center gap-1.5 ml-auto cursor-pointer"
+                    >
+                      <CheckCircle2 className="w-3.5 h-3.5" />
+                      Mark Read
+                    </button>
                   )}
                 </td>
               </tr>
