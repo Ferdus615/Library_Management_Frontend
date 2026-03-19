@@ -14,7 +14,6 @@ import {
   CalendarCheck,
   Users,
   LogOut,
-  Bell,
 } from "lucide-react";
 
 interface NavItem {
@@ -58,11 +57,6 @@ const navItems: NavItem[] = [
     label: "Category Management",
     href: "/admin/category-management",
     icon: <LibraryBig className="h-5 w-5" />,
-  },
-  {
-    label: "Notifications",
-    href: "/admin/notifications",
-    icon: <Bell className="h-5 w-5" />,
   },
 ];
 
