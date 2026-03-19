@@ -49,7 +49,7 @@ export default function EditBookPage() {
           title: bookDetails.title,
           author: bookDetails.author,
           isbn: bookDetails.isbn,
-          publication_year: parseInt(bookDetails.publication_year),
+          publication_year: bookDetails.publication_year,
           total_copies: bookDetails.total_copies,
           damaged_copies: bookDetails.damaged_copies,
           category_id: bookDetails.category?.id || "",

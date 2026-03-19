@@ -11,7 +11,7 @@ export default function OverdueBooks({ overdueBooks }: OverdueBooksProps) {
     <div className="rounded-xl bg-(--clr-surface-tonal-a0) border border-(--clr-surface-a20) p-5">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-3">
-          <h2 className="text-lg font-semibold text-(--clr-light-a0)">
+          <h2 className="text-lg font-semibold text-foreground">
             Overdue Books
           </h2>
           <span className="px-2 py-1 text-xs font-medium rounded-full bg-(--clr-warning-a0)/20 text-(--clr-warning-a10)">
