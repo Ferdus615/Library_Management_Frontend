@@ -34,7 +34,7 @@ export default function OverdueBookRow({
         </svg>
       </div>
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium text-(--clr-light-a0)">{book}</p>
+        <p className="text-sm font-medium text-foreground">{book}</p>
         <span className="flex items-center gap-5">
           <p className="text-xs text-(--clr-surface-a50)">Borrowed by {user}</p>
           <p className="text-xs text-(--clr-surface-a50)">
