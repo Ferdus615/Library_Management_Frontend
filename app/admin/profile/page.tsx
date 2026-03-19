@@ -20,14 +20,14 @@ import { MemberDetails } from "@/types/admin";
 import router from "next/router";
 import { toast } from "sonner";
 
-export default function MemberProfilePage() {
+export default function AdminProfilePage() {
   const [userInfo, setUserInfo] = useState<MemberDetails>();
 
   const fetchUser = async () => {
     try {
       const user = authService.getUser();
       if (!user) {
-        router.push("/login");
+        router.push("/admin/login");
         return;
       }
 
@@ -85,13 +85,13 @@ export default function MemberProfilePage() {
                     : "bg-red-500/10 text-red-400 border-red-500/20"
                 }`}
               >
-                {userInfo.is_active ? "Verified Member" : "Inactive"}
+                {userInfo.is_active ? "Active Staff" : "Inactive"}
               </span>
             </div>
             
             <p className="text-zinc-400 font-medium flex items-center justify-center md:justify-start gap-2 text-sm">
               <IdCard size={14} className="text-zinc-500" />
-              Member ID: <span className="text-zinc-300">{userInfo.id}</span>
+              Staff ID: <span className="text-zinc-300">{userInfo.id}</span>
             </p>
           </div>
 
@@ -181,9 +181,9 @@ export default function MemberProfilePage() {
             <div className="w-14 h-14 rounded-full bg-indigo-500/10 flex items-center justify-center text-indigo-400 mb-4 ring-4 ring-indigo-500/5 group-hover:scale-110 transition-transform duration-500">
               <Activity size={24} />
             </div>
-            <h3 className="text-base font-medium text-white mb-2 tracking-wide">Elite Status</h3>
+            <h3 className="text-base font-medium text-white mb-2 tracking-wide">System Access</h3>
             <p className="text-xs text-zinc-400 font-light leading-relaxed max-w-[200px]">
-              Your account is in good standing. Rewards system coming soon.
+              You have authorized access to manage library records and systems.
             </p>
           </div>
 
@@ -194,7 +194,7 @@ export default function MemberProfilePage() {
               </div>
               <div className="text-left">
                 <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest mb-1">
-                  Member Since
+                  Joined
                 </p>
                 <p className="text-sm font-medium text-zinc-200">
                   {userInfo.created_at}

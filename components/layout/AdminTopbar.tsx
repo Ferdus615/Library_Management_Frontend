@@ -2,6 +2,7 @@
 
 import { authService } from "@/services/auth.service";
 import React, { useEffect, useState } from "react";
+import Link from "next/link";
 import { Menu, Search, Command } from "lucide-react";
 import NotificationBell from "../ui/NotificationBell";
 import { User } from "@/types/auth";
@@ -58,22 +59,22 @@ export default function AdminTopbar({ onMenuClick }: AdminTopbarProps) {
         <NotificationBell href="/admin/notifications" />
 
         {/* initials */}
-        <div className="flex items-center gap-3 border-l-2 border-white/5 pl-5">
+        <Link href="/admin/profile" className="flex items-center gap-3 border-l-2 border-white/5 pl-5 cursor-pointer group">
           <div className="flex flex-col items-end">
-            <span className="text-sm font-bold text-white tracking-tight">
+            <span className="text-sm font-bold text-white tracking-tight group-hover:text-(--clr-primary-a10) transition-colors">
               {userName ? userName : ""}
             </span>
             <span className="text-[10px] text-(--clr-primary-a10) font-mono uppercase">
               Role: {userRole ? userRole : ""}
             </span>
           </div>
-          <div className="w-10 h-10 rounded-xl bg-linear-to-br from-(--clr-primary-a0) to-(--clr-primary-a10) p-px shadow-lg shadow-(--clr-primary-a0)/20">
-            <div className="w-full h-full rounded-[11px] bg-(--clr-surface-a10) flex items-center justify-center text-xs font-black text-white">
+          <div className="w-10 h-10 rounded-xl bg-linear-to-br from-(--clr-primary-a0) to-(--clr-primary-a10) p-px shadow-lg shadow-(--clr-primary-a0)/20 group-hover:shadow-(--clr-primary-a0)/40 transition-shadow">
+            <div className="w-full h-full rounded-[11px] bg-(--clr-surface-a10) flex items-center justify-center text-xs font-black text-white group-hover:bg-(--clr-surface-a0) transition-colors">
               {getInitials()}
             </div>
             <div className="absolute bottom-3 right-5 w-3.5 h-3.5 bg-(--clr-success-a0) border-2 border-(--clr-surface-a0) rounded-full" />
           </div>
-        </div>
+        </Link>
       </div>
     </header>
   );
