@@ -220,6 +220,7 @@ export interface PaginatedFineResponse {
   total: number;
   activeCount: number;
   paidCount: number;
+  totalUnpaidAmount: number;
 }
 
 export interface Reservation {

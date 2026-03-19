@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { adminService } from "@/services/admin.service";
 import { PendingFine } from "@/types/admin";
 import ActionButton from "@/components/ui/ActionButton";
@@ -25,6 +25,7 @@ export default function FinesPage() {
   const [totalRecords, setTotalRecords] = useState(0);
   const [activeCount, setActiveCount] = useState(0);
   const [paidCount, setPaidCount] = useState(0);
+  const [totalUnpaidAmount, setTotalUnpaidAmount] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
@@ -39,7 +40,7 @@ export default function FinesPage() {
     return () => clearTimeout(handler);
   }, [searchQuery]);
 
-  const fetchFines = async () => {
+  const fetchFines = useCallback(async () => {
     try {
       setIsLoading(true);
       const response = await adminService.getFines({
@@ -51,21 +52,23 @@ export default function FinesPage() {
       setTotalRecords(response.total || 0);
       setActiveCount(response.activeCount || 0);
       setPaidCount(response.paidCount || 0);
+      setTotalUnpaidAmount(response.totalUnpaidAmount || 0);
     } catch (error) {
       console.error("Failed to fetch fines:", error);
       toast.error("Failed to fetch fines data");
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [currentPage, debouncedSearch]);
 
   useEffect(() => {
     fetchFines();
-  }, [currentPage, debouncedSearch]);
+  }, [fetchFines]);
 
   const stats = {
     active: activeCount,
     paid: paidCount,
+    unpaidAmount: totalUnpaidAmount,
   };
 
   const handlePayFine = async (fineID: string) => {
@@ -123,7 +126,7 @@ export default function FinesPage() {
       </div>
 
       {/* stat card */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {[
           {
             label: "Active fine",
@@ -138,6 +141,13 @@ export default function FinesPage() {
             icon: BanknoteArrowUp,
             color: "text-(--clr-success-a10)",
             bg: "bg-(--clr-success-a10)/10",
+          },
+          {
+            label: "Total Unpaid Amount",
+            value: `$${stats.unpaidAmount.toFixed(2)}`,
+            icon: DollarSign,
+            color: "text-(--clr-danger-a10)",
+            bg: "bg-(--clr-danger-a10)/10",
           },
         ].map(
           (stat, i) =>
@@ -223,7 +233,7 @@ export default function FinesPage() {
                   <td colSpan={5} className="px-6 py-24 text-center">
                     <div className="flex flex-col items-center gap-3 opacity-30">
                       <Search className="w-10 h-10 text-zinc-700" />
-                      <p className="text-zinc-500 font-medium text-lg font-bold">
+                      <p className="text-zinc-500 text-lg font-bold">
                         {searchQuery
                           ? "No fines match your search"
                           : "No fine records found"}

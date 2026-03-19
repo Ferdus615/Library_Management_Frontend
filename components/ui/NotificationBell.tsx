@@ -14,8 +14,14 @@ import { notificationService } from "../../services/notification.service";
 import { Notification } from "../../types/notification";
 import { formatDistanceToNow } from "date-fns";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
-export default function NotificationBell() {
+interface NotificationBellProps {
+  href?: string;
+}
+
+export default function NotificationBell({ href }: NotificationBellProps = {}) {
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -110,7 +116,13 @@ export default function NotificationBell() {
   return (
     <div className="relative" ref={dropdownRef}>
       <button
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={() => {
+          if (href) {
+            router.push(href);
+          } else {
+            setIsOpen(!isOpen);
+          }
+        }}
         className="relative p-2.5 rounded-xl text-zinc-400 hover:bg-white/5 hover:text-white transition-all duration-200 cursor-pointer"
       >
         <Bell size={20} />

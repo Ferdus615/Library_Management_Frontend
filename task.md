@@ -1,50 +1,58 @@
+🔜 What do you want next?
 
+1️⃣ Add Redis caching to dashboard
+2️⃣ Add dashboard charts (time-based analytics)
+3️⃣ Connect notification feed to dashboard
+4️⃣ Lock admin routes properly (fix your role bug)
+5️⃣ Optimize indexes for dashboard queries
 
-similar to the reservation & loans history create a fines page under the History page
+Pick one and we continue.
 
-this is the api endpoint
-http://localhost:3000/user/fines/{user_id}
+Add Redis Caching to Dashboards
+Check if Redis is already set up in the backend API.
+Install Redis caching dependencies (e.g., @nestjs/cache-manager, cache-manager, cache-manager-redis-yet) if necessary.
+Configure CacheModule equipped with Redis in app.module.ts.
+Identify the dashboard endpoints (e.g., admin.controller.ts, dashboard.controller.ts).
+Apply @UseInterceptors(CacheInterceptor) and @CacheKey / @CacheTTL to the dashboard endpoints.
+Implement manual cache invalidation where necessary (e.g., when a new book/loan is added).
+Verify caching works by checking Redis and response times.
 
-this is the respose you will receive
-[
-    {
-        "id": "246929a6-8481-4a2f-9599-186e1cd0e29b",
-        "user": {
-            "id": "ccb3c10f-d36e-4f1a-9f1d-a3958191b92d",
-            "first_name": "Bob",
-            "last_name": "Williams",
-            "email": "bob.williams@example.com"
-        },
-        "loan": {
-            "id": "38286f9e-62b7-4374-b318-45bdf2630b45",
-            "status": "overdue",
-            "issue_date": "2026-02-05",
-            "due_date": "2026-02-05",
-            "return_date": null
-        },
-        "book_title": "Introduction to Algorithms 2nd edition",
-        "total_amount": 230,
-        "paid": true,
-        "paid_at": "2026-02-25T13:06:34.198Z"
-    },
-    {
-        "id": "10fad9f5-4a29-4ea4-8fb4-040209f46e4d",
-        "user": {
-            "id": "ccb3c10f-d36e-4f1a-9f1d-a3958191b92d",
-            "first_name": "Bob",
-            "last_name": "Williams",
-            "email": "bob.williams@example.com"
-        },
-        "loan": {
-            "id": "53feb71e-f61c-4bfb-9bb6-62a91accf969",
-            "status": "returned",
-            "issue_date": "2025-12-30",
-            "due_date": "2025-12-31",
-            "return_date": "2026-02-05"
-        },
-        "book_title": "Design Patterns: Elements of Reusable Object-Oriented Software",
-        "total_amount": 360,
-        "paid": false,
-        "paid_at": null
-    }
-]
+Add Redis Caching to Dashboards
+We will integrate Redis caching into the backend's dashboard endpoints to improve performance, as dashboard data can be computationally heavy and accessed frequently.
+
+Proposed Changes
+Configuration
+[MODIFY] package.json (file:///f:/CODING/LMS-Project/lms-api/package.json)
+Add dependencies: @nestjs/cache-manager, cache-manager, and cache-manager-redis-yet for Redis integration.
+[MODIFY] .env (file:///f:/CODING/LMS-Project/lms-api/.env)
+Add Redis configuration variables (e.g., REDIS_HOST, REDIS_PORT).
+[MODIFY] app.module.ts (file:///f:/CODING/LMS-Project/lms-api/src/app.module.ts)
+Import and configure the CacheModule with Redis store from @nestjs/cache-manager.
+Dashboard Module
+[MODIFY] dashboard.controller.ts (file:///f:/CODING/LMS-Project/lms-api/src/dashboard/dashboard.controller.ts)
+Import CacheInterceptor, CacheKey, and CacheTTL from @nestjs/cache-manager.
+Apply @UseInterceptors(CacheInterceptor) to the
+DashboardController
+or specific endpoints.
+Apply @CacheKey to identify cache entries for admin and member dashboards.
+Add @CacheTTL (e.g., 5 minutes or standard TTL) for
+getAdminDashboard
+,
+getMemberDashboard
+, and
+getOverdueBooks
+endpoints.
+Ensure the member dashboard uses a dynamic cache key that includes the user ID so that members don't share identical cached data.
+[MODIFY] dashboard.module.ts (file:///f:/CODING/LMS-Project/lms-api/src/dashboard/dashboard.module.ts)
+Import CacheModule into the DashboardModule for local usage if needed (or rely on global configuration in
+AppModule
+).
+Verification Plan
+Automated Tests
+Run NestJS e2e or unit tests if existing, ensuring no controllers are broken due to the interceptor:
+npm run test
+Manual Verification
+Start the backend with Redis properly configured (run docker-compose up -d redis or a local Redis instance).
+Log in as an admin from the frontend and load the dashboard. Check the backend logs/time to verify the first request is processed normally.
+Refresh the dashboard; the second request should have a drastically reduced response time, indicating cache hit, and the backend console should show it skipped the service logic.
+Test cache expiry by waiting past the TTL duration and reloading the page.
