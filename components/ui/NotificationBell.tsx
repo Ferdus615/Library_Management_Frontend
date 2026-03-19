@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect, useRef, useMemo } from "react";
-import Link from "next/link";
 import {
   Bell,
   Check,
@@ -16,11 +15,7 @@ import { Notification } from "../../types/notification";
 import { formatDistanceToNow } from "date-fns";
 import { toast } from "sonner";
 
-export default function NotificationBell({
-  viewAllLink,
-}: {
-  viewAllLink?: string;
-}) {
+export default function NotificationBell() {
   const [isOpen, setIsOpen] = useState(false);
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -229,23 +224,11 @@ export default function NotificationBell({
             )}
           </div>
 
-          {viewAllLink ? (
-            <Link
-              href={viewAllLink}
-              onClick={() => setIsOpen(false)}
-              className="block p-4 border-t border-white/5 bg-white/2 hover:bg-white/5 transition-colors text-center"
-            >
-              <p className="text-[10px] text-(--clr-primary-a10) font-black uppercase tracking-widest hover:text-(--clr-primary-a0) transition-colors">
-                View All Notifications
-              </p>
-            </Link>
-          ) : (
-            <div className="p-4 border-t border-white/5 bg-white/2 text-center">
-              <p className="text-[10px] text-zinc-600 font-black uppercase tracking-widest">
-                End of Notifications
-              </p>
-            </div>
-          )}
+          <div className="p-4 border-t border-white/5 bg-white/2 text-center">
+            <p className="text-[10px] text-zinc-600 font-black uppercase tracking-widest">
+              End of Notifications
+            </p>
+          </div>
         </div>
       )}
 
