@@ -23,24 +23,24 @@ import { toast } from "sonner";
 export default function MemberProfilePage() {
   const [userInfo, setUserInfo] = useState<MemberDetails>();
 
-  const fetchUser = async () => {
-    try {
-      const user = authService.getUser();
-      if (!user) {
-        router.push("/login");
-        return;
-      }
-
-      const userId = user.id;
-      const userInfo = await adminService.getMemberById(userId);
-      setUserInfo(userInfo);
-    } catch (error) {
-      console.error(error);
-      toast.error("Failed to load user data");
-    }
-  };
-
   useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const user = authService.getUser();
+        if (!user) {
+          router.push("/login");
+          return;
+        }
+
+        const userId = user.id;
+        const userInfo = await adminService.getMemberById(userId);
+        setUserInfo(userInfo);
+      } catch (error) {
+        console.error(error);
+        toast.error("Failed to load user data");
+      }
+    };
+
     fetchUser();
   }, []);
 
