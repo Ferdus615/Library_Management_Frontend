@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { adminService } from "@/services/admin.service";
-import { AddBook, Category } from "@/types/admin";
+import { AddBook } from "@/types/admin";
 import { toast } from "sonner";
 import { ArrowLeft, Save, Image as ImageIcon, Plus } from "lucide-react";
 import Link from "next/link";
@@ -11,12 +11,11 @@ import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import Image from "next/image";
 import ConfirmModal from "@/components/ui/ConfirmModal";
+import { CategorySelect } from "@/components/ui/CategorySelect";
 
 export default function AddBookPage() {
   const router = useRouter();
-  const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [isFetchingCategories, setIsFetchingCategories] = useState(true);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
 
   const [formData, setFormData] = useState<AddBook>({
@@ -33,24 +32,6 @@ export default function AddBookPage() {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await adminService.getCategories();
-        const categoriesList = response.data || [];
-
-        setCategories(categoriesList);
-        setCategories(categoriesList);
-      } catch (error) {
-        console.error("Failed to fetch categories:", error);
-        toast.error("Failed to load categories");
-      } finally {
-        setIsFetchingCategories(false);
-      }
-    };
-
-    fetchCategories();
-  }, []);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
@@ -193,37 +174,13 @@ export default function AddBookPage() {
             />
 
             {/* Category */}
-            <div className="space-y-2">
-              <label className="text-sm font-medium leading-none text-(--clr-surface-a50)">
-                Category
-              </label>
-              <select
-                name="category_id"
-                value={formData.category_id || ""}
-                onChange={handleChange}
-                disabled={isFetchingCategories}
-                className="w-full h-10 bg-white/5 border border-white/10 rounded-md px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-(--clr-primary-a0) transition-all appearance-none cursor-pointer"
-              >
-                {isFetchingCategories ? (
-                  <option>Loading categories...</option>
-                ) : (
-                  <>
-                    <option value="" className="bg-zinc-900 border-none">
-                      No Category
-                    </option>
-                    {categories.map((cat) => (
-                      <option
-                        key={cat.id}
-                        value={cat.id}
-                        className="bg-zinc-900"
-                      >
-                        {cat.name}
-                      </option>
-                    ))}
-                  </>
-                )}
-              </select>
-            </div>
+            <CategorySelect
+              label="Category"
+              value={formData.category_id}
+              onChange={(value) =>
+                setFormData((prev) => ({ ...prev, category_id: value }))
+              }
+            />
 
             {/* Publication Year */}
             <Input
