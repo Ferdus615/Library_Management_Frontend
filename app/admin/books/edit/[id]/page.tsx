@@ -121,10 +121,13 @@ export default function EditBookPage() {
         // updateData.cover_image = uploadResult.url;
       }
 
-      // If cover_image is empty string, remove it or set to undefined
-      // so it doesn't fail IsUrl validation in backend
+      // If cover_image or category_id is empty string, handle correctly
       if (!updateData.cover_image) {
         delete updateData.cover_image;
+      }
+
+      if (updateData.category_id === "") {
+        updateData.category_id = null;
       }
 
       await adminService.updateBook(id, updateData);
@@ -207,12 +210,14 @@ export default function EditBookPage() {
                 Category
               </label>
               <select
-                required
                 name="category_id"
-                value={formData.category_id}
+                value={formData.category_id || ""}
                 onChange={handleChange}
                 className="w-full h-10 bg-white/5 border border-white/10 rounded-md px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-(--clr-primary-a0) transition-all appearance-none cursor-pointer"
               >
+                <option value="" className="bg-zinc-900 border-none">
+                  No Category
+                </option>
                 {categories.map((cat) => (
                   <option key={cat.id} value={cat.id} className="bg-zinc-900">
                     {cat.name}

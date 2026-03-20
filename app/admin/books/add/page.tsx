@@ -40,12 +40,7 @@ export default function AddBookPage() {
         const categoriesList = response.data || [];
 
         setCategories(categoriesList);
-        if (categoriesList.length > 0) {
-          setFormData((prev) => ({
-            ...prev,
-            category_id: categoriesList[0].id,
-          }));
-        }
+        setCategories(categoriesList);
       } catch (error) {
         console.error("Failed to fetch categories:", error);
         toast.error("Failed to load categories");
@@ -110,7 +105,13 @@ export default function AddBookPage() {
       }
       */
 
-      await adminService.addBook({ ...formData, cover_image });
+      const bookData = {
+        ...formData,
+        cover_image,
+        category_id: formData.category_id === "" ? null : formData.category_id,
+      };
+
+      await adminService.addBook(bookData);
       toast.success("Book added successfully!");
       router.push("/admin/books");
     } catch (error: unknown) {
@@ -197,9 +198,8 @@ export default function AddBookPage() {
                 Category
               </label>
               <select
-                required
                 name="category_id"
-                value={formData.category_id}
+                value={formData.category_id || ""}
                 onChange={handleChange}
                 disabled={isFetchingCategories}
                 className="w-full h-10 bg-white/5 border border-white/10 rounded-md px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-(--clr-primary-a0) transition-all appearance-none cursor-pointer"
@@ -207,11 +207,20 @@ export default function AddBookPage() {
                 {isFetchingCategories ? (
                   <option>Loading categories...</option>
                 ) : (
-                  categories.map((cat) => (
-                    <option key={cat.id} value={cat.id} className="bg-zinc-900">
-                      {cat.name}
+                  <>
+                    <option value="" className="bg-zinc-900 border-none">
+                      No Category
                     </option>
-                  ))
+                    {categories.map((cat) => (
+                      <option
+                        key={cat.id}
+                        value={cat.id}
+                        className="bg-zinc-900"
+                      >
+                        {cat.name}
+                      </option>
+                    ))}
+                  </>
                 )}
               </select>
             </div>
