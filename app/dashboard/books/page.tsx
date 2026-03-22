@@ -3,12 +3,11 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { adminService } from "@/services/admin.service";
 import { authService } from "@/services/auth.service";
-import { Book, Category } from "@/types/admin";
+import { Book } from "@/types/admin";
 import { User } from "@/types/auth";
 import { toast } from "sonner";
 import {
   Search,
-  Filter,
   BookOpen,
   Bookmark,
   CheckCircle2,
@@ -17,11 +16,11 @@ import {
 } from "lucide-react";
 import ActionButton from "@/components/ui/ActionButton";
 import Image from "next/image";
+import { CategorySelect } from "@/components/ui/CategorySelect";
 
 export default function MemberBooksPage() {
   const [books, setBooks] = useState<Book[]>([]);
   const [totalRecords, setTotalRecords] = useState(0);
-  const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
@@ -58,21 +57,12 @@ export default function MemberBooksPage() {
     }
   }, [debouncedSearch, selectedCategory, currentPage, itemsPerPage]);
 
-  const fetchCategories = async () => {
-    try {
-      const data = await adminService.getCategories();
-      setCategories(data.data || []);
-    } catch (error) {
-      console.error("Failed to fetch categories:", error);
-    }
-  };
 
   useEffect(() => {
     fetchBooks();
   }, [fetchBooks]);
 
   useEffect(() => {
-    fetchCategories();
     setUser(authService.getUser());
   }, []);
 
@@ -135,26 +125,16 @@ export default function MemberBooksPage() {
             className="w-full bg-white/5 border border-white/10 rounded-2xl py-3 pl-12 pr-4 text-sm text-white focus:outline-none focus:border-(--clr-primary-a10)/30 focus:ring-4 focus:ring-(--clr-primary-a10)/5 transition-all"
           />
         </div>
-        <div className="relative group min-w-[200px]">
-          <Filter className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500 group-focus-within:text-(--clr-primary-a10) transition-colors" />
-          <select
-            value={selectedCategory}
-            onChange={(e) => {
-              setSelectedCategory(e.target.value);
-              setCurrentPage(1);
-            }}
-            className="w-full appearance-none bg-white/5 border border-white/10 rounded-2xl py-3 pl-12 pr-10 text-sm text-white focus:outline-none focus:border-(--clr-primary-a10)/30 focus:ring-4 focus:ring-(--clr-primary-a10)/5 transition-all cursor-pointer"
-          >
-            <option value="all" className="bg-zinc-900">
-              All Categories
-            </option>
-            {categories.map((cat) => (
-              <option key={cat.id} value={cat.id} className="bg-zinc-900">
-                {cat.name}
-              </option>
-            ))}
-          </select>
-        </div>
+        <CategorySelect
+          placeholder="All Categories"
+          nullLabel="All Categories"
+          value={selectedCategory === "all" ? "" : selectedCategory}
+          onChange={(value) => {
+            setSelectedCategory(value || "all");
+            setCurrentPage(1);
+          }}
+          className="min-w-[200px]"
+        />
       </div>
 
       {/* Books Grid */}

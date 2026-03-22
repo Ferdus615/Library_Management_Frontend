@@ -2,12 +2,13 @@
 
 import React, { useState, useEffect, useCallback } from "react";
 import { adminService } from "@/services/admin.service";
-import { Book, Category, Reservation } from "@/types/admin";
+import { Book, Reservation } from "@/types/admin";
 import { toast } from "sonner";
-import { Search, Filter, Plus, X } from "lucide-react";
+import { Search, Plus, X } from "lucide-react";
 import Link from "next/link";
 import ActionButton from "@/components/ui/ActionButton";
 import DeleteModal from "@/components/ui/deleteModal";
+import { CategorySelect } from "@/components/ui/CategorySelect";
 import BookStats from "./components/BookStats";
 import BooksTable from "./components/BooksTable";
 import BookReservationsModal from "./components/BookReservationsModal";
@@ -15,7 +16,6 @@ import BookReservationsModal from "./components/BookReservationsModal";
 export default function AdminBooksPage() {
   const [books, setBooks] = useState<Book[]>([]);
   const [totalRecords, setTotalRecords] = useState(0);
-  const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
@@ -65,22 +65,10 @@ export default function AdminBooksPage() {
     }
   }, [debouncedSearch, selectedCategory, currentPage, itemsPerPage]);
 
-  const fetchCategories = async () => {
-    try {
-      const data = await adminService.getCategories();
-      setCategories(data.data || []);
-    } catch (error) {
-      console.error("Failed to fetch categories:", error);
-    }
-  };
 
   useEffect(() => {
     fetchBooks();
   }, [fetchBooks]);
-
-  useEffect(() => {
-    fetchCategories();
-  }, []);
 
   // Debounce search moved to useEffect above
 
@@ -163,26 +151,17 @@ export default function AdminBooksPage() {
           </div>
 
           {/* Category Filter */}
-          <div className="relative group w-[250px]">
-            <Filter className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500 group-focus-within:text-(--clr-primary-a10) transition-colors" />
-            <select
-              value={selectedCategory}
-              onChange={(e) => {
-                setSelectedCategory(e.target.value);
-                setCurrentPage(1);
-              }}
-              className="w-full appearance-none bg-white/5 border border-white/10 rounded-2xl py-2.5 pl-11 pr-10 text-sm text-white focus:outline-none focus:border-(--clr-primary-a10)/30 focus:ring-4 focus:ring-(--clr-primary-a10)/5 transition-all cursor-pointer"
-            >
-              <option value="all" className="bg-zinc-900">
-                All Categories
-              </option>
-              {categories.map((cat) => (
-                <option key={cat.id} value={cat.id} className="bg-zinc-900">
-                  {cat.name}
-                </option>
-              ))}
-            </select>
-          </div>
+          <CategorySelect
+            label="Category"
+            placeholder="All Categories"
+            nullLabel="All Categories"
+            value={selectedCategory}
+            onChange={(value) => {
+              setSelectedCategory(value);
+              setCurrentPage(1);
+            }}
+            className="min-w-[180px]"
+          />
 
           {/* Add Book Button */}
           <Link href="/admin/books/add">

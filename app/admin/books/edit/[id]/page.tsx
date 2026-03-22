@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { adminService } from "@/services/admin.service";
-import { Category, Book } from "@/types/admin";
 import { toast } from "sonner";
 import { ArrowLeft, Save, Image as ImageIcon, Plus } from "lucide-react";
 import Link from "next/link";
@@ -11,13 +10,13 @@ import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import Image from "next/image";
 import ConfirmModal from "@/components/ui/ConfirmModal";
+import { CategorySelect } from "@/components/ui/CategorySelect";
 
 export default function EditBookPage() {
   const router = useRouter();
   const params = useParams();
   const id = params.id as string;
 
-  const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isFetchingData, setIsFetchingData] = useState(true);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
@@ -39,12 +38,8 @@ export default function EditBookPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [{ data: categoriesList }, bookDetails] = await Promise.all([
-          adminService.getCategories(),
-          adminService.getBookById(id),
-        ]);
+        const bookDetails = await adminService.getBookById(id);
 
-        setCategories(categoriesList || []);
         setFormData({
           title: bookDetails.title,
           author: bookDetails.author,
@@ -112,7 +107,7 @@ export default function EditBookPage() {
     setIsLoading(true);
 
     try {
-      const updateData: any = { ...formData };
+      const updateData = { ...formData } as any;
 
       // Handle cover image
       if (imageFile) {
@@ -121,10 +116,13 @@ export default function EditBookPage() {
         // updateData.cover_image = uploadResult.url;
       }
 
-      // If cover_image is empty string, remove it or set to undefined
-      // so it doesn't fail IsUrl validation in backend
+      // If cover_image or category_id is empty string, handle correctly
       if (!updateData.cover_image) {
         delete updateData.cover_image;
+      }
+
+      if (updateData.category_id === "") {
+        updateData.category_id = null;
       }
 
       await adminService.updateBook(id, updateData);
@@ -202,24 +200,13 @@ export default function EditBookPage() {
               className="bg-white/5 border-white/10 rounded-2xl"
             />
 
-            <div className="space-y-2">
-              <label className="text-sm font-medium leading-none text-(--clr-surface-a50)">
-                Category
-              </label>
-              <select
-                required
-                name="category_id"
-                value={formData.category_id}
-                onChange={handleChange}
-                className="w-full h-10 bg-white/5 border border-white/10 rounded-md px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-(--clr-primary-a0) transition-all appearance-none cursor-pointer"
-              >
-                {categories.map((cat) => (
-                  <option key={cat.id} value={cat.id} className="bg-zinc-900">
-                    {cat.name}
-                  </option>
-                ))}
-              </select>
-            </div>
+            <CategorySelect
+              label="Category"
+              value={formData.category_id}
+              onChange={(value) =>
+                setFormData((prev) => ({ ...prev, category_id: value }))
+              }
+            />
 
             <Input
               label="Publication Year"

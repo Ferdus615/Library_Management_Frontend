@@ -111,7 +111,7 @@ export interface AddBook {
   publication_year: number;
   total_copies: number;
   damaged_copies: number;
-  category_id: string;
+  category_id: string | null;
   cover_image: string | null;
 }
 
