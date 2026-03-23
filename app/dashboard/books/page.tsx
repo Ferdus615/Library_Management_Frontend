@@ -6,17 +6,11 @@ import { authService } from "@/services/auth.service";
 import { Book } from "@/types/admin";
 import { User } from "@/types/auth";
 import { toast } from "sonner";
-import {
-  Search,
-  BookOpen,
-  Bookmark,
-  CheckCircle2,
-  ChevronLeft,
-  ChevronRight,
-} from "lucide-react";
+import { Search, BookOpen, Bookmark, CheckCircle2 } from "lucide-react";
 import ActionButton from "@/components/ui/ActionButton";
 import Image from "next/image";
 import { CategorySelect } from "@/components/ui/CategorySelect";
+import Pagination from "@/components/ui/Pagination";
 
 export default function MemberBooksPage() {
   const [books, setBooks] = useState<Book[]>([]);
@@ -57,7 +51,6 @@ export default function MemberBooksPage() {
     }
   }, [debouncedSearch, selectedCategory, currentPage, itemsPerPage]);
 
-
   useEffect(() => {
     fetchBooks();
   }, [fetchBooks]);
@@ -65,8 +58,6 @@ export default function MemberBooksPage() {
   useEffect(() => {
     setUser(authService.getUser());
   }, []);
-
-  // Debounce search moved to useEffect above
 
   const handleBorrow = async (bookId: string) => {
     if (!user) {
@@ -250,48 +241,14 @@ export default function MemberBooksPage() {
             ))}
           </div>
 
-          {/* Pagination */}
-          {totalRecords > 0 && (
-            <div className="flex items-center justify-center gap-2 pt-4">
-              <button
-                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                disabled={currentPage === 1 || isLoading}
-                className="p-3 rounded-2xl bg-white/5 border border-white/5 text-zinc-400 hover:text-white hover:bg-white/10 disabled:opacity-20 transition-all"
-              >
-                <ChevronLeft size={20} />
-              </button>
-
-              <div className="flex items-center gap-1">
-                {Array.from(
-                  { length: Math.ceil(totalRecords / itemsPerPage) },
-                  (_, i) => i + 1,
-                ).map((page) => (
-                  <button
-                    key={page}
-                    onClick={() => setCurrentPage(page)}
-                    className={`w-10 h-10 rounded-xl text-sm font-bold transition-all ${
-                      page === currentPage
-                        ? "bg-(--clr-primary-a10) text-white shadow-lg shadow-(--clr-primary-a0)/25"
-                        : "bg-white/5 text-zinc-400 hover:bg-white/10 hover:text-white"
-                    }`}
-                  >
-                    {page}
-                  </button>
-                ))}
-              </div>
-
-              <button
-                onClick={() => setCurrentPage((p) => p + 1)}
-                disabled={
-                  currentPage >= Math.ceil(totalRecords / itemsPerPage) ||
-                  isLoading
-                }
-                className="p-3 rounded-2xl bg-white/5 border border-white/5 text-zinc-400 hover:text-white hover:bg-white/10 disabled:opacity-20 transition-all"
-              >
-                <ChevronRight size={20} />
-              </button>
-            </div>
-          )}
+          <Pagination
+            currentPage={currentPage}
+            totalResults={totalRecords}
+            itemsPerPage={itemsPerPage}
+            onPageChange={setCurrentPage}
+            label="books"
+            className="rounded-3xl border border-white/5"
+          />
         </div>
       )}
     </div>

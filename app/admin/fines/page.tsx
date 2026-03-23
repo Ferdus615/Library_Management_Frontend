@@ -14,9 +14,8 @@ import {
   Activity,
   Search,
   X,
-  ChevronLeft,
-  ChevronRight,
 } from "lucide-react";
+import Pagination from "@/components/ui/Pagination";
 
 const ITEMS_PER_PAGE = 8;
 
@@ -83,10 +82,10 @@ export default function FinesPage() {
   };
 
   // Pagination derived values
-  const totalPages = Math.max(1, Math.ceil(totalRecords / ITEMS_PER_PAGE));
   const paginatedFines = fines;
 
   const goToPage = (page: number) => {
+    const totalPages = Math.max(1, Math.ceil(totalRecords / ITEMS_PER_PAGE));
     setCurrentPage(Math.min(Math.max(1, page), totalPages));
   };
 
@@ -306,59 +305,13 @@ export default function FinesPage() {
           </table>
         </div>
 
-        {/* Pagination Footer */}
-        {!isLoading && totalRecords > 0 && (
-          <div className="flex items-center justify-between px-6 py-4 border-t border-white/5 bg-white/2">
-            <p className="text-xs text-zinc-500">
-              Showing{" "}
-              <span className="font-bold text-zinc-300">
-                {(currentPage - 1) * ITEMS_PER_PAGE + 1}
-              </span>
-              {" – "}
-              <span className="font-bold text-zinc-300">
-                {Math.min(currentPage * ITEMS_PER_PAGE, totalRecords)}
-              </span>{" "}
-              of <span className="font-bold text-zinc-300">{totalRecords}</span>{" "}
-              records
-            </p>
-
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => goToPage(currentPage - 1)}
-                disabled={currentPage === 1}
-                className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-zinc-400 hover:text-white transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
-              >
-                <ChevronLeft size={16} />
-              </button>
-
-              <div className="flex items-center gap-1">
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-                  (page) => (
-                    <button
-                      key={page}
-                      onClick={() => goToPage(page)}
-                      className={`w-8 h-8 rounded-xl text-xs font-bold transition-all ${
-                        page === currentPage
-                          ? "bg-(--clr-primary-a10) text-white shadow-lg"
-                          : "bg-white/5 text-zinc-400 hover:bg-white/10 hover:text-white"
-                      }`}
-                    >
-                      {page}
-                    </button>
-                  ),
-                )}
-              </div>
-
-              <button
-                onClick={() => goToPage(currentPage + 1)}
-                disabled={currentPage === totalPages}
-                className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-zinc-400 hover:text-white transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
-              >
-                <ChevronRight size={16} />
-              </button>
-            </div>
-          </div>
-        )}
+        <Pagination
+          currentPage={currentPage}
+          totalResults={totalRecords}
+          itemsPerPage={ITEMS_PER_PAGE}
+          onPageChange={goToPage}
+          label="records"
+        />
       </div>
     </div>
   );
