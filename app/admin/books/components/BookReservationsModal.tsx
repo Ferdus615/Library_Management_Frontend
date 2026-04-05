@@ -24,7 +24,7 @@ export default function BookReservationsModal({
         className="absolute inset-0 bg-black/60 backdrop-blur-md"
         onClick={onClose}
       />
-      <div className="relative w-full max-w-2xl transform overflow-hidden rounded-[2.5rem] glass-light border border-white/10 flex flex-col max-h-[80vh] animate-in fade-in zoom-in-95 duration-300">
+      <div className="relative w-full max-w-2xl transform overflow-hidden rounded-[2.5rem] bg-(--clr-surface-a0) border border-white/5 flex flex-col max-h-[80vh] animate-in fade-in zoom-in-95 duration-300">
         {/* Header */}
         <div className="p-8 border-b border-white/5 flex items-center justify-between">
           <div>
