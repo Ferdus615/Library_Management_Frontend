@@ -35,7 +35,6 @@ export default function ReservationsTable({
   clearSearch,
   totalResults,
   currentPage,
-  totalPages,
   goToPage,
   itemsPerPage,
 }: ReservationsTableProps) {
@@ -176,6 +175,7 @@ export default function ReservationsTable({
                         confirmTitle="Cancel Reservation"
                         confirmMessage={`Are you sure you want to cancel the reservation for "${res.book.title}"?`}
                         confirmText="Cancel Reservation"
+                        isDanger={true}
                       >
                         <div className="flex items-center gap-1">
                           <XCircle size={14} />

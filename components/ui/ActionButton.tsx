@@ -8,6 +8,7 @@ interface ActionButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   confirmTitle?: string;
   confirmMessage?: string;
   confirmText?: string;
+  isDanger?: boolean;
   onConfirm?: () => Promise<void> | void;
 }
 
@@ -17,6 +18,7 @@ const ActionButton: React.FC<ActionButtonProps> = ({
   confirmTitle,
   confirmMessage,
   confirmText = "Confirm",
+  isDanger = false,
   onConfirm,
   onClick,
   ...props
@@ -67,6 +69,7 @@ const ActionButton: React.FC<ActionButtonProps> = ({
           message={confirmMessage}
           confirmText={confirmText}
           isLoading={isConfirming}
+          isDanger={isDanger}
         />
       )}
     </>
