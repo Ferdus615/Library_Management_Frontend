@@ -229,6 +229,33 @@
   .toast-close-btn:hover {
     color: white !important;
   }
+
+  /* Custom Scrollbar Styling */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--clr-surface-a0);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--clr-surface-a20);
+    border-radius: 100px;
+    border: 2px solid var(--clr-surface-a0);
+    transition: all 0.3s ease;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--clr-primary-a10);
+  }
+
+  /* Firefox */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--clr-surface-a20) var(--clr-surface-a0);
+  }
 }
 
 body {

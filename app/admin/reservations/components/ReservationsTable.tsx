@@ -7,11 +7,10 @@ import {
   XCircle,
   Clock,
   Search,
-  ChevronLeft,
-  ChevronRight,
 } from "lucide-react";
 import { PendingRequest } from "@/types/admin";
 import ActionButton from "@/components/ui/ActionButton";
+import Pagination from "@/components/ui/Pagination";
 
 interface ReservationsTableProps {
   reservations: PendingRequest[];
@@ -36,7 +35,6 @@ export default function ReservationsTable({
   clearSearch,
   totalResults,
   currentPage,
-  totalPages,
   goToPage,
   itemsPerPage,
 }: ReservationsTableProps) {
@@ -177,6 +175,7 @@ export default function ReservationsTable({
                         confirmTitle="Cancel Reservation"
                         confirmMessage={`Are you sure you want to cancel the reservation for "${res.book.title}"?`}
                         confirmText="Cancel Reservation"
+                        isDanger={true}
                       >
                         <div className="flex items-center gap-1">
                           <XCircle size={14} />
@@ -192,59 +191,13 @@ export default function ReservationsTable({
         </table>
       </div>
 
-      {/* Pagination Footer */}
-      {!isLoading && totalResults > 0 && (
-        <div className="flex items-center justify-between px-6 py-4 border-t border-white/5 bg-white/2">
-          <p className="text-xs text-zinc-500">
-            Showing{" "}
-            <span className="font-bold text-zinc-300">
-              {(currentPage - 1) * itemsPerPage + 1}
-            </span>
-            {" – "}
-            <span className="font-bold text-zinc-300">
-              {Math.min(currentPage * itemsPerPage, totalResults)}
-            </span>{" "}
-            of <span className="font-bold text-zinc-300">{totalResults}</span>{" "}
-            records
-          </p>
-
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => goToPage(currentPage - 1)}
-              disabled={currentPage === 1}
-              className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-zinc-400 hover:text-white transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
-            >
-              <ChevronLeft size={16} />
-            </button>
-
-            <div className="flex items-center gap-1">
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-                (page) => (
-                  <button
-                    key={page}
-                    onClick={() => goToPage(page)}
-                    className={`w-8 h-8 rounded-xl text-xs font-bold transition-all ${
-                      page === currentPage
-                        ? "bg-(--clr-primary-a10) text-white shadow-lg"
-                        : "bg-white/5 text-zinc-400 hover:bg-white/10 hover:text-white"
-                    }`}
-                  >
-                    {page}
-                  </button>
-                ),
-              )}
-            </div>
-
-            <button
-              onClick={() => goToPage(currentPage + 1)}
-              disabled={currentPage === totalPages}
-              className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-zinc-400 hover:text-white transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
-            >
-              <ChevronRight size={16} />
-            </button>
-          </div>
-        </div>
-      )}
+      <Pagination
+        currentPage={currentPage}
+        totalResults={totalResults}
+        itemsPerPage={itemsPerPage}
+        onPageChange={goToPage}
+        label="records"
+      />
     </div>
   );
 }

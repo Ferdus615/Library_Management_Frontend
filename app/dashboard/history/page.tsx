@@ -58,7 +58,7 @@ export default function HistoryPage() {
       <div className="flex items-center gap-2 p-1 bg-white/5 rounded-2xl border border-white/5 w-fit">
         <button
           onClick={() => setActiveTab("fines")}
-          className={`px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${
+          className={`px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all cursor-pointer ${
             activeTab === "fines"
               ? "bg-white text-black shadow-lg"
               : "text-zinc-500 hover:text-white"
@@ -69,7 +69,7 @@ export default function HistoryPage() {
 
         <button
           onClick={() => setActiveTab("loans")}
-          className={`px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${
+          className={`px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all cursor-pointer ${
             activeTab === "loans"
               ? "bg-white text-black shadow-lg"
               : "text-zinc-500 hover:text-white"
@@ -80,7 +80,7 @@ export default function HistoryPage() {
 
         <button
           onClick={() => setActiveTab("reservations")}
-          className={`px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${
+          className={`px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all cursor-pointer ${
             activeTab === "reservations"
               ? "bg-white text-black shadow-lg"
               : "text-zinc-500 hover:text-white"

@@ -153,7 +153,6 @@ export const adminService = {
       body: JSON.stringify({
         user_id: userId,
         book_id: bookId,
-        due_date: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
       }),
     });
 

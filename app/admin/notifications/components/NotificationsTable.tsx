@@ -5,8 +5,6 @@ import { Notification } from "@/types/admin";
 import {
   Bell,
   Clock,
-  ChevronLeft,
-  ChevronRight,
   AlertCircle,
   BookOpen,
   Calendar,
@@ -15,6 +13,7 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
+import Pagination from "@/components/ui/Pagination";
 
 interface NotificationsTableProps {
   notifications: Notification[];
@@ -169,72 +168,13 @@ export default function NotificationsTable({
         </table>
       </div>
 
-      {/* Pagination Container */}
-      <div className="p-6 border-t border-white/5 bg-white/1 flex flex-col sm:flex-row items-center justify-between gap-4">
-        <div className="text-xs text-zinc-500 font-medium order-2 sm:order-1">
-          Showing{" "}
-          <span className="text-white">
-            {(currentPage - 1) * itemsPerPage + 1}
-          </span>{" "}
-          to{" "}
-          <span className="text-white">
-            {Math.min(currentPage * itemsPerPage, totalResults)}
-          </span>{" "}
-          of <span className="text-white">{totalResults}</span> system alerts
-        </div>
-
-        <div className="flex items-center gap-2 order-1 sm:order-2">
-          <button
-            onClick={() => goToPage(currentPage - 1)}
-            disabled={currentPage === 1}
-            className="p-2 rounded-xl bg-white/5 border border-white/10 text-white disabled:opacity-30 disabled:cursor-not-allowed hover:bg-white/10 transition-all active:scale-95"
-          >
-            <ChevronLeft size={18} />
-          </button>
-
-          <div className="flex items-center gap-1 mx-2">
-            {[...Array(totalPages)].map((_, i) => {
-              const pageNum = i + 1;
-              // Simple pagination logic to show limited dots if too many pages
-              if (
-                totalPages > 5 &&
-                Math.abs(pageNum - currentPage) > 2 &&
-                pageNum !== 1 &&
-                pageNum !== totalPages
-              ) {
-                if (pageNum === 2 || pageNum === totalPages - 1)
-                  return (
-                    <span key={pageNum} className="text-zinc-600 px-1">
-                      ...
-                    </span>
-                  );
-                return null;
-              }
-              return (
-                <button
-                  key={pageNum}
-                  onClick={() => goToPage(pageNum)}
-                  className={`w-9 h-9 rounded-xl text-xs font-bold transition-all active:scale-90 ${
-                    currentPage === pageNum
-                      ? "bg-(--clr-primary-a0) text-white shadow-lg shadow-(--clr-primary-a0)/20"
-                      : "bg-white/5 text-zinc-500 hover:text-white hover:bg-white/10 border border-white/5"
-                  }`}
-                >
-                  {pageNum}
-                </button>
-              );
-            })}
-          </div>
-
-          <button
-            onClick={() => goToPage(currentPage + 1)}
-            disabled={currentPage === totalPages}
-            className="p-2 rounded-xl bg-white/5 border border-white/10 text-white disabled:opacity-30 disabled:cursor-not-allowed hover:bg-white/10 transition-all active:scale-95"
-          >
-            <ChevronRight size={18} />
-          </button>
-        </div>
-      </div>
+      <Pagination
+        currentPage={currentPage}
+        totalResults={totalResults}
+        itemsPerPage={itemsPerPage}
+        onPageChange={goToPage}
+        label="system alerts"
+      />
     </div>
   );
 }
