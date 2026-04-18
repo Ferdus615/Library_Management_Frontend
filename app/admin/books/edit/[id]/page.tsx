@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/Button";
 import Image from "next/image";
 import ConfirmModal from "@/components/ui/ConfirmModal";
 import { CategorySelect } from "@/components/ui/CategorySelect";
+import { uploadService } from "@/services/upload.service";
 
 export default function EditBookPage() {
   const router = useRouter();
@@ -111,9 +112,10 @@ export default function EditBookPage() {
 
       // Handle cover image
       if (imageFile) {
-        // toast.loading("Uploading image...", { id: "uploading" });
-        // const uploadResult = await uploadService.uploadImage(imageFile);
-        // updateData.cover_image = uploadResult.url;
+        toast.loading("Uploading image...", { id: "uploading" });
+        const uploadResult = await uploadService.uploadImage(imageFile);
+        updateData.cover_image = uploadResult.url;
+        toast.success("Image uploaded successfully", { id: "uploading" });
       }
 
       // If cover_image or category_id is empty string, handle correctly

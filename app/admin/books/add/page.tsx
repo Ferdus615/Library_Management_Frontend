@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/Button";
 import Image from "next/image";
 import ConfirmModal from "@/components/ui/ConfirmModal";
 import { CategorySelect } from "@/components/ui/CategorySelect";
+import { uploadService } from "@/services/upload.service";
 
 export default function AddBookPage() {
   const router = useRouter();
@@ -74,17 +75,14 @@ export default function AddBookPage() {
     setIsLoading(true);
 
     try {
-      const cover_image = "";
+      let cover_image = "";
 
-      /* 
-      // Temporarily disabled for testing
       if (imageFile) {
         toast.loading("Uploading image...", { id: "uploading" });
         const uploadResult = await uploadService.uploadImage(imageFile);
         cover_image = uploadResult.url;
         toast.success("Image uploaded successfully", { id: "uploading" });
       }
-      */
 
       const bookData = {
         ...formData,

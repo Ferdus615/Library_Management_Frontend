@@ -65,7 +65,6 @@ export default function AdminBooksPage() {
     }
   }, [debouncedSearch, selectedCategory, currentPage, itemsPerPage]);
 
-
   useEffect(() => {
     fetchBooks();
   }, [fetchBooks]);
@@ -127,7 +126,7 @@ export default function AdminBooksPage() {
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-3">
           {/* Search */}
           <div className="relative group w-full sm:w-64">
             <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">

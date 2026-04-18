@@ -28,8 +28,10 @@ export const CategorySelect: React.FC<CategorySelectProps> = ({
   const [searchTerm, setSearchTerm] = useState("");
   const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedCategoryName, setSelectedCategoryName] = useState<string | null>(null);
-  
+  const [selectedCategoryName, setSelectedCategoryName] = useState<
+    string | null
+  >(null);
+
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -62,7 +64,10 @@ export const CategorySelect: React.FC<CategorySelectProps> = ({
   // Handle outside click to close dropdown
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target as Node)
+      ) {
         setIsOpen(false);
       }
     };
@@ -83,7 +88,7 @@ export const CategorySelect: React.FC<CategorySelectProps> = ({
       if (value) {
         try {
           // Check if it's already in the current list
-          const existing = categories.find(c => c.id === value);
+          const existing = categories.find((c) => c.id === value);
           if (existing) {
             setSelectedCategoryName(existing.name);
           } else {
@@ -119,15 +124,15 @@ export const CategorySelect: React.FC<CategorySelectProps> = ({
 
   return (
     <div className={`space-y-2 relative ${className}`} ref={containerRef}>
-      {label && (
+      {/* {label && (
         <label className="text-sm font-medium leading-none text-(--clr-surface-a50)">
           {label} {required && <span className="text-red-500">*</span>}
         </label>
-      )}
+      )} */}
 
       <div
         onClick={handleToggle}
-        className="w-full h-10 bg-white/5 border border-white/10 rounded-md px-3 py-2 text-sm text-white flex items-center justify-between cursor-pointer focus:ring-2 focus:ring-(--clr-primary-a0) transition-all hover:bg-white/10"
+        className="w-full h-10 bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-white flex items-center justify-between cursor-pointer focus:ring-2 focus:ring-(--clr-primary-a0) transition-all hover:bg-white/10"
       >
         <span className={!selectedCategoryName ? "text-zinc-500" : ""}>
           {selectedCategoryName || placeholder}
@@ -154,7 +159,10 @@ export const CategorySelect: React.FC<CategorySelectProps> = ({
         <div className="absolute z-50 w-full mt-1 bg-zinc-900 border border-white/10 rounded-xl shadow-2xl overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
           <div className="p-2 border-b border-white/5 bg-zinc-950/50">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" size={14} />
+              <Search
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500"
+                size={14}
+              />
               <input
                 ref={inputRef}
                 type="text"
@@ -165,7 +173,10 @@ export const CategorySelect: React.FC<CategorySelectProps> = ({
                 onClick={(e) => e.stopPropagation()}
               />
               {isLoading && (
-                <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 animate-spin" size={14} />
+                <Loader2
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 animate-spin"
+                  size={14}
+                />
               )}
             </div>
           </div>
@@ -175,34 +186,40 @@ export const CategorySelect: React.FC<CategorySelectProps> = ({
               <div
                 onClick={() => handleSelect(null)}
                 className={`px-3 py-2 text-sm cursor-pointer flex items-center justify-between transition-colors ${
-                  !value ? "bg-(--clr-primary-a0)/20 text-white" : "text-zinc-400 hover:bg-white/5 hover:text-white"
+                  !value
+                    ? "bg-(--clr-primary-a0)/20 text-white"
+                    : "text-zinc-400 hover:bg-white/5 hover:text-white"
                 }`}
               >
                 <span>{nullLabel}</span>
-                {!value && <Check size={14} className="text-(--clr-primary-a0)" />}
+                {!value && (
+                  <Check size={14} className="text-(--clr-primary-a0)" />
+                )}
               </div>
             )}
-            
-            {categories.length > 0 ? (
-              categories.map((cat) => (
-                <div
-                  key={cat.id}
-                  onClick={() => handleSelect(cat)}
-                  className={`px-3 py-2 text-sm cursor-pointer flex items-center justify-between transition-colors ${
-                    value === cat.id ? "bg-(--clr-primary-a0)/20 text-white" : "text-zinc-400 hover:bg-white/5 hover:text-white"
-                  }`}
-                >
-                  <span>{cat.name}</span>
-                  {value === cat.id && <Check size={14} className="text-(--clr-primary-a0)" />}
-                </div>
-              ))
-            ) : (
-              !isLoading && (
-                <div className="px-3 py-8 text-xs text-zinc-500 text-center italic">
-                  No categories found
-                </div>
-              )
-            )}
+
+            {categories.length > 0
+              ? categories.map((cat) => (
+                  <div
+                    key={cat.id}
+                    onClick={() => handleSelect(cat)}
+                    className={`px-3 py-2 text-sm cursor-pointer flex items-center justify-between transition-colors ${
+                      value === cat.id
+                        ? "bg-(--clr-primary-a0)/20 text-white"
+                        : "text-zinc-400 hover:bg-white/5 hover:text-white"
+                    }`}
+                  >
+                    <span>{cat.name}</span>
+                    {value === cat.id && (
+                      <Check size={14} className="text-(--clr-primary-a0)" />
+                    )}
+                  </div>
+                ))
+              : !isLoading && (
+                  <div className="px-3 py-8 text-xs text-zinc-500 text-center italic">
+                    No categories found
+                  </div>
+                )}
           </div>
         </div>
       )}
